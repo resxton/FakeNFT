@@ -2,7 +2,7 @@
 
 # Ссылки
 
-[Дизайн Figma](https://www.figma.com/file/k1LcgXHGTHIeiCv4XuPbND/FakeNFT-(YP)?node-id=96-5542&t=YdNbOI8EcqdYmDeg-0)
+[Дизайн Figma](https://www.figma.com/design/Uz5G39wRRCr2mRE4SbnNla/FakeNFT)
 
 # Назначение и цели приложения
 
