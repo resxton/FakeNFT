@@ -13,7 +13,7 @@ brew install swiftformat
 🚀 Начало работы
 1. Клонирование репозитория
 ```
-git clone https://github.com/BogdanTarchenko/DebtTracker.git
+git clone https://github.com/resxton/FakeNFT.git
 ```
 2. Настройки Git hooks
 ```
