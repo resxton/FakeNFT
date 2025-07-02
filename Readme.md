@@ -1,6 +1,4 @@
-# DebtTracker
-![Build](https://github.com/BogdanTarchenko/DebtTracker/actions/workflows/build.yml/badge.svg)
-![Lint](https://github.com/BogdanTarchenko/DebtTracker/actions/workflows/lint.yml/badge.svg)
+# FakeNFT 27_1
 
 Swift 6, UIKit, SnapKit
 
