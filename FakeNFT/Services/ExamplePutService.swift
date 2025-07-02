@@ -2,6 +2,8 @@ import Foundation
 
 typealias ExamplePutCompletion = (Result<ExamplePutResponse, Error>) -> Void
 
+// MARK: - ExamplePutService
+
 protocol ExamplePutService {
     func sendExamplePutRequest(
         param1: String,
@@ -9,6 +11,8 @@ protocol ExamplePutService {
         completion: @escaping ExamplePutCompletion
     )
 }
+
+// MARK: - ExamplePutServiceImpl
 
 final class ExamplePutServiceImpl: ExamplePutService {
     private let networkClient: NetworkClient

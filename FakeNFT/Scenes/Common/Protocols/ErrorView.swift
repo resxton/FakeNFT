@@ -1,10 +1,14 @@
 import UIKit
 
+// MARK: - ErrorModel
+
 struct ErrorModel {
     let message: String
     let actionText: String
     let action: () -> Void
 }
+
+// MARK: - ErrorView
 
 protocol ErrorView {
     func showError(_ model: ErrorModel)

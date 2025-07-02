@@ -1,5 +1,6 @@
-import ProgressHUD
 import UIKit
+
+// MARK: - LoadingView
 
 protocol LoadingView {
     var activityIndicator: UIActivityIndicatorView { get }

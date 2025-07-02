@@ -1,5 +1,7 @@
 import UIKit
 
+// MARK: - LinePageControl
+
 final class LinePageControl: UIView {
     // MARK: - Properties
 
@@ -16,7 +18,7 @@ final class LinePageControl: UIView {
     }
 
     override var intrinsicContentSize: CGSize {
-        return CGSize(width: UIView.noIntrinsicMetric, height: height)
+        CGSize(width: UIView.noIntrinsicMetric, height: height)
     }
 
     // MARK: - Private properties

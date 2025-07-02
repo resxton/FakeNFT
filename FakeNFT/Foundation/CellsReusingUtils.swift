@@ -1,5 +1,7 @@
 import UIKit
 
+// MARK: - ReuseIdentifying
+
 protocol ReuseIdentifying {
     static var defaultReuseIdentifier: String { get }
 }

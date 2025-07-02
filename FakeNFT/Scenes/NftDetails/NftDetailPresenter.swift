@@ -1,16 +1,18 @@
 import Foundation
 
-// MARK: - Protocol
+// MARK: - NftDetailPresenter
 
 protocol NftDetailPresenter {
     func viewDidLoad()
 }
 
-// MARK: - State
+// MARK: - NftDetailState
 
 enum NftDetailState {
     case initial, loading, failed(Error), data(Nft)
 }
+
+// MARK: - NftDetailPresenterImpl
 
 final class NftDetailPresenterImpl: NftDetailPresenter {
     // MARK: - Properties
@@ -67,12 +69,11 @@ final class NftDetailPresenterImpl: NftDetailPresenter {
     }
 
     private func makeErrorModel(_ error: Error) -> ErrorModel {
-        let message: String
-        switch error {
+        let message: String = switch error {
         case is NetworkClientError:
-            message = NSLocalizedString("Error.network", comment: "")
+            NSLocalizedString("Error.network", comment: "")
         default:
-            message = NSLocalizedString("Error.unknown", comment: "")
+            NSLocalizedString("Error.unknown", comment: "")
         }
 
         let actionText = NSLocalizedString("Error.repeat", comment: "")

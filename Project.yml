@@ -57,6 +57,8 @@ targets:
         UILaunchStoryboardName: LaunchScreen
     dependencies:
       - package: SnapKit
+      - package: ProgressHUD
+      - package: Kingfisher
     scheme:
       testTargets:
         - FakeNFTTests
@@ -96,3 +98,9 @@ packages:
   SnapKit:
     url: https://github.com/SnapKit/SnapKit
     exactVersion: 5.7.1
+  ProgressHUD:
+    url: https://github.com/relatedcode/ProgressHUD.git
+    exactVersion: 14.1.3
+  Kingfisher:
+    url: https://github.com/onevcat/Kingfisher.git
+    exactVersion: 8.3.3

@@ -1,5 +1,7 @@
 import UIKit
 
+// MARK: - NftImageCollectionViewCell
+
 final class NftImageCollectionViewCell: UICollectionViewCell, ReuseIdentifying {
     // MARK: - Properties
 
@@ -43,7 +45,7 @@ final class NftImageCollectionViewCell: UICollectionViewCell, ReuseIdentifying {
     }
 }
 
-// MARK: - UIScrollViewDelegate
+// MARK: UIScrollViewDelegate
 
 extension NftImageCollectionViewCell: UIScrollViewDelegate {
     func scrollViewDidEndZooming(_ scrollView: UIScrollView, with _: UIView?, atScale _: CGFloat) {

@@ -1,5 +1,7 @@
 import UIKit
 
+// MARK: - TestCatalogViewController
+
 final class TestCatalogViewController: UIViewController {
     let servicesAssembly: ServicesAssembly
     let testNftButton = UIButton()
@@ -34,6 +36,8 @@ final class TestCatalogViewController: UIViewController {
         present(nftViewController, animated: true)
     }
 }
+
+// MARK: - Constants
 
 private enum Constants {
     static let openNftTitle = NSLocalizedString("Catalog.openNft", comment: "")

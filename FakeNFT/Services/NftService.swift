@@ -2,9 +2,13 @@ import Foundation
 
 typealias NftCompletion = (Result<Nft, Error>) -> Void
 
+// MARK: - NftService
+
 protocol NftService {
     func loadNft(id: String, completion: @escaping NftCompletion)
 }
+
+// MARK: - NftServiceImpl
 
 final class NftServiceImpl: NftService {
     private let networkClient: NetworkClient

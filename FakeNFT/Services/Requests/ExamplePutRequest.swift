@@ -1,5 +1,7 @@
 import Foundation
 
+// MARK: - ExamplePutRequest
+
 struct ExamplePutRequest: NetworkRequest {
     var endpoint: URL? {
         URL(string: "\(RequestConstants.baseURL)/api/v1/someMethod")
@@ -8,6 +10,8 @@ struct ExamplePutRequest: NetworkRequest {
     var httpMethod: HttpMethod = .put
     var dto: Dto?
 }
+
+// MARK: - ExampleDtoObject
 
 struct ExampleDtoObject: Dto {
     let param1: String
@@ -21,10 +25,12 @@ struct ExampleDtoObject: Dto {
     func asDictionary() -> [String: String] {
         [
             CodingKeys.param1.rawValue: param1,
-            CodingKeys.param2.rawValue: param2,
+            CodingKeys.param2.rawValue: param2
         ]
     }
 }
+
+// MARK: - ExamplePutResponse
 
 struct ExamplePutResponse: Decodable {
     let name: String

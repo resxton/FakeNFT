@@ -1,5 +1,7 @@
 import Foundation
 
+// MARK: - HttpMethod
+
 enum HttpMethod: String {
     case get = "GET"
     case post = "POST"
@@ -7,11 +9,15 @@ enum HttpMethod: String {
     case delete = "DELETE"
 }
 
+// MARK: - NetworkRequest
+
 protocol NetworkRequest {
     var endpoint: URL? { get }
     var httpMethod: HttpMethod { get }
     var dto: Dto? { get }
 }
+
+// MARK: - Dto
 
 protocol Dto {
     func asDictionary() -> [String: String]

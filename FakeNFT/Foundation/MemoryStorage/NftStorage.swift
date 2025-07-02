@@ -1,9 +1,13 @@
 import Foundation
 
+// MARK: - NftStorage
+
 protocol NftStorage: AnyObject {
     func saveNft(_ nft: Nft)
     func getNft(with id: String) -> Nft?
 }
+
+// MARK: - NftStorageImpl
 
 // Пример простого класса, который сохраняет данные из сети
 final class NftStorageImpl: NftStorage {
