@@ -7,7 +7,6 @@ protocol NftService {
 }
 
 final class NftServiceImpl: NftService {
-
     private let networkClient: NetworkClient
     private let storage: NftStorage
 
@@ -25,10 +24,10 @@ final class NftServiceImpl: NftService {
         let request = NFTRequest(id: id)
         networkClient.send(request: request, type: Nft.self) { [weak storage] result in
             switch result {
-            case .success(let nft):
+            case let .success(nft):
                 storage?.saveNft(nft)
                 completion(.success(nft))
-            case .failure(let error):
+            case let .failure(error):
                 completion(.failure(error))
             }
         }

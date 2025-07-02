@@ -48,20 +48,20 @@ extension UIColor {
     private static let yaLightGrayDark = UIColor(hexString: "#2C2C2E")
 
     static let segmentActive = UIColor { traits in
-        return traits.userInterfaceStyle == .dark
-        ? .yaBlackDark
-        : .yaBlackLight
+        traits.userInterfaceStyle == .dark
+            ? .yaBlackDark
+            : .yaBlackLight
     }
 
     static let segmentInactive = UIColor { traits in
-        return traits.userInterfaceStyle == .dark
-        ? .yaLightGrayDark
-        : .yaLightGrayLight
+        traits.userInterfaceStyle == .dark
+            ? .yaLightGrayDark
+            : .yaLightGrayLight
     }
 
     static let closeButton = UIColor { traits in
-        return traits.userInterfaceStyle == .dark
-        ? .yaBlackDark
-        : .yaBlackLight
+        traits.userInterfaceStyle == .dark
+            ? .yaBlackDark
+            : .yaBlackLight
     }
 }

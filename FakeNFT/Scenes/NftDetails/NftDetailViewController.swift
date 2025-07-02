@@ -1,12 +1,11 @@
-import UIKit
 import Kingfisher
+import UIKit
 
 protocol NftDetailView: AnyObject, ErrorView, LoadingView {
     func displayCells(_ cellModels: [NftDetailCellModel])
 }
 
 final class NftDetailViewController: UIViewController {
-
     private let presenter: NftDetailPresenter
 
     private lazy var collectionView: UICollectionView = {
@@ -33,7 +32,7 @@ final class NftDetailViewController: UIViewController {
     }()
 
     private lazy var pageControl = LinePageControl()
-    internal lazy var activityIndicator = UIActivityIndicatorView()
+    lazy var activityIndicator = UIActivityIndicatorView()
 
     private var cellModels: [NftDetailCellModel] = []
 
@@ -44,7 +43,8 @@ final class NftDetailViewController: UIViewController {
         super.init(nibName: nil, bundle: nil)
     }
 
-    required init?(coder: NSCoder) {
+    @available(*, unavailable)
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -72,14 +72,14 @@ final class NftDetailViewController: UIViewController {
         NSLayoutConstraint.activate([
             pageControl.widthAnchor.constraint(equalTo: view.widthAnchor, constant: -32),
             pageControl.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            pageControl.bottomAnchor.constraint(equalTo: collectionView.safeAreaLayoutGuide.bottomAnchor)
+            pageControl.bottomAnchor.constraint(equalTo: collectionView.safeAreaLayoutGuide.bottomAnchor),
         ])
 
         view.addSubview(closeButton)
         closeButton.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             closeButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 30),
-            closeButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16)
+            closeButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
         ])
     }
 
@@ -102,12 +102,13 @@ extension NftDetailViewController: NftDetailView {
 // MARK: - UICollectionViewDataSource
 
 extension NftDetailViewController: UICollectionViewDataSource {
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+    func collectionView(_: UICollectionView, numberOfItemsInSection _: Int) -> Int {
         cellModels.count
     }
 
     func collectionView(_ collectionView: UICollectionView,
-                        cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+                        cellForItemAt indexPath: IndexPath) -> UICollectionViewCell
+    {
         let cell: NftImageCollectionViewCell = collectionView.dequeueReusableCell(indexPath: indexPath)
 
         let cellModel = cellModels[indexPath.row]
@@ -121,8 +122,9 @@ extension NftDetailViewController: UICollectionViewDataSource {
 
 extension NftDetailViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView,
-                        layout collectionViewLayout: UICollectionViewLayout,
-                        sizeForItemAt indexPath: IndexPath) -> CGSize {
+                        layout _: UICollectionViewLayout,
+                        sizeForItemAt _: IndexPath) -> CGSize
+    {
         collectionView.bounds.size
     }
 

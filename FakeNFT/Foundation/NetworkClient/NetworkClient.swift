@@ -21,17 +21,18 @@ protocol NetworkClient {
 }
 
 extension NetworkClient {
-
     @discardableResult
     func send(request: NetworkRequest,
-              onResponse: @escaping (Result<Data, Error>) -> Void) -> NetworkTask? {
+              onResponse: @escaping (Result<Data, Error>) -> Void) -> NetworkTask?
+    {
         send(request: request, completionQueue: .main, onResponse: onResponse)
     }
 
     @discardableResult
     func send<T: Decodable>(request: NetworkRequest,
                             type: T.Type,
-                            onResponse: @escaping (Result<T, Error>) -> Void) -> NetworkTask? {
+                            onResponse: @escaping (Result<T, Error>) -> Void) -> NetworkTask?
+    {
         send(request: request, type: type, completionQueue: .main, onResponse: onResponse)
     }
 }
@@ -43,7 +44,8 @@ struct DefaultNetworkClient: NetworkClient {
 
     init(session: URLSession = URLSession.shared,
          decoder: JSONDecoder = JSONDecoder(),
-         encoder: JSONEncoder = JSONEncoder()) {
+         encoder: JSONEncoder = JSONEncoder())
+    {
         self.session = session
         self.decoder = decoder
         self.encoder = encoder
@@ -126,7 +128,7 @@ struct DefaultNetworkClient: NetworkClient {
                 URLQueryItem(
                     name: field.key,
                     value: field.value
-                    )
+                )
             }
             urlComponents.queryItems = queryItems
             urlRequest.httpBody = urlComponents.query?.data(using: .utf8)

@@ -1,7 +1,6 @@
 import UIKit
 
 final class TabBarController: UITabBarController {
-
     var servicesAssembly: ServicesAssembly!
 
     private let catalogTabBarItem = UITabBarItem(

@@ -13,7 +13,6 @@ enum NftDetailState {
 }
 
 final class NftDetailPresenterImpl: NftDetailPresenter {
-
     // MARK: - Properties
 
     weak var view: NftDetailView?
@@ -45,11 +44,11 @@ final class NftDetailPresenterImpl: NftDetailPresenter {
         case .loading:
             view?.showLoading()
             loadNft()
-        case .data(let nft):
+        case let .data(nft):
             view?.hideLoading()
             let cellModels = nft.images.map { NftDetailCellModel(url: $0) }
             view?.displayCells(cellModels)
-        case .failed(let error):
+        case let .failed(error):
             let errorModel = makeErrorModel(error)
             view?.hideLoading()
             view?.showError(errorModel)
@@ -59,9 +58,9 @@ final class NftDetailPresenterImpl: NftDetailPresenter {
     private func loadNft() {
         service.loadNft(id: input.id) { [weak self] result in
             switch result {
-            case .success(let nft):
+            case let .success(nft):
                 self?.state = .data(nft)
-            case .failure(let error):
+            case let .failure(error):
                 self?.state = .failed(error)
             }
         }

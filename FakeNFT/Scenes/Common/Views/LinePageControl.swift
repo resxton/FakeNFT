@@ -1,7 +1,6 @@
 import UIKit
 
 final class LinePageControl: UIView {
-
     // MARK: - Properties
 
     var numberOfItems: Int = 0 {
@@ -39,7 +38,8 @@ final class LinePageControl: UIView {
         stackView.constraintEdges(to: self)
     }
 
-    required init?(coder: NSCoder) {
+    @available(*, unavailable)
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -48,7 +48,7 @@ final class LinePageControl: UIView {
     func setupStackView() {
         stackView.arrangedSubviews.forEach { stackView.removeArrangedSubview($0) }
 
-        for _ in (0..<numberOfItems) {
+        for _ in 0 ..< numberOfItems {
             let segment = UIView()
             segment.heightAnchor.constraint(equalToConstant: height).isActive = true
             segment.layer.cornerRadius = height / 2

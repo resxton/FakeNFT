@@ -1,7 +1,6 @@
 import UIKit
 
 final class TestCatalogViewController: UIViewController {
-
     let servicesAssembly: ServicesAssembly
     let testNftButton = UIButton()
 
@@ -10,7 +9,8 @@ final class TestCatalogViewController: UIViewController {
         super.init(nibName: nil, bundle: nil)
     }
 
-    required init?(coder: NSCoder) {
+    @available(*, unavailable)
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 

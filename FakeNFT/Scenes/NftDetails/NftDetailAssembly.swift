@@ -1,7 +1,6 @@
 import UIKit
 
 public final class NftDetailAssembly {
-
     private let servicesAssembler: ServicesAssembly
 
     init(servicesAssembler: ServicesAssembly) {
