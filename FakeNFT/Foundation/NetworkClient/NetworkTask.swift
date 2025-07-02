@@ -3,15 +3,15 @@ import Foundation
 // MARK: - NetworkTask
 
 protocol NetworkTask {
-    func cancel()
+  func cancel()
 }
 
 // MARK: - DefaultNetworkTask
 
 struct DefaultNetworkTask: NetworkTask {
-    let dataTask: URLSessionDataTask
+  let dataTask: URLSessionDataTask
 
-    func cancel() {
-        dataTask.cancel()
-    }
+  func cancel() {
+    dataTask.cancel()
+  }
 }

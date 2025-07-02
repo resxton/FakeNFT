@@ -3,56 +3,56 @@ import UIKit
 // MARK: - NftImageCollectionViewCell
 
 final class NftImageCollectionViewCell: UICollectionViewCell, ReuseIdentifying {
-    // MARK: - Properties
+  // MARK: - Properties
 
-    private lazy var scrollView: UIScrollView = {
-        let scrollView = UIScrollView()
-        scrollView.delegate = self
-        scrollView.minimumZoomScale = 1.0
-        scrollView.maximumZoomScale = 3.0
-        return scrollView
-    }()
+  private lazy var scrollView: UIScrollView = {
+    let scrollView = UIScrollView()
+    scrollView.delegate = self
+    scrollView.minimumZoomScale = 1.0
+    scrollView.maximumZoomScale = 3.0
+    return scrollView
+  }()
 
-    private lazy var imageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFit
-        return imageView
-    }()
+  private lazy var imageView: UIImageView = {
+    let imageView = UIImageView()
+    imageView.contentMode = .scaleAspectFit
+    return imageView
+  }()
 
-    // MARK: - Init
+  // MARK: - Init
 
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+  override init(frame: CGRect) {
+    super.init(frame: frame)
 
-        contentView.addSubview(scrollView)
-        scrollView.constraintEdges(to: contentView)
+    contentView.addSubview(scrollView)
+    scrollView.constraintEdges(to: contentView)
 
-        scrollView.addSubview(imageView)
-        imageView.constraintCenters(to: scrollView)
-        imageView.widthAnchor.constraint(equalTo: scrollView.widthAnchor).isActive = true
-        imageView.heightAnchor.constraint(equalTo: scrollView.widthAnchor).isActive = true
-    }
+    scrollView.addSubview(imageView)
+    imageView.constraintCenters(to: scrollView)
+    imageView.widthAnchor.constraint(equalTo: scrollView.widthAnchor).isActive = true
+    imageView.heightAnchor.constraint(equalTo: scrollView.widthAnchor).isActive = true
+  }
 
-    @available(*, unavailable)
-    required init?(coder _: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
+  @available(*, unavailable)
+  required init?(coder _: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+  }
 
-    // MARK: - Functions
+  // MARK: - Functions
 
-    func configure(with cellModel: NftDetailCellModel) {
-        imageView.kf.setImage(with: cellModel.url)
-    }
+  func configure(with cellModel: NftDetailCellModel) {
+    imageView.kf.setImage(with: cellModel.url)
+  }
 }
 
 // MARK: UIScrollViewDelegate
 
 extension NftImageCollectionViewCell: UIScrollViewDelegate {
-    func scrollViewDidEndZooming(_ scrollView: UIScrollView, with _: UIView?, atScale _: CGFloat) {
-        scrollView.setZoomScale(scrollView.minimumZoomScale, animated: true)
-    }
+  func scrollViewDidEndZooming(_ scrollView: UIScrollView, with _: UIView?, atScale _: CGFloat) {
+    scrollView.setZoomScale(scrollView.minimumZoomScale, animated: true)
+  }
 
-    func viewForZooming(in _: UIScrollView) -> UIView? {
-        imageView
-    }
+  func viewForZooming(in _: UIScrollView) -> UIView? {
+    imageView
+  }
 }

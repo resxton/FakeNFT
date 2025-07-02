@@ -1,21 +1,24 @@
 import UIKit
 
 final class ProductDetailsTableViewController: UITableViewController {
-    override func viewDidLoad() {
-        super.viewDidLoad()
+  override func viewDidLoad() {
+    super.viewDidLoad()
 
-        tableView.register(ProductDetailsTableViewCell.self)
-    }
+    tableView.register(ProductDetailsTableViewCell.self)
+  }
 
-    override func tableView(_: UITableView, numberOfRowsInSection _: Int) -> Int {
-        10
-    }
+  override func tableView(_: UITableView, numberOfRowsInSection _: Int) -> Int {
+    10
+  }
 
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell: ProductDetailsTableViewCell = tableView.dequeueReusableCell()
+  override func tableView(
+    _ tableView: UITableView,
+    cellForRowAt indexPath: IndexPath
+  ) -> UITableViewCell {
+    let cell: ProductDetailsTableViewCell = tableView.dequeueReusableCell()
 
-        cell.textLabel?.text = "Ячейка номер \(indexPath.row)"
+    cell.textLabel?.text = "Ячейка номер \(indexPath.row)"
 
-        return cell
-    }
+    return cell
+  }
 }
