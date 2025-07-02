@@ -1,0 +1,106 @@
+name: FakeNFT
+options:
+  bundleIdPrefix: resxton
+  deploymentTarget:
+    iOS: 17.0
+  usesTabs: false
+  tabWidth: 2
+  indentWidth: 2
+
+targets:
+  FakeNFT:
+    type: application
+    platform: iOS
+    sources:
+      - path: FakeNFT
+    preBuildScripts:
+      - name: Run SwiftFormat
+        script: |
+          export PATH="$PATH:/usr/local/bin:/opt/homebrew/bin"
+          if which swiftformat >/dev/null; then
+            swiftformat "$SRCROOT"
+          else
+            echo "error: SwiftFormat not installed. Please run: brew install swiftformat"
+            exit 1
+          fi
+        outputFiles: []
+        basedOnDependencyAnalysis: false
+      - name: Run SwiftLint
+        script: |
+          export PATH="$PATH:/usr/local/bin:/opt/homebrew/bin"
+          if which swiftlint >/dev/null; then
+            swiftlint
+          else
+            echo "error: SwiftLint not installed. Please run: brew install swiftlint"
+            exit 1
+          fi
+        outputFiles: []
+        basedOnDependencyAnalysis: false
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: resxton.FakeNFT
+        INFOPLIST_FILE: FakeNFT/Info.plist
+        SWIFT_VERSION: 5.10
+        MARKETING_VERSION: 1.0.0
+        CURRENT_PROJECT_VERSION: 1
+    info:
+      path: FakeNFT/Info.plist
+      properties:
+        CFBundleVersion: "$(CURRENT_PROJECT_VERSION)"
+        CFBundleShortVersionString: "$(MARKETING_VERSION)"
+        UIApplicationSceneManifest:
+          UIApplicationSupportsMultipleScenes: false
+          UISceneConfigurations:
+            UIWindowSceneSessionRoleApplication:
+              - UISceneConfigurationName: Default Configuration
+                UISceneDelegateClassName: $(PRODUCT_MODULE_NAME).SceneDelegate
+        UILaunchStoryboardName: LaunchScreen
+    dependencies:
+      - package: SnapKit
+      - package: ProgressHUD
+      - package: Kingfisher
+    scheme:
+      testTargets:
+        - FakeNFTTests
+        - FakeNFTUITests
+
+  FakeNFTTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: FakeNFTTests
+    dependencies:
+      - target: FakeNFT
+    settings:
+      base:
+        BUNDLE_LOADER: $(TEST_HOST)
+        TEST_HOST: $(BUILT_PRODUCTS_DIR)/FakeNFT.app/FakeNFT
+        GENERATE_INFOPLIST_FILE: YES
+        PRODUCT_BUNDLE_IDENTIFIER: resxton.FakeNFTTests
+        MARKETING_VERSION: 1.0.0
+        CURRENT_PROJECT_VERSION: 1
+
+  FakeNFTUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources:
+      - path: FakeNFTUITests
+    dependencies:
+      - target: FakeNFT
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        PRODUCT_BUNDLE_IDENTIFIER: resxton.FakeNFTUITests
+        MARKETING_VERSION: 1.0.0
+        CURRENT_PROJECT_VERSION: 1
+
+packages:
+  SnapKit:
+    url: https://github.com/SnapKit/SnapKit
+    exactVersion: 5.7.1
+  ProgressHUD:
+    url: https://github.com/relatedcode/ProgressHUD.git
+    exactVersion: 14.1.3
+  Kingfisher:
+    url: https://github.com/onevcat/Kingfisher.git
+    exactVersion: 8.3.3

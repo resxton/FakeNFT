@@ -4,7 +4,8 @@
    version = "1.7">
    <BuildAction
       parallelizeBuildables = "YES"
-      buildImplicitDependencies = "YES">
+      buildImplicitDependencies = "YES"
+      runPostActionsOnFailure = "NO">
       <BuildActionEntries>
          <BuildActionEntry
             buildForTesting = "YES"
@@ -14,7 +15,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "3F68069229CBBAF100B4F915"
+               BlueprintIdentifier = "49F29AB4404937D56AB2228B"
                BuildableName = "FakeNFT.app"
                BlueprintName = "FakeNFT"
                ReferencedContainer = "container:FakeNFT.xcodeproj">
@@ -27,31 +28,40 @@
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES"
-      shouldAutocreateTestPlan = "YES">
+      onlyGenerateCoverageForSpecifiedTargets = "NO">
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "49F29AB4404937D56AB2228B"
+            BuildableName = "FakeNFT.app"
+            BlueprintName = "FakeNFT"
+            ReferencedContainer = "container:FakeNFT.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
       <Testables>
          <TestableReference
-            skipped = "NO"
-            parallelizable = "YES">
+            skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "3F6806A829CBBAF200B4F915"
+               BlueprintIdentifier = "2D40C3B174A8626C86859802"
                BuildableName = "FakeNFTTests.xctest"
                BlueprintName = "FakeNFTTests"
                ReferencedContainer = "container:FakeNFT.xcodeproj">
             </BuildableReference>
          </TestableReference>
          <TestableReference
-            skipped = "NO"
-            parallelizable = "YES">
+            skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "3F6806B229CBBAF200B4F915"
+               BlueprintIdentifier = "F87843CC6F91F6358D4CF9C6"
                BuildableName = "FakeNFTUITests.xctest"
                BlueprintName = "FakeNFTUITests"
                ReferencedContainer = "container:FakeNFT.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
+      <CommandLineArguments>
+      </CommandLineArguments>
    </TestAction>
    <LaunchAction
       buildConfiguration = "Debug"
@@ -67,12 +77,14 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "3F68069229CBBAF100B4F915"
+            BlueprintIdentifier = "49F29AB4404937D56AB2228B"
             BuildableName = "FakeNFT.app"
             BlueprintName = "FakeNFT"
             ReferencedContainer = "container:FakeNFT.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
+      <CommandLineArguments>
+      </CommandLineArguments>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"
@@ -84,12 +96,14 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "3F68069229CBBAF100B4F915"
+            BlueprintIdentifier = "49F29AB4404937D56AB2228B"
             BuildableName = "FakeNFT.app"
             BlueprintName = "FakeNFT"
             ReferencedContainer = "container:FakeNFT.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
+      <CommandLineArguments>
+      </CommandLineArguments>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">

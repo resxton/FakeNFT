@@ -1,13 +1,17 @@
 import Foundation
 
+// MARK: - NetworkTask
+
 protocol NetworkTask {
-    func cancel()
+  func cancel()
 }
 
-struct DefaultNetworkTask: NetworkTask {
-    let dataTask: URLSessionDataTask
+// MARK: - DefaultNetworkTask
 
-    func cancel() {
-        dataTask.cancel()
-    }
+struct DefaultNetworkTask: NetworkTask {
+  let dataTask: URLSessionDataTask
+
+  func cancel() {
+    dataTask.cancel()
+  }
 }
