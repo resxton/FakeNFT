@@ -1,4 +1,4 @@
---swiftversion 6.0             # Указываем версию Swift 6.0
+--swiftversion 5.10             # Указываем версию Swift 5.10
 --allman false                 # Открывающая скобка на той же строке
 --elseposition same-line       # "else" на той же строке, что и закрывающая скобка
 --indent 4                     # Отступ 4 пробела
