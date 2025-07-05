@@ -43,6 +43,7 @@ targets:
         SWIFT_VERSION: 5.10
         MARKETING_VERSION: 1.0.0
         CURRENT_PROJECT_VERSION: 1
+        ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS: YES
     info:
       path: FakeNFT/Info.plist
       properties:
@@ -79,6 +80,7 @@ targets:
         PRODUCT_BUNDLE_IDENTIFIER: resxton.FakeNFTTests
         MARKETING_VERSION: 1.0.0
         CURRENT_PROJECT_VERSION: 1
+        ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS: YES
 
   FakeNFTUITests:
     type: bundle.ui-testing
@@ -93,6 +95,7 @@ targets:
         PRODUCT_BUNDLE_IDENTIFIER: resxton.FakeNFTUITests
         MARKETING_VERSION: 1.0.0
         CURRENT_PROJECT_VERSION: 1
+        ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS: YES
 
 packages:
   SnapKit:
