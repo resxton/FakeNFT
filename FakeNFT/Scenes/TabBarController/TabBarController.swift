@@ -10,6 +10,12 @@ final class TabBarController: UITabBarController {
     tag: 0
   )
 
+  private let statisticsTabBarItem = UITabBarItem(
+    title: "Статистика",
+    image: UIImage(resource: .statisticsTabBar),
+    tag: 0
+  )
+
   // MARK: - Initializers
 
   init(servicesAssembly: ServicesAssembly) {
@@ -32,7 +38,15 @@ final class TabBarController: UITabBarController {
     )
     catalogController.tabBarItem = catalogTabBarItem
 
-    viewControllers = [catalogController]
+    let statisticsController = StatisticsViewController(
+      servicesAssembly: servicesAssembly
+    )
+    let navigationStatisticsController = UINavigationController(
+      rootViewController: statisticsController
+    )
+    statisticsController.tabBarItem = statisticsTabBarItem
+
+    viewControllers = [catalogController, navigationStatisticsController]
 
     view.backgroundColor = .systemBackground
   }
