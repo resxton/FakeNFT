@@ -76,6 +76,7 @@ class CartViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     view.backgroundColor = .universalWhite
+    presenter.sort(sortBy: "by name")
     setUI()
   }
 
@@ -122,9 +123,18 @@ class CartViewController: UIViewController {
 
   @objc private func handleSortButtonTapped() {
     let alert = UIAlertController(title: "Сортировка", message: nil, preferredStyle: .actionSheet)
-    let sortByPrice = UIAlertAction(title: "По цене", style: .default) { _ in }
-    let sortByRating = UIAlertAction(title: "По рейтингу", style: .default) { _ in }
-    let sortByName = UIAlertAction(title: "По названию", style: .default) { _ in }
+    let sortByPrice = UIAlertAction(title: "По цене", style: .default) { [weak self] _ in
+      guard let self else { return }
+      sort(sortBy: "by price")
+    }
+    let sortByRating = UIAlertAction(title: "По рейтингу", style: .default) { [weak self] _ in
+      guard let self else { return }
+      sort(sortBy: "by raiting")
+    }
+    let sortByName = UIAlertAction(title: "По названию", style: .default) { [weak self] _ in
+      guard let self else { return }
+      sort(sortBy: "by name")
+    }
     let close = UIAlertAction(title: "Закрыть", style: .cancel) { _ in }
     alert.addAction(sortByPrice)
     alert.addAction(sortByRating)
@@ -145,6 +155,11 @@ class CartViewController: UIViewController {
     cell.imageNFT.image = presenter.cartItems[indexPath.row].image
     cell.nameNFTLabel.text = presenter.cartItems[indexPath.row].name
     cell.starImage.image = UIImage(named: presenter.getStringRating(for: presenter.cartItems[indexPath.row].rating))
+  }
+
+  private func sort(sortBy: String) {
+    presenter.sort(sortBy: sortBy)
+    tableView.reloadData()
   }
 }
 

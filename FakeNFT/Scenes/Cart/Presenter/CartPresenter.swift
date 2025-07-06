@@ -22,4 +22,17 @@ final class CartPresenter {
   func priceNFT() -> Double {
     return cartItems.reduce(0) { $0 + $1.price }
   }
+
+  func sort(sortBy: String) {
+    switch sortBy {
+    case "by raiting":
+      cartItems.sort { $0.rating < $1.rating }
+    case "by price":
+      cartItems.sort { $0.price < $1.price }
+    case "by name":
+      cartItems.sort { $0.name < $1.name }
+    default:
+      break
+    }
+  }
 }
