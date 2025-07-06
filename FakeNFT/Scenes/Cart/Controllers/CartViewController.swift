@@ -3,9 +3,10 @@ import UIKit
 // MARK: - CartViewController
 
 class CartViewController: UIViewController {
+  private let presenter = CartPresenter()
   private lazy var countNTFLabel: UILabel = {
     let label = UILabel()
-    label.text = "3 NFT"
+    label.text = "\(presenter.cartItems.count) NFT"
     label.textColor = .universalBlack
     label.font = UIFont.systemFont(ofSize: 15, weight: .regular)
     return label
@@ -13,7 +14,7 @@ class CartViewController: UIViewController {
 
   private lazy var priceNTFLabel: UILabel = {
     let label = UILabel()
-    label.text = "5,34 ETH"
+    label.text = "\(presenter.priceNFT()) ETH"
     label.textColor = .universalGreen
     label.font = UIFont.systemFont(ofSize: 17, weight: .bold)
     return label
@@ -140,10 +141,10 @@ class CartViewController: UIViewController {
   }
 
   private func configCell(cell: CartCell, indexPath: IndexPath) {
-    cell.priceNFTLabel.text = "1,78 ETH"
-    cell.imageNFT.image = UIImage(named: "NFTImage1")
-    cell.nameNFTLabel.text = "Test"
-    cell.starImage.image = UIImage(named: "ratingFour")
+    cell.priceNFTLabel.text = "\(presenter.cartItems[indexPath.row].price) ETH"
+    cell.imageNFT.image = presenter.cartItems[indexPath.row].image
+    cell.nameNFTLabel.text = presenter.cartItems[indexPath.row].name
+    cell.starImage.image = UIImage(named: presenter.getStringRating(for: presenter.cartItems[indexPath.row].rating))
   }
 }
 
@@ -151,7 +152,7 @@ class CartViewController: UIViewController {
 
 extension CartViewController: UITableViewDataSource, UITableViewDelegate {
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    return 3
+    return presenter.cartItems.count
   }
 
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
