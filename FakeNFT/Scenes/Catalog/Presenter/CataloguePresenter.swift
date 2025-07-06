@@ -6,24 +6,40 @@ final class CataloguePresenter: CataloguePresenterProtocol {
   // MARK: - Public Properties
 
   weak var view: CatalogueViewProtocol?
+  private let servicesAssembly: ServicesAssembly
   var collectionsCount: Int {
-    30
+    collections.count
+  }
+
+  // MARK: - Private Properties
+
+  private var collections: [CollectionDomain] = []
+
+  // MARK: - Initializers
+
+  init(servicesAssembly: ServicesAssembly) {
+    self.servicesAssembly = servicesAssembly
   }
 
   // MARK: - Public Methods
 
-  func viewDidLoad() {}
+  func viewDidLoad() {
+    servicesAssembly.mockCollectionService.loadCollections { result in
+      switch result {
+      case let .success(collections):
+        self.collections = collections
+      case let .failure(error):
+        print("Error: \(error)")
+      }
+    }
+  }
 
   func didSelectRow(at indexPath: IndexPath) {
     print("Selected \(indexPath.row)")
   }
 
   func collection(at index: Int) -> CollectionViewModel {
-    guard let stubImage = UIImage(named: "CollectionStubImage") else {
-      return CollectionViewModel(title: "Stub (3)", previewImage: UIImage())
-    }
-
-    return CollectionViewModel(title: "Stub (3)", previewImage: stubImage)
+    collections[index].toViewModel()
   }
 }
 

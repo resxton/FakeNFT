@@ -1,6 +1,7 @@
-import UIKit
+import Foundation
 
 struct CollectionViewModel {
-  let title: String
-  let previewImage: UIImage?
+  let nameWithCount: String
+  let name: String
+  let coverURL: URL?
 }

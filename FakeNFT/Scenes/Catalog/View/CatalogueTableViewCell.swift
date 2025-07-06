@@ -44,8 +44,11 @@ final class CatalogueTableViewCell: UITableViewCell {
   // MARK: - Public Methods
 
   func configure(with viewModel: CollectionViewModel) {
-    previewImage.image = viewModel.previewImage
-    titleLabel.text = viewModel.title
+    previewImage.kf.setImage(
+      with: viewModel.coverURL,
+      placeholder: UIImage(named: "CollectionStubImage")
+    )
+    titleLabel.text = viewModel.nameWithCount
   }
 
   // MARK: - Private Methods

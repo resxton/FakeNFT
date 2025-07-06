@@ -1,5 +1,5 @@
 import Foundation
 
 protocol CatalogueViewProtocol: AnyObject {
-  // TODO:
+  func reloadData()
 }

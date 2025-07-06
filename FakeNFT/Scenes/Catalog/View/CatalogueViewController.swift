@@ -3,7 +3,7 @@ import UIKit
 
 // MARK: - CatalogueViewController
 
-final class CatalogueViewController: UIViewController, CatalogueViewProtocol {
+final class CatalogueViewController: UIViewController {
   // MARK: - Visual Components
 
   private lazy var sortButton: UIButton = {
@@ -75,6 +75,14 @@ final class CatalogueViewController: UIViewController, CatalogueViewProtocol {
   @objc
   private func sortButtonTapped() {
     print("Sort button tapped")
+  }
+}
+
+// MARK: CatalogueViewProtocol
+
+extension CatalogueViewController: CatalogueViewProtocol {
+  func reloadData() {
+    catalogueTableView.reloadData()
   }
 }
 

@@ -5,6 +5,7 @@ final class AppDIContainer {
 
   private let servicesAssembly = ServicesAssembly(
     networkClient: DefaultNetworkClient(),
+    collectionStorage: CollectionStorage(),
     nftStorage: NftStorageImpl()
   )
 
@@ -22,7 +23,7 @@ final class AppDIContainer {
   }
 
   func makeCatalogueViewController() -> UINavigationController {
-    let presenter = CataloguePresenter()
+    let presenter = CataloguePresenter(servicesAssembly: servicesAssembly)
     let view = CatalogueViewController(presenter: presenter)
     presenter.view = view
     let navigationController = UINavigationController(rootViewController: view)
