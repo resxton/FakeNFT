@@ -1,12 +1,11 @@
 import UIKit
 
-// MARK: - CataloguePresenter
+// MARK: - CatalogPresenter
 
-final class CataloguePresenter: CataloguePresenterProtocol {
+final class CatalogPresenter: CatalogPresenterProtocol {
   // MARK: - Public Properties
 
-  weak var view: CatalogueViewProtocol?
-  private let servicesAssembly: ServicesAssembly
+  weak var view: CatalogViewProtocol?
   var collectionsCount: Int {
     collections.count
   }
@@ -15,16 +14,23 @@ final class CataloguePresenter: CataloguePresenterProtocol {
 
   private var collections: [CollectionDomain] = []
 
+  private let services: ServicesAssembly
+  private let router: CatalogRouterProtocol
+
   // MARK: - Initializers
 
-  init(servicesAssembly: ServicesAssembly) {
-    self.servicesAssembly = servicesAssembly
+  init(
+    servicesAssembly: ServicesAssembly,
+    router: CatalogRouterProtocol
+  ) {
+    services = servicesAssembly
+    self.router = router
   }
 
   // MARK: - Public Methods
 
   func viewDidLoad() {
-    servicesAssembly.mockCollectionService.loadCollections { result in
+    services.mockCollectionService.loadCollections { result in
       switch result {
       case let .success(collections):
         self.collections = collections
@@ -35,7 +41,8 @@ final class CataloguePresenter: CataloguePresenterProtocol {
   }
 
   func didSelectRow(at indexPath: IndexPath) {
-    print("Selected \(indexPath.row)")
+    let collection = collections[indexPath.row]
+    router.show(collection: collection)
   }
 
   func collection(at index: Int) -> CollectionViewModel {
@@ -43,8 +50,8 @@ final class CataloguePresenter: CataloguePresenterProtocol {
   }
 }
 
-// MARK: CataloguePresenter.Constants
+// MARK: CatalogPresenter.Constants
 
-extension CataloguePresenter {
+extension CatalogPresenter {
   private enum Constants {}
 }

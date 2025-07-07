@@ -1,26 +1,26 @@
 import SnapKit
 import UIKit
 
-// MARK: - CatalogueViewController
+// MARK: - CatalogViewController
 
-final class CatalogueViewController: UIViewController {
+final class CatalogViewController: UIViewController {
   // MARK: - Visual Components
 
   private lazy var sortButton: UIButton = {
     let button = UIButton(type: .custom)
     guard let sortImage = UIImage(named: Constants.sortImage) else {
-      fatalError("[CatalogueViewController] – sort image not found")
+      fatalError("[CatalogViewController] – sort image not found")
     }
     button.setImage(sortImage, for: .normal)
     button.addTarget(self, action: #selector(sortButtonTapped), for: .touchUpInside)
     return button
   }()
 
-  private lazy var catalogueTableView: UITableView = {
+  private lazy var catalogTableView: UITableView = {
     let tableView = UITableView()
     tableView.register(
-      CatalogueTableViewCell.self,
-      forCellReuseIdentifier: CatalogueTableViewCell.cellIdentifier
+      CatalogTableViewCell.self,
+      forCellReuseIdentifier: CatalogTableViewCell.cellIdentifier
     )
     tableView.dataSource = self
     tableView.delegate = self
@@ -32,11 +32,11 @@ final class CatalogueViewController: UIViewController {
 
   // MARK: - Private Properties
 
-  private let presenter: CataloguePresenterProtocol
+  private let presenter: CatalogPresenterProtocol
 
   // MARK: - Initializers
 
-  init(presenter: CataloguePresenterProtocol) {
+  init(presenter: CatalogPresenterProtocol) {
     self.presenter = presenter
     super.init(nibName: nil, bundle: nil)
   }
@@ -63,11 +63,11 @@ final class CatalogueViewController: UIViewController {
     view.backgroundColor = .adaptiveWhite
     navigationItem.rightBarButtonItem = UIBarButtonItem(customView: sortButton)
 
-    view.addSubview(catalogueTableView)
+    view.addSubview(catalogTableView)
   }
 
   private func setupConstraints() {
-    catalogueTableView.snp.makeConstraints { make in
+    catalogTableView.snp.makeConstraints { make in
       make.edges.equalTo(view.safeAreaLayoutGuide)
     }
   }
@@ -78,17 +78,17 @@ final class CatalogueViewController: UIViewController {
   }
 }
 
-// MARK: CatalogueViewProtocol
+// MARK: CatalogViewProtocol
 
-extension CatalogueViewController: CatalogueViewProtocol {
+extension CatalogViewController: CatalogViewProtocol {
   func reloadData() {
-    catalogueTableView.reloadData()
+    catalogTableView.reloadData()
   }
 }
 
 // MARK: UITableViewDataSource
 
-extension CatalogueViewController: UITableViewDataSource {
+extension CatalogViewController: UITableViewDataSource {
   func tableView(
     _ tableView: UITableView,
     numberOfRowsInSection section: Int
@@ -101,9 +101,9 @@ extension CatalogueViewController: UITableViewDataSource {
     cellForRowAt indexPath: IndexPath
   ) -> UITableViewCell {
     guard let cell = tableView.dequeueReusableCell(
-      withIdentifier: CatalogueTableViewCell.cellIdentifier,
+      withIdentifier: CatalogTableViewCell.cellIdentifier,
       for: indexPath
-    ) as? CatalogueTableViewCell else {
+    ) as? CatalogTableViewCell else {
       return UITableViewCell()
     }
 
@@ -114,10 +114,10 @@ extension CatalogueViewController: UITableViewDataSource {
 
   func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
     let contentWidth = tableView.bounds.width
-    let imageHeight = contentWidth / CatalogueTableViewCell.Constants.imageAspectRatio
-    let titleHeight = CatalogueTableViewCell.Constants.titleHeight
-    let innerSpacing = CatalogueTableViewCell.Constants.innerSpacing
-    let outerSpacing = CatalogueTableViewCell.Constants.outerBottomSpacing
+    let imageHeight = contentWidth / CatalogTableViewCell.Constants.imageAspectRatio
+    let titleHeight = CatalogTableViewCell.Constants.titleHeight
+    let innerSpacing = CatalogTableViewCell.Constants.innerSpacing
+    let outerSpacing = CatalogTableViewCell.Constants.outerBottomSpacing
 
     return imageHeight + innerSpacing + titleHeight + outerSpacing
   }
@@ -125,7 +125,7 @@ extension CatalogueViewController: UITableViewDataSource {
 
 // MARK: UITableViewDelegate
 
-extension CatalogueViewController: UITableViewDelegate {
+extension CatalogViewController: UITableViewDelegate {
   func tableView(
     _ tableView: UITableView,
     didSelectRowAt indexPath: IndexPath
@@ -134,9 +134,9 @@ extension CatalogueViewController: UITableViewDelegate {
   }
 }
 
-// MARK: CatalogueViewController.Constants
+// MARK: CatalogViewController.Constants
 
-extension CatalogueViewController {
+extension CatalogViewController {
   private enum Constants {
     static let cellHeight: CGFloat = 187
     static let topInset: CGFloat = 20

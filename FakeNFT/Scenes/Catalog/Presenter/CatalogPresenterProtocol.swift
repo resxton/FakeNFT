@@ -1,6 +1,6 @@
 import Foundation
 
-protocol CataloguePresenterProtocol {
+protocol CatalogPresenterProtocol {
   var collectionsCount: Int { get }
 
   func viewDidLoad()

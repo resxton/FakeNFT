@@ -1,9 +1,9 @@
 import SnapKit
 import UIKit
 
-// MARK: - CatalogueTableViewCell
+// MARK: - CatalogTableViewCell
 
-final class CatalogueTableViewCell: UITableViewCell {
+final class CatalogTableViewCell: UITableViewCell {
   // MARK: - Visual Components
 
   private let containerView = UIView()
@@ -26,7 +26,7 @@ final class CatalogueTableViewCell: UITableViewCell {
 
   // MARK: - Public Properties
 
-  static let cellIdentifier = "CatalogueCell"
+  static let cellIdentifier = "CatalogCell"
 
   // MARK: - Initializers
 
@@ -69,20 +69,20 @@ final class CatalogueTableViewCell: UITableViewCell {
     }
 
     previewImage.snp.makeConstraints { make in
-      make.top.leading.trailing.equalToSuperview()
+      make.top.horizontalEdges.equalToSuperview()
       make.height.equalTo(previewImage.snp.width).dividedBy(Constants.imageAspectRatio)
     }
 
     titleLabel.snp.makeConstraints { make in
       make.top.equalTo(previewImage.snp.bottom).offset(Constants.innerSpacing)
-      make.leading.trailing.bottom.equalToSuperview()
+      make.horizontalEdges.bottom.equalToSuperview()
     }
   }
 }
 
-// MARK: CatalogueTableViewCell.Constants
+// MARK: CatalogTableViewCell.Constants
 
-extension CatalogueTableViewCell {
+extension CatalogTableViewCell {
   enum Constants {
     static let titleFontSize: CGFloat = 17
     static let titleHeight: CGFloat = 22
