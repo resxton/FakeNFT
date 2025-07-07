@@ -140,6 +140,6 @@ extension CatalogueViewController {
   private enum Constants {
     static let cellHeight: CGFloat = 187
     static let topInset: CGFloat = 20
-    static let sortImage = "sort"
+    static let sortImage = "Sort"
   }
 }
