@@ -107,12 +107,17 @@ class CartViewController: UIViewController {
 
   private func setPaymentViewConstraints() {
     view.addSubview(paymentView)
-    NSLayoutConstraint.activate([
-      paymentView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
-      paymentView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-      paymentView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-      paymentView.heightAnchor.constraint(equalToConstant: 76)
-    ])
+    NSLayoutConstraint.activate(
+      [
+        paymentView.bottomAnchor.constraint(
+          equalTo: view.safeAreaLayoutGuide.bottomAnchor,
+          constant: -20
+        ),
+        paymentView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+        paymentView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+        paymentView.heightAnchor.constraint(equalToConstant: 76)
+      ]
+    )
   }
 
   private func setSortButton() {
@@ -154,7 +159,9 @@ class CartViewController: UIViewController {
     cell.priceNFTLabel.text = "\(presenter.cartItems[indexPath.row].price) ETH"
     cell.imageNFT.image = presenter.cartItems[indexPath.row].image
     cell.nameNFTLabel.text = presenter.cartItems[indexPath.row].name
-    cell.starImage.image = UIImage(named: presenter.getStringRating(for: presenter.cartItems[indexPath.row].rating))
+    let ratingInt = presenter.cartItems[indexPath.row].rating
+    let image = UIImage(named: presenter.getStringRating(for: ratingInt))
+    cell.starImage.image = image
   }
 
   private func sort(sortBy: String) {

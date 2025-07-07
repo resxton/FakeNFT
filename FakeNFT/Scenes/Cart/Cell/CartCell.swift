@@ -41,7 +41,7 @@ final class CartCell: UITableViewCell {
     return stackView
   }()
 
-  private lazy var nameAndPriceStackView: UIStackView = {
+  private lazy var nameAndPriceStack: UIStackView = {
     let stackView = UIStackView(arrangedSubviews: [nameNFTStackView, priceNFTStackView])
     stackView.axis = .vertical
     stackView.spacing = 12
@@ -95,13 +95,13 @@ final class CartCell: UITableViewCell {
   }
 
   private func setNameAndPriceStackView() {
-    contentView.addSubview(nameAndPriceStackView)
+    contentView.addSubview(nameAndPriceStack)
     NSLayoutConstraint.activate([
-      nameAndPriceStackView.leadingAnchor.constraint(
+      nameAndPriceStack.leadingAnchor.constraint(
         equalTo: imageNFT.trailingAnchor, constant: 20
       ),
-      nameAndPriceStackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 24),
-      nameAndPriceStackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -24)
+      nameAndPriceStack.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 24),
+      nameAndPriceStack.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -24)
     ])
   }
 
