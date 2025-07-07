@@ -1,3 +1,4 @@
+import ProgressHUD
 import SnapKit
 import UIKit
 
@@ -128,6 +129,14 @@ extension CatalogViewController: CatalogViewProtocol {
     actionSheet.addAction(cancelAction)
 
     present(actionSheet, animated: true)
+  }
+
+  func showLoader() {
+    ProgressHUD.animate(interaction: false)
+  }
+
+  func hideLoader() {
+    ProgressHUD.dismiss()
   }
 }
 

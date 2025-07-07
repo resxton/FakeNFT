@@ -71,6 +71,7 @@ final class MockCollectionService: CollectionServiceProtocol {
       authorID: "mock_author",
       id: id
     )
+
     completion(.success(mock))
   }
 

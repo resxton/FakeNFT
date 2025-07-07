@@ -31,14 +31,7 @@ final class CatalogPresenter: CatalogPresenterProtocol {
   // MARK: - Public Methods
 
   func viewDidLoad() {
-    services.mockCollectionService.loadCollections { result in
-      switch result {
-      case let .success(collections):
-        self.collections = collections
-      case let .failure(error):
-        print("Error: \(error)")
-      }
-    }
+    loadCollections()
   }
 
   func didSelectRow(at indexPath: IndexPath) {
@@ -60,6 +53,22 @@ final class CatalogPresenter: CatalogPresenterProtocol {
       return
     }
     sortingOption = option
+  }
+
+  // MARK: - Private Methods
+
+  private func loadCollections() {
+    view?.showLoader()
+    services.mockCollectionService.loadCollections { [weak self] result in
+      guard let self else { return }
+      view?.hideLoader()
+      switch result {
+      case let .success(collections):
+        self.collections = collections
+      case let .failure(error):
+        print("Error: \(error)")
+      }
+    }
   }
 }
 
