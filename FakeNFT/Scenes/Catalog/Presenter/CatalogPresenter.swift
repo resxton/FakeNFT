@@ -13,6 +13,7 @@ final class CatalogPresenter: CatalogPresenterProtocol {
   // MARK: - Private Properties
 
   private var collections: [CollectionDomain] = []
+  private var sortingOption: SortingOption?
 
   private let services: ServicesAssembly
   private let router: CatalogRouterProtocol
@@ -47,6 +48,28 @@ final class CatalogPresenter: CatalogPresenterProtocol {
 
   func collection(at index: Int) -> CollectionViewModel {
     collections[index].toViewModel()
+  }
+
+  func sortButtonTapped() {
+    view?.presentSortingOptions()
+  }
+
+  func didSelectSorting(option: SortingOption) {
+    guard option != sortingOption else {
+      sortingOption = nil
+      return
+    }
+    sortingOption = option
+    print("Selected \(option)")
+  }
+}
+
+// MARK: CatalogPresenter.SortingOption
+
+extension CatalogPresenter {
+  enum SortingOption {
+    case name
+    case count
   }
 }
 

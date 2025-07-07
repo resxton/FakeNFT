@@ -6,4 +6,6 @@ protocol CatalogPresenterProtocol {
   func viewDidLoad()
   func didSelectRow(at indexPath: IndexPath)
   func collection(at index: Int) -> CollectionViewModel
+  func sortButtonTapped()
+  func didSelectSorting(option: CatalogPresenter.SortingOption)
 }

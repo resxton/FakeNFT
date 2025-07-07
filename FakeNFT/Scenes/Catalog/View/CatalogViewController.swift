@@ -74,7 +74,7 @@ final class CatalogViewController: UIViewController {
 
   @objc
   private func sortButtonTapped() {
-    print("Sort button tapped")
+    presenter.sortButtonTapped()
   }
 }
 
@@ -83,6 +83,51 @@ final class CatalogViewController: UIViewController {
 extension CatalogViewController: CatalogViewProtocol {
   func reloadData() {
     catalogTableView.reloadData()
+  }
+
+  func presentSortingOptions() {
+    let actionSheet = UIAlertController(
+      title: NSLocalizedString(
+        "Catalog.alertTitle",
+        comment: ""
+      ),
+      message: nil,
+      preferredStyle: .actionSheet
+    )
+
+    let sortByNameAction = UIAlertAction(
+      title: NSLocalizedString(
+        "Catalog.sortByNameActionTitle",
+        comment: ""
+      ),
+      style: .default
+    ) { [weak self] _ in
+      guard let self else { return }
+      presenter.didSelectSorting(option: .name)
+    }
+    let sortByCountAction = UIAlertAction(
+      title: NSLocalizedString(
+        "Catalog.sortByCountActionTitle",
+        comment: ""
+      ),
+      style: .default
+    ) { [weak self] _ in
+      guard let self else { return }
+      presenter.didSelectSorting(option: .count)
+    }
+    let cancelAction = UIAlertAction(
+      title: NSLocalizedString(
+        "Catalog.cancelActionTitle",
+        comment: ""
+      ),
+      style: .cancel
+    )
+
+    actionSheet.addAction(sortByNameAction)
+    actionSheet.addAction(sortByCountAction)
+    actionSheet.addAction(cancelAction)
+
+    present(actionSheet, animated: true)
   }
 }
 

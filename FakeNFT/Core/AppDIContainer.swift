@@ -54,11 +54,10 @@ final class AppDIContainer {
 
     let appearance = UINavigationBarAppearance()
     appearance.configureWithTransparentBackground()
-    guard let image = UIImage(named: "Back") else {
+    guard let backImage = UIImage(named: "Back") else {
       fatalError("[AppDIContainer] – Back icon not found")
     }
 
-    let backImage = image.withRenderingMode(.alwaysOriginal)
     appearance.setBackIndicatorImage(backImage, transitionMaskImage: backImage)
 
     let backButtonAppearance = UIBarButtonItemAppearance()
