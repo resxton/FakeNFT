@@ -60,7 +60,6 @@ final class CatalogPresenter: CatalogPresenterProtocol {
       return
     }
     sortingOption = option
-    print("Selected \(option)")
   }
 }
 
