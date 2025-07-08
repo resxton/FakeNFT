@@ -1,13 +1,23 @@
 import Foundation
 
-typealias CollectionCompletion = (Result<CollectionDomain, Error>) -> Void
-typealias CollectionsCompletion = (Result<[CollectionDomain], Error>) -> Void
+typealias CollectionCompletion = (
+  Result<CollectionDomain, Error>
+) -> Void
+typealias CollectionsCompletion = (
+  Result<[CollectionDomain], Error>
+) -> Void
 
 // MARK: - CollectionServiceProtocol
 
 protocol CollectionServiceProtocol {
-  func loadCollection(id: String, completion: @escaping CollectionCompletion)
-  func loadCollections(completion: @escaping CollectionsCompletion)
+  func loadCollection(
+    id: String,
+    completion: @escaping CollectionCompletion
+  )
+  func loadCollections(
+    sortBy option: SortingOption?,
+    completion: @escaping CollectionsCompletion
+  )
 }
 
 // MARK: - CollectionService
@@ -16,12 +26,18 @@ final class CollectionService: CollectionServiceProtocol {
   private let networkClient: NetworkClient
   private let collectionStorage: CollectionStorageProtocol
 
-  init(networkClient: NetworkClient, collectionStorage: CollectionStorageProtocol) {
+  init(
+    networkClient: NetworkClient,
+    collectionStorage: CollectionStorageProtocol
+  ) {
     self.networkClient = networkClient
     self.collectionStorage = collectionStorage
   }
 
-  func loadCollection(id: String, completion: @escaping CollectionCompletion) {
+  func loadCollection(
+    id: String,
+    completion: @escaping CollectionCompletion
+  ) {
     if let collection = collectionStorage.getCollection(with: id) {
       completion(.success(collection.toDomain()))
       return
@@ -42,15 +58,23 @@ final class CollectionService: CollectionServiceProtocol {
     }
   }
 
-  func loadCollections(completion: @escaping CollectionsCompletion) {
-    let request = CollectionsRequest()
+  func loadCollections(
+    sortBy option: SortingOption? = nil,
+    completion: @escaping CollectionsCompletion
+  ) {
+    let request = CollectionsRequest(sortBy: option?.serverKey)
+
     networkClient.send(
       request: request,
       type: [CollectionDTO].self
     ) { result in
       switch result {
       case let .success(collections):
-        completion(.success(collections.map { $0.toDomain() }))
+        let domain = collections.map { $0.toDomain() }
+        let sorted = option == .nftCount
+          ? domain.sorted { $0.nftIDs.count > $1.nftIDs.count }
+          : domain
+        completion(.success(sorted))
       case let .failure(error):
         completion(.failure(error))
       }
@@ -75,7 +99,7 @@ final class MockCollectionService: CollectionServiceProtocol {
     completion(.success(mock))
   }
 
-  func loadCollections(completion: @escaping CollectionsCompletion) {
+  func loadCollections(sortBy: SortingOption?, completion: @escaping CollectionsCompletion) {
     let mocks: [CollectionDomain] = (1 ... 3).map { index in
       CollectionDomain(
         createdAt: Date(),

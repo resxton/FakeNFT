@@ -114,7 +114,7 @@ extension CatalogViewController: CatalogViewProtocol {
       style: .default
     ) { [weak self] _ in
       guard let self else { return }
-      presenter.didSelectSorting(option: .count)
+      presenter.didSelectSorting(option: .nftCount)
     }
     let cancelAction = UIAlertAction(
       title: NSLocalizedString(

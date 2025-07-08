@@ -50,34 +50,38 @@ final class CatalogPresenter: CatalogPresenterProtocol {
   func didSelectSorting(option: SortingOption) {
     guard option != sortingOption else {
       sortingOption = nil
+      loadCollections()
       return
     }
+
     sortingOption = option
+
+    switch option {
+    case .name:
+      loadCollections()
+    case .nftCount:
+      collections.sort { $0.nftIDs.count < $1.nftIDs.count }
+      view?.reloadData()
+    }
   }
 
   // MARK: - Private Methods
 
   private func loadCollections() {
     view?.showLoader()
-    services.mockCollectionService.loadCollections { [weak self] result in
-      guard let self else { return }
-      view?.hideLoader()
-      switch result {
-      case let .success(collections):
-        self.collections = collections
-      case let .failure(error):
-        print("Error: \(error)")
+    services.collectionService.loadCollections(sortBy: sortingOption) { result in
+      DispatchQueue.main.async { [weak self] in
+        guard let self else { return }
+        view?.hideLoader()
+        switch result {
+        case let .success(collections):
+          self.collections = collections
+          view?.reloadData()
+        case let .failure(error):
+          print("Error: \(error)")
+        }
       }
     }
-  }
-}
-
-// MARK: CatalogPresenter.SortingOption
-
-extension CatalogPresenter {
-  enum SortingOption {
-    case name
-    case count
   }
 }
 
