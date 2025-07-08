@@ -1,5 +1,15 @@
 import UIKit
 
+// MARK: - CartSortType
+
+enum CartSortType {
+  case byPrice
+  case byRating
+  case byName
+}
+
+// MARK: - CartPresenter
+
 final class CartPresenter {
   var cartItems: [NFTForCartModel] = [
     NFTForCartModel(
@@ -44,16 +54,14 @@ final class CartPresenter {
     return cartItems.reduce(0) { $0 + $1.price }
   }
 
-  func sort(sortBy: String) {
+  func sort(sortBy: CartSortType) {
     switch sortBy {
-    case "by raiting":
+    case .byRating:
       cartItems.sort { $0.rating < $1.rating }
-    case "by price":
+    case .byPrice:
       cartItems.sort { $0.price < $1.price }
-    case "by name":
+    case .byName:
       cartItems.sort { $0.name < $1.name }
-    default:
-      break
     }
   }
 }

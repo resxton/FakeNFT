@@ -85,7 +85,7 @@ class CartViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     view.backgroundColor = .universalWhite
-    presenter.sort(sortBy: "by name")
+    presenter.sort(sortBy: .byName)
     setUI()
     setPlaceholderIsHidden(!presenter.cartItems.isEmpty)
   }
@@ -140,15 +140,15 @@ class CartViewController: UIViewController {
     let alert = UIAlertController(title: "Сортировка", message: nil, preferredStyle: .actionSheet)
     let sortByPrice = UIAlertAction(title: "По цене", style: .default) { [weak self] _ in
       guard let self else { return }
-      sort(sortBy: "by price")
+      sort(sortBy: .byPrice)
     }
     let sortByRating = UIAlertAction(title: "По рейтингу", style: .default) { [weak self] _ in
       guard let self else { return }
-      sort(sortBy: "by raiting")
+      sort(sortBy: .byRating)
     }
     let sortByName = UIAlertAction(title: "По названию", style: .default) { [weak self] _ in
       guard let self else { return }
-      sort(sortBy: "by name")
+      sort(sortBy: .byName)
     }
     let close = UIAlertAction(title: "Закрыть", style: .cancel) { _ in }
     alert.addAction(sortByPrice)
@@ -175,7 +175,7 @@ class CartViewController: UIViewController {
     cell.starImage.image = image
   }
 
-  private func sort(sortBy: String) {
+  private func sort(sortBy: CartSortType) {
     presenter.sort(sortBy: sortBy)
     tableView.reloadData()
   }
