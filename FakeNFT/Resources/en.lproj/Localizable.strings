@@ -8,3 +8,4 @@
 "Error.unknown" = "An unknown error occurred";
 "Error.repeat" = "Retry";
 "Error.title" = "Error";
+"Error.dismiss" = "Close";
