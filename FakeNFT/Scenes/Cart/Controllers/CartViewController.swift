@@ -73,11 +73,21 @@ class CartViewController: UIViewController {
     return view
   }()
 
+  private var placeholderLabel: UILabel = {
+    let label = UILabel()
+    label.text = "Корзина пуста"
+    label.textColor = .universalBlack
+    label.font = .systemFont(ofSize: 17, weight: .bold)
+    label.translatesAutoresizingMaskIntoConstraints = false
+    return label
+  }()
+
   override func viewDidLoad() {
     super.viewDidLoad()
     view.backgroundColor = .universalWhite
     presenter.sort(sortBy: "by name")
     setUI()
+    setPlaceholderIsHidden(!presenter.cartItems.isEmpty)
   }
 
   private func setTableViewConstraints() {
@@ -153,6 +163,7 @@ class CartViewController: UIViewController {
     setPaymentViewConstraints()
     setPaymentStackView()
     setSortButton()
+    setPlaceholderLabel()
   }
 
   private func configCell(cell: CartCell, indexPath: IndexPath) {
@@ -167,6 +178,21 @@ class CartViewController: UIViewController {
   private func sort(sortBy: String) {
     presenter.sort(sortBy: sortBy)
     tableView.reloadData()
+  }
+
+  private func setPlaceholderLabel() {
+    view.addSubview(placeholderLabel)
+    NSLayoutConstraint.activate([
+      placeholderLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+      placeholderLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+    ])
+  }
+
+  private func setPlaceholderIsHidden(_ isHidden: Bool) {
+    placeholderLabel.isHidden = isHidden
+    paymentView.isHidden = !isHidden
+    sortButton.isHidden = !isHidden
+    tableView.isHidden = !isHidden
   }
 }
 
