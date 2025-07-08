@@ -23,8 +23,12 @@ protocol CollectionServiceProtocol {
 // MARK: - CollectionService
 
 final class CollectionService: CollectionServiceProtocol {
+  // MARK: - Private Properties
+
   private let networkClient: NetworkClient
   private let collectionStorage: CollectionStorageProtocol
+
+  // MARK: - Initializers
 
   init(
     networkClient: NetworkClient,
@@ -33,6 +37,8 @@ final class CollectionService: CollectionServiceProtocol {
     self.networkClient = networkClient
     self.collectionStorage = collectionStorage
   }
+
+  // MARK: - Public Methods
 
   func loadCollection(
     id: String,

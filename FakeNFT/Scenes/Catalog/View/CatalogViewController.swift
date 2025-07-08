@@ -138,6 +138,10 @@ extension CatalogViewController: CatalogViewProtocol {
   func hideLoader() {
     ProgressHUD.dismiss()
   }
+
+  func showError(_ message: String) {
+    ProgressHUD.banner(NSLocalizedString("Error.title", comment: ""), message)
+  }
 }
 
 // MARK: UITableViewDataSource

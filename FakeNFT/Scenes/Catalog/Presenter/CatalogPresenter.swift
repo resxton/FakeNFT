@@ -79,6 +79,7 @@ final class CatalogPresenter: CatalogPresenterProtocol {
           view?.reloadData()
         case let .failure(error):
           print("Error: \(error)")
+          view?.showError(error.localizedDescription)
         }
       }
     }

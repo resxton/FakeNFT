@@ -5,4 +5,5 @@ protocol CatalogViewProtocol: AnyObject {
   func presentSortingOptions()
   func showLoader()
   func hideLoader()
+  func showError(_ message: String)
 }

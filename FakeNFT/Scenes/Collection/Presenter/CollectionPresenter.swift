@@ -4,11 +4,12 @@ final class CollectionPresenter: CollectionPresenterProtocol {
   // MARK: - Public Properties
 
   weak var view: CollectionViewProtocol?
-  private let servicesAssembly: ServicesAssembly
 
   // MARK: - Private Properties
 
   private let collection: CollectionDomain
+
+  private let servicesAssembly: ServicesAssembly
 
   // MARK: - Initializers
 
