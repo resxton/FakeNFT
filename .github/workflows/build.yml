@@ -24,8 +24,8 @@ jobs:
 
       - name: Create Secrets.xcconfig
         run: |
-          cp FakeNFT/Secrets.xcconfig.example FakeNFT/Secrets.xcconfig
-          echo "API_KEY = ${{ secrets.API_KEY }}" > FakeNFT/Secrets.xcconfig
+          cp Secrets.xcconfig.example Secrets.xcconfig
+          echo "API_KEY = ${{ secrets.API_KEY }}" > Secrets.xcconfig
         env:
           API_KEY: ${{ secrets.API_KEY }}
 
