@@ -11,6 +11,7 @@ final class AppDIContainer {
 
   // MARK: - Public Methods
 
+  @MainActor
   func makeTabBarController() -> UITabBarController {
     let tabBarController = TabBarController(servicesAssembly: servicesAssembly)
     let catalog = makeCatalogViewController()
@@ -22,6 +23,7 @@ final class AppDIContainer {
     return tabBarController
   }
 
+  @MainActor
   func makeCatalogViewController() -> UINavigationController {
     let navigationController = configuredNavigationController()
 
@@ -49,26 +51,40 @@ final class AppDIContainer {
 
   // MARK: - Private Methods
 
+  @MainActor
   private func configuredNavigationController() -> UINavigationController {
     let navigationController = UINavigationController()
 
-    let appearance = UINavigationBarAppearance()
-    appearance.configureWithTransparentBackground()
-    guard let backImage = UIImage(named: "Back") else {
-      fatalError("[AppDIContainer] – Back icon not found")
+    func applyNavigationBarAppearance(for traitCollection: UITraitCollection) {
+      let appearance = UINavigationBarAppearance()
+      appearance.configureWithTransparentBackground()
+
+      guard let image = UIImage(named: "Back", in: nil, compatibleWith: traitCollection) else {
+        fatalError("[AppDIContainer] – Back icon not found")
+      }
+
+      let backImage = image.withRenderingMode(.alwaysOriginal)
+      appearance.setBackIndicatorImage(backImage, transitionMaskImage: backImage)
+
+      let backButtonAppearance = UIBarButtonItemAppearance()
+      backButtonAppearance.normal.titleTextAttributes = [.foregroundColor: UIColor.clear]
+      appearance.backButtonAppearance = backButtonAppearance
+
+      navigationController.navigationBar.standardAppearance = appearance
+      navigationController.navigationBar.scrollEdgeAppearance = appearance
+      navigationController.navigationBar.compactAppearance = appearance
+      navigationController.navigationBar.isTranslucent = true
+      navigationController.navigationBar.tintColor = .clear
     }
 
-    appearance.setBackIndicatorImage(backImage, transitionMaskImage: backImage)
+    applyNavigationBarAppearance(for: navigationController.traitCollection)
 
-    let backButtonAppearance = UIBarButtonItemAppearance()
-    backButtonAppearance.normal.titleTextAttributes = [.foregroundColor: UIColor.clear]
-    appearance.backButtonAppearance = backButtonAppearance
-
-    navigationController.navigationBar.standardAppearance = appearance
-    navigationController.navigationBar.scrollEdgeAppearance = appearance
-    navigationController.navigationBar.compactAppearance = appearance
-    navigationController.navigationBar.isTranslucent = true
-    navigationController.navigationBar.tintColor = nil
+    navigationController
+      .registerForTraitChanges(
+        [UITraitUserInterfaceStyle.self]
+      ) { (controller: UINavigationController, _) in
+        applyNavigationBarAppearance(for: controller.traitCollection)
+      }
 
     return navigationController
   }
