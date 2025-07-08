@@ -11,6 +11,8 @@ enum CartSortType {
 // MARK: - CartPresenter
 
 final class CartPresenter {
+  private let store = SortTypeStore.shared
+
   private var cartItems: [NFTForCartModel] = [
     NFTForCartModel(
       name: "April",
@@ -71,5 +73,11 @@ final class CartPresenter {
     case .byName:
       cartItems.sort { $0.name < $1.name }
     }
+    store.sortSettings = sortBy
+  }
+
+  func viewDidLoad() {
+    print(store.sortSettings)
+    sort(sortBy: store.sortSettings)
   }
 }

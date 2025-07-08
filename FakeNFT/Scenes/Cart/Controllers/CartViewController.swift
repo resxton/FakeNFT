@@ -85,7 +85,7 @@ class CartViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     view.backgroundColor = .universalWhite
-    presenter.sort(sortBy: .byName)
+    presenter.viewDidLoad()
     setUI()
     setPlaceholderIsHidden(presenter.getCountOfItems() > 0)
   }
