@@ -28,12 +28,14 @@ final class CatalogViewController: UIViewController {
     tableView.separatorStyle = .none
     tableView.backgroundColor = .adaptiveWhite
     tableView.contentInset.top = Constants.topInset
+    tableView.refreshControl = refreshControl
     return tableView
   }()
 
   // MARK: - Private Properties
 
   private let presenter: CatalogPresenterProtocol
+  private let refreshControl = UIRefreshControl()
 
   // MARK: - Initializers
 
@@ -63,6 +65,7 @@ final class CatalogViewController: UIViewController {
   private func setupUI() {
     view.backgroundColor = .adaptiveWhite
     navigationItem.rightBarButtonItem = UIBarButtonItem(customView: sortButton)
+    refreshControl.addTarget(self, action: #selector(pullToRefresh), for: .valueChanged)
 
     view.addSubview(catalogTableView)
   }
@@ -76,6 +79,12 @@ final class CatalogViewController: UIViewController {
   @objc
   private func sortButtonTapped() {
     presenter.sortButtonTapped()
+  }
+
+  @objc
+  private func pullToRefresh() {
+    presenter.refresh()
+    refreshControl.endRefreshing()
   }
 }
 
@@ -141,6 +150,10 @@ extension CatalogViewController: CatalogViewProtocol {
 
   func showError(_ message: String) {
     ProgressHUD.banner(NSLocalizedString("Error.title", comment: ""), message)
+  }
+
+  func setUserInteraction(enabled: Bool) {
+    view.isUserInteractionEnabled = enabled
   }
 }
 

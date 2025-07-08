@@ -65,14 +65,24 @@ final class CatalogPresenter: CatalogPresenterProtocol {
     }
   }
 
+  func refresh() {
+    view?.setUserInteraction(enabled: false)
+    loadCollections(with: false)
+    view?.setUserInteraction(enabled: true)
+  }
+
   // MARK: - Private Methods
 
-  private func loadCollections() {
-    view?.showLoader()
+  private func loadCollections(with loader: Bool = true) {
+    if loader {
+      view?.showLoader()
+    }
     services.collectionService.loadCollections(sortBy: sortingOption) { result in
       DispatchQueue.main.async { [weak self] in
         guard let self else { return }
-        view?.hideLoader()
+        if loader {
+          view?.hideLoader()
+        }
         switch result {
         case let .success(collections):
           self.collections = collections

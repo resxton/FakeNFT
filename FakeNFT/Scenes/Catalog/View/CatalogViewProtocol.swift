@@ -6,4 +6,5 @@ protocol CatalogViewProtocol: AnyObject {
   func showLoader()
   func hideLoader()
   func showError(_ message: String)
+  func setUserInteraction(enabled: Bool)
 }
