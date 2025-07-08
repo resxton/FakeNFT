@@ -2,7 +2,7 @@
 
 Студент: Демидчик Максим
 Эпик : Корзина
-Ссылка на доску: https://github.com/users/resxton/projects/3/views/1?filterQuery=assignee%3Amaksdemidchik
+Ссылка на доску: https://github.com/users/resxton/projects/3/views/7
 
 ## **Часть 1**
 
