@@ -11,7 +11,7 @@ enum CartSortType {
 // MARK: - CartPresenter
 
 final class CartPresenter {
-  var cartItems: [NFTForCartModel] = [
+  private var cartItems: [NFTForCartModel] = [
     NFTForCartModel(
       name: "April",
       price: 1.78,
@@ -52,6 +52,14 @@ final class CartPresenter {
 
   func priceNFT() -> Double {
     return cartItems.reduce(0) { $0 + $1.price }
+  }
+
+  func getItemFromCartItems(at index: Int) -> NFTForCartModel {
+    return cartItems[index]
+  }
+
+  func getCountOfItems() -> Int {
+    return cartItems.count
   }
 
   func sort(sortBy: CartSortType) {

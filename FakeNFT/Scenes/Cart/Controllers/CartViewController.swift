@@ -6,7 +6,7 @@ class CartViewController: UIViewController {
   private let presenter = CartPresenter()
   private lazy var countNTFLabel: UILabel = {
     let label = UILabel()
-    label.text = "\(presenter.cartItems.count) NFT"
+    label.text = "\(presenter.getCountOfItems()) NFT"
     label.textColor = .universalBlack
     label.font = UIFont.systemFont(ofSize: 15, weight: .regular)
     return label
@@ -87,7 +87,7 @@ class CartViewController: UIViewController {
     view.backgroundColor = .universalWhite
     presenter.sort(sortBy: .byName)
     setUI()
-    setPlaceholderIsHidden(!presenter.cartItems.isEmpty)
+    setPlaceholderIsHidden(presenter.getCountOfItems() > 0)
   }
 
   private func setTableViewConstraints() {
@@ -167,10 +167,11 @@ class CartViewController: UIViewController {
   }
 
   private func configCell(cell: CartCell, indexPath: IndexPath) {
-    cell.priceNFTLabel.text = "\(presenter.cartItems[indexPath.row].price) ETH"
-    cell.imageNFT.image = presenter.cartItems[indexPath.row].image
-    cell.nameNFTLabel.text = presenter.cartItems[indexPath.row].name
-    let ratingInt = presenter.cartItems[indexPath.row].rating
+    let cartItem = presenter.getItemFromCartItems(at: indexPath.row)
+    cell.priceNFTLabel.text = "\(cartItem.price) ETH"
+    cell.imageNFT.image = cartItem.image
+    cell.nameNFTLabel.text = cartItem.name
+    let ratingInt = cartItem.rating
     let image = UIImage(named: presenter.getStringRating(for: ratingInt))
     cell.starImage.image = image
   }
@@ -200,7 +201,7 @@ class CartViewController: UIViewController {
 
 extension CartViewController: UITableViewDataSource, UITableViewDelegate {
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    return presenter.cartItems.count
+    return presenter.getCountOfItems()
   }
 
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
