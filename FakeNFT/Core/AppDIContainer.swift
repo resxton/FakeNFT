@@ -1,5 +1,7 @@
 import UIKit
 
+// MARK: - AppDIContainer
+
 final class AppDIContainer {
   // MARK: - Private Properties
 
@@ -59,8 +61,11 @@ final class AppDIContainer {
       let appearance = UINavigationBarAppearance()
       appearance.configureWithTransparentBackground()
 
-      guard let image = UIImage(resource: .back, in: nil, compatibleWith: traitCollection) else {
-        assertionFailure("[AppDIContainer] – Back icon not found")
+      guard let image = UIImage(
+        named: Constants.back,
+        in: nil, compatibleWith: traitCollection
+      ) else {
+        fatalError("[AppDIContainer] – Back icon not found")
       }
 
       let backImage = image.withRenderingMode(.alwaysOriginal)
@@ -87,5 +92,13 @@ final class AppDIContainer {
       }
 
     return navigationController
+  }
+}
+
+// MARK: AppDIContainer.Constants
+
+extension AppDIContainer {
+  private enum Constants {
+    static let back = "Back"
   }
 }

@@ -133,6 +133,7 @@ struct DefaultNetworkClient: NetworkClient {
 
     guard let token = Bundle.main.infoDictionary?["API_TOKEN"] as? String else {
       assertionFailure("[NetworkClient] – Missing API_TOKEN in Info.plist")
+      return nil
     }
 
     urlRequest.addValue(token, forHTTPHeaderField: "X-Practicum-Mobile-Token")
