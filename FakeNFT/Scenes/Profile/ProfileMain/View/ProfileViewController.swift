@@ -107,15 +107,15 @@ extension ProfileViewController: ProfileView {
   }
 
   func showMyNFT() {
-    let vc = MyNFTViewController()
-    vc.hidesBottomBarWhenPushed = true
-    navigationController?.pushViewController(vc, animated: true)
+    let viewController = MyNFTViewController()
+    viewController.hidesBottomBarWhenPushed = true
+    navigationController?.pushViewController(viewController, animated: true)
   }
 
   func showFavorites() {
-    let vc = FavoritesViewController()
-    vc.hidesBottomBarWhenPushed = true
-    navigationController?.pushViewController(vc, animated: true)
+    let viewController = FavoritesViewController()
+    viewController.hidesBottomBarWhenPushed = true
+    navigationController?.pushViewController(viewController, animated: true)
   }
 
   func openWebsite(_ url: URL) {

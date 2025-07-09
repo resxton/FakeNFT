@@ -43,6 +43,7 @@ final class ProfileHeaderView: UIView {
     }
   }
 
+  // swiftlint:disable:next function_body_length
   private func setupUI() {
     avatar.translatesAutoresizingMaskIntoConstraints = false
     avatar.contentMode = .scaleAspectFill
@@ -70,14 +71,9 @@ final class ProfileHeaderView: UIView {
     bio.setContentCompressionResistancePriority(.required, for: .vertical)
     bio.setContentHuggingPriority(.required, for: .vertical)
     bio.translatesAutoresizingMaskIntoConstraints = false
-    bio.attributedText = NSAttributedString(
-      string: "",
-      attributes: [
-        .font: bioFont,
-        .paragraphStyle: paragraphStyle,
-        .foregroundColor: UIColor.yaBlack
-      ]
-    )
+    bio.attributedText = NSAttributedString(string: "", attributes: [
+      .font: bioFont, .paragraphStyle: paragraphStyle, .foregroundColor: UIColor.yaBlack
+    ])
 
     site.font = .systemFont(ofSize: 15)
     site.textColor = UIColor.yaBlueUniversal
