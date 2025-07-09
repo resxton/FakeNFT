@@ -10,6 +10,12 @@ final class TabBarController: UITabBarController {
     tag: 0
   )
 
+  private let cartTabBarItem = UITabBarItem(
+    title: "Корзина",
+    image: UIImage(named: "basketNFT"),
+    tag: 0
+  )
+
   // MARK: - Initializers
 
   init(servicesAssembly: ServicesAssembly) {
@@ -32,7 +38,10 @@ final class TabBarController: UITabBarController {
     )
     catalogController.tabBarItem = catalogTabBarItem
 
-    viewControllers = [catalogController]
+    let cartVC = CartViewController()
+    let cartViewController = UINavigationController(rootViewController: cartVC)
+    cartViewController.tabBarItem = cartTabBarItem
+    viewControllers = [catalogController, cartViewController]
 
     view.backgroundColor = .systemBackground
   }
