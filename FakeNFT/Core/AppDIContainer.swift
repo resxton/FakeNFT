@@ -59,7 +59,7 @@ final class AppDIContainer {
       let appearance = UINavigationBarAppearance()
       appearance.configureWithTransparentBackground()
 
-      guard let image = UIImage(named: "Back", in: nil, compatibleWith: traitCollection) else {
+      guard let image = UIImage(resource: .back, in: nil, compatibleWith: traitCollection) else {
         assertionFailure("[AppDIContainer] – Back icon not found")
       }
 

@@ -46,7 +46,7 @@ final class CatalogTableViewCell: UITableViewCell {
   func configure(with viewModel: CollectionViewModel) {
     previewImage.kf.setImage(
       with: viewModel.coverURL,
-      placeholder: UIImage(named: "CollectionStubImage")
+      placeholder: UIImage(resource: .collectionStub)
     )
     titleLabel.text = viewModel.nameWithCount
   }

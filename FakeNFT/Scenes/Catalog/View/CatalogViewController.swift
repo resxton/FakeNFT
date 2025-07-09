@@ -9,9 +9,7 @@ final class CatalogViewController: UIViewController {
 
   private lazy var sortButton: UIButton = {
     let button = UIButton(type: .custom)
-    guard let sortImage = UIImage(named: Constants.sortImage) else {
-      assertionFailure("[CatalogViewController] – sort image not found")
-    }
+    let sortImage = UIImage(resource: .sort)
     button.setImage(sortImage, for: .normal)
     button.addTarget(self, action: #selector(sortButtonTapped), for: .touchUpInside)
     return button
