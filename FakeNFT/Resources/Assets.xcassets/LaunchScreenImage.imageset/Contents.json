@@ -1,7 +1,6 @@
 {
   "images" : [
     {
-      "filename" : "Vector@1x.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
@@ -12,7 +11,6 @@
           "value" : "dark"
         }
       ],
-      "filename" : "Vector@1x 1.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
