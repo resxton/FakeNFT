@@ -1,4 +1,10 @@
-## **Архитектура и способ верстки:**
-Архитектура - MVP
+## Project Info
 
-Способ верстки - верстка кодом
+### Архитектура
+MVP
+
+### Способ верстки
+Верстка кодом (UIKit)
+
+### Таск-трекер
+[GitHub Projects — Resxton Tasks](https://github.com/users/resxton/projects/3)
