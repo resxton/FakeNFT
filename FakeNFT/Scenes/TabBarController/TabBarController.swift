@@ -10,6 +10,12 @@ final class TabBarController: UITabBarController {
     tag: 0
   )
 
+  private let profileTabBarItem = UITabBarItem(
+    title: "Профиль",
+    image: UIImage(named: "ProfileTabBarIcon"),
+    tag: 2
+  )
+
   // MARK: - Initializers
 
   init(servicesAssembly: ServicesAssembly) {
@@ -32,7 +38,23 @@ final class TabBarController: UITabBarController {
     )
     catalogController.tabBarItem = catalogTabBarItem
 
-    viewControllers = [catalogController]
+    let profilePresenter = ProfilePresenter(user: .phoenixMock)
+    let profileVC = ProfileViewController(presenter: profilePresenter)
+    let profileNav = UINavigationController(rootViewController: profileVC)
+
+    profileNav.tabBarItem = profileTabBarItem
+
+    tabBar.tintColor = UIColor(hexString: "#0A84FF")
+    tabBar.unselectedItemTintColor = UIColor(hexString: "#1A1B22")
+
+    let appearance = UITabBarAppearance()
+    appearance.configureWithOpaqueBackground()
+    appearance.backgroundColor = UIColor.yaWhite // твой цвет фона
+
+    tabBar.standardAppearance = appearance
+    tabBar.scrollEdgeAppearance = appearance
+
+    viewControllers = [profileNav, catalogController]
 
     view.backgroundColor = .systemBackground
   }
