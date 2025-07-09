@@ -132,7 +132,7 @@ struct DefaultNetworkClient: NetworkClient {
     urlRequest.httpMethod = request.httpMethod.rawValue
 
     guard let token = Bundle.main.infoDictionary?["API_TOKEN"] as? String else {
-      fatalError("[NetworkClient] – Missing API_TOKEN in Info.plist")
+      assertionFailure("[NetworkClient] – Missing API_TOKEN in Info.plist")
     }
 
     urlRequest.addValue(token, forHTTPHeaderField: "X-Practicum-Mobile-Token")

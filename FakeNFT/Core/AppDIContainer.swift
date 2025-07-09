@@ -60,7 +60,7 @@ final class AppDIContainer {
       appearance.configureWithTransparentBackground()
 
       guard let image = UIImage(named: "Back", in: nil, compatibleWith: traitCollection) else {
-        fatalError("[AppDIContainer] – Back icon not found")
+        assertionFailure("[AppDIContainer] – Back icon not found")
       }
 
       let backImage = image.withRenderingMode(.alwaysOriginal)
