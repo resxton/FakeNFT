@@ -19,13 +19,12 @@ protocol ProfileView: AnyObject {
 
 final class ProfilePresenter {
   enum MenuItem: CaseIterable {
-    case myNFT, favorites, website
+    case myNFT, favorites
 
     var title: String {
       switch self {
       case .myNFT: return "Мои NFT"
       case .favorites: return "Избранные NFT"
-      case .website: return "О разработчике"
       }
     }
   }
@@ -54,7 +53,6 @@ final class ProfilePresenter {
     switch item {
     case .myNFT: view?.showMyNFT()
     case .favorites: view?.showFavorites()
-    case .website: return
     }
   }
 

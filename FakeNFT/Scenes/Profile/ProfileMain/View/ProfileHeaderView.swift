@@ -21,26 +21,41 @@ final class ProfileHeaderView: UIView {
 
   func configure(with user: User) {
     name.text = user.name
-    let bioFont = UIFont.systemFont(ofSize: 13)
 
-    let paragraphStyle = NSMutableParagraphStyle()
-    paragraphStyle.minimumLineHeight = 18
-    paragraphStyle.maximumLineHeight = 18
+    let font = UIFont.systemFont(ofSize: 13)
 
-    let bioAttributes: [NSAttributedString.Key: Any] = [
-      .font: bioFont,
-      .paragraphStyle: paragraphStyle,
-      .foregroundColor: UIColor.yaBlack
+    let targetLineHeight: CGFloat = 18
+    let multiple = targetLineHeight / font.lineHeight
+
+    let paragraph = NSMutableParagraphStyle()
+    paragraph.lineHeightMultiple = multiple
+    paragraph.alignment = .left
+
+    let baselineOffset = (targetLineHeight - font.lineHeight) / 2
+
+    let attrs: [NSAttributedString.Key: Any] = [
+      .font: font,
+      .paragraphStyle: paragraph,
+      .foregroundColor: UIColor.yaBlack,
+      .kern: -0.08,
+      .baselineOffset: baselineOffset
     ]
 
-    bio.attributedText = NSAttributedString(string: user.bio, attributes: bioAttributes)
-    site.text = user.website?.relativeString
+    bio.attributedText = NSAttributedString(string: user.bio, attributes: attrs)
+
+    site.text = user.website?.absoluteString
 
     if let url = user.avatarURL {
-      avatar.kf.setImage(with: url, placeholder: UIImage(systemName: "person.crop.circle"))
+      avatar.kf.setImage(
+        with: url,
+        placeholder: UIImage(systemName: "person.crop.circle")
+      )
     } else {
       avatar.image = UIImage(named: "Joaqiun")
     }
+
+    bio.setNeedsLayout()
+    layoutIfNeeded()
   }
 
   // swiftlint:disable:next function_body_length
@@ -55,7 +70,7 @@ final class ProfileHeaderView: UIView {
       avatar.heightAnchor.constraint(equalToConstant: 70)
     ])
 
-    name.font = .systemFont(ofSize: 24, weight: .semibold)
+    name.font = .systemFont(ofSize: 22, weight: .bold)
     name.numberOfLines = 0
     name.translatesAutoresizingMaskIntoConstraints = false
     name.textColor = UIColor.yaBlack
@@ -83,8 +98,7 @@ final class ProfileHeaderView: UIView {
     let tap = UITapGestureRecognizer(target: self, action: #selector(siteTapped))
     site.addGestureRecognizer(tap)
 
-    let imgCfg = UIImage.SymbolConfiguration(pointSize: 18, weight: .medium)
-    edit.setImage(UIImage(systemName: "square.and.pencil", withConfiguration: imgCfg), for: .normal)
+    edit.setImage(UIImage(named: "EditIcon"), for: .normal)
     edit.tintColor = UIColor.yaBlack
     edit.addTarget(self, action: #selector(editTapped), for: .touchUpInside)
     edit.translatesAutoresizingMaskIntoConstraints = false
@@ -106,7 +120,7 @@ final class ProfileHeaderView: UIView {
       name.leadingAnchor.constraint(equalTo: avatar.trailingAnchor, constant: 16),
       name.trailingAnchor.constraint(equalTo: edit.leadingAnchor, constant: -8),
 
-      bio.topAnchor.constraint(equalTo: avatar.bottomAnchor, constant: 16),
+      bio.topAnchor.constraint(equalTo: avatar.bottomAnchor, constant: 20),
       bio.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
       bio.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
 

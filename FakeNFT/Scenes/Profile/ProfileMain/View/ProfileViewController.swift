@@ -157,17 +157,25 @@ extension ProfileViewController: UITableViewDataSource, UITableViewDelegate {
     ) as? ProfileMenuCell else {
       let fallback = UITableViewCell(style: .default, reuseIdentifier: nil)
       fallback.textLabel?.text = item.title
-      fallback.accessoryView = UIImageView(image: UIImage(systemName: "chevron.right"))
-      fallback.accessoryView?.tintColor = UIColor.yaBlack
+      fallback.selectionStyle = .none
+
+      let chevron = UIImageView(image: UIImage(named: "ChevronForwardIcon"))
+      chevron.tintColor = UIColor.yaBlack
+      chevron.frame = CGRect(x: 0, y: 0, width: 7.98, height: 13.86)
+      chevron.contentMode = .scaleAspectFit
+      fallback.accessoryView = chevron
+
       return fallback
     }
 
     cell.configure(item.title)
-
-    let chevron = UIImageView(image: UIImage(systemName: "chevron.right"))
-    chevron.tintColor = UIColor.yaBlack
-    cell.accessoryView = chevron
     cell.selectionStyle = .none
+
+    let chevron = UIImageView(image: UIImage(named: "ChevronForwardIcon"))
+    chevron.tintColor = UIColor.yaBlack
+    chevron.frame = CGRect(x: 0, y: 0, width: 7.98, height: 13.86)
+    chevron.contentMode = .scaleAspectFit
+    cell.accessoryView = chevron
 
     return cell
   }
