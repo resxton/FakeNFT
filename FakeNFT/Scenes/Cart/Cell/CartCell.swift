@@ -90,7 +90,6 @@ final class CartCell: UITableViewCell {
         image: imageNFT.image ?? UIImage(),
         indexPath: indexPath ?? IndexPath()
       )
-    print(indexPath)
   }
 
   private func setImageNFT() {

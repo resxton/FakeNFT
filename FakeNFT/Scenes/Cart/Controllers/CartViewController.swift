@@ -91,6 +91,35 @@ class CartViewController: UIViewController {
     setPlaceholderIsHidden(presenter.getCountOfItems() > 0)
   }
 
+  @objc private func handleSortButtonTapped() {
+    let alert = UIAlertController(title: "Сортировка", message: nil, preferredStyle: .actionSheet)
+    let sortByPrice = UIAlertAction(title: "По цене", style: .default) { [weak self] _ in
+      guard let self else { return }
+      sort(sortBy: .byPrice)
+    }
+    let sortByRating = UIAlertAction(title: "По рейтингу", style: .default) { [weak self] _ in
+      guard let self else { return }
+      sort(sortBy: .byRating)
+    }
+    let sortByName = UIAlertAction(title: "По названию", style: .default) { [weak self] _ in
+      guard let self else { return }
+      sort(sortBy: .byName)
+    }
+    let close = UIAlertAction(title: "Закрыть", style: .cancel) { _ in }
+    alert.addAction(sortByPrice)
+    alert.addAction(sortByRating)
+    alert.addAction(sortByName)
+    alert.addAction(close)
+    present(alert, animated: true)
+  }
+
+  @objc private func handlePaymentButtonTapped() {
+    let currencySelectionViewController = CurrencySelectionViewController()
+    let viewController = UINavigationController(rootViewController: currencySelectionViewController)
+    viewController.modalPresentationStyle = .fullScreen
+    present(viewController, animated: true)
+  }
+
   private func setTableViewConstraints() {
     tableView.translatesAutoresizingMaskIntoConstraints = false
     view.addSubview(tableView)
@@ -114,6 +143,7 @@ class CartViewController: UIViewController {
       paymenStackView.leadingAnchor.constraint(equalTo: paymentView.leadingAnchor, constant: 16),
       paymenStackView.trailingAnchor.constraint(equalTo: paymentView.trailingAnchor, constant: -16)
     ])
+    paymentButton.addTarget(self, action: #selector(handlePaymentButtonTapped), for: .touchUpInside)
   }
 
   private func setPaymentViewConstraints() {
@@ -135,28 +165,6 @@ class CartViewController: UIViewController {
     let sortBarButtonItem = UIBarButtonItem(customView: sortButton)
     sortButton.addTarget(self, action: #selector(handleSortButtonTapped), for: .touchUpInside)
     navigationItem.rightBarButtonItem = sortBarButtonItem
-  }
-
-  @objc private func handleSortButtonTapped() {
-    let alert = UIAlertController(title: "Сортировка", message: nil, preferredStyle: .actionSheet)
-    let sortByPrice = UIAlertAction(title: "По цене", style: .default) { [weak self] _ in
-      guard let self else { return }
-      sort(sortBy: .byPrice)
-    }
-    let sortByRating = UIAlertAction(title: "По рейтингу", style: .default) { [weak self] _ in
-      guard let self else { return }
-      sort(sortBy: .byRating)
-    }
-    let sortByName = UIAlertAction(title: "По названию", style: .default) { [weak self] _ in
-      guard let self else { return }
-      sort(sortBy: .byName)
-    }
-    let close = UIAlertAction(title: "Закрыть", style: .cancel) { _ in }
-    alert.addAction(sortByPrice)
-    alert.addAction(sortByRating)
-    alert.addAction(sortByName)
-    alert.addAction(close)
-    present(alert, animated: true)
   }
 
   private func setUI() {
