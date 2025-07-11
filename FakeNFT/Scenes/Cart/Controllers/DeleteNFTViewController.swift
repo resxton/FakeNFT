@@ -15,7 +15,8 @@ final class DeleteNFTViewController: UIViewController {
 
   private var returnButton: UIButton = {
     let button = UIButton()
-    button.setTitle("Вернуться", for: .normal)
+    let text = NSLocalizedString("Delete.returnButton", comment: "Delete.returnButton")
+    button.setTitle(text, for: .normal)
     button.backgroundColor = .universalBlack
     button.setTitleColor(.universalWhite, for: .normal)
     button.layer.cornerRadius = 12
@@ -26,7 +27,8 @@ final class DeleteNFTViewController: UIViewController {
 
   private var deleteButton: UIButton = {
     let button = UIButton()
-    button.setTitle("Удалить", for: .normal)
+    let text = NSLocalizedString("Delete.deleteButton", comment: "Delete.deleteButton")
+    button.setTitle(text, for: .normal)
     button.setTitleColor(.universalRed, for: .normal)
     button.backgroundColor = .universalBlack
     button.layer.cornerRadius = 12
@@ -46,7 +48,7 @@ final class DeleteNFTViewController: UIViewController {
 
   private var textLabel: UILabel = {
     let label = UILabel()
-    let text = "Вы уверены,что хотите\n удалить объект из корзины?"
+    let text = NSLocalizedString("Delete.text", comment: "Delete.text")
     label.numberOfLines = 2
     label.textAlignment = .center
     label.text = text

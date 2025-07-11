@@ -23,7 +23,8 @@ class CartViewController: UIViewController {
 
   private var paymentButton: UIButton = {
     let button = UIButton()
-    button.setTitle("К оплате", for: .normal)
+    let text = NSLocalizedString("Cart.forPayment", comment: "Cart.forPayment")
+    button.setTitle(text, for: .normal)
     button.backgroundColor = .universalBlack
     button.tintColor = .universalWhite
     button.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: .bold)
@@ -76,7 +77,8 @@ class CartViewController: UIViewController {
 
   private var placeholderLabel: UILabel = {
     let label = UILabel()
-    label.text = "Корзина пуста"
+    let text = NSLocalizedString("Cart.placeholderText", comment: "Cart.placeholderText")
+    label.text = text
     label.textColor = .universalBlack
     label.font = .systemFont(ofSize: 17, weight: .bold)
     label.translatesAutoresizingMaskIntoConstraints = false
@@ -92,20 +94,27 @@ class CartViewController: UIViewController {
   }
 
   @objc private func handleSortButtonTapped() {
-    let alert = UIAlertController(title: "Сортировка", message: nil, preferredStyle: .actionSheet)
-    let sortByPrice = UIAlertAction(title: "По цене", style: .default) { [weak self] _ in
+    let textSorting = NSLocalizedString("Cart.Sorting", comment: "Cart.Sorting")
+    let alert = UIAlertController(title: textSorting, message: nil, preferredStyle: .actionSheet)
+
+    let textSortingByPrice = NSLocalizedString("Sorting.forPrice", comment: "Sorting.forPrice")
+
+    let sortByPrice = UIAlertAction(title: textSortingByPrice, style: .default) { [weak self] _ in
       guard let self else { return }
       sort(sortBy: .byPrice)
     }
-    let sortByRating = UIAlertAction(title: "По рейтингу", style: .default) { [weak self] _ in
+    let textSortingByRating = NSLocalizedString("Sorting.forRating", comment: "Sorting.forRating")
+    let sortByRating = UIAlertAction(title: textSortingByRating, style: .default) { [weak self] _ in
       guard let self else { return }
       sort(sortBy: .byRating)
     }
-    let sortByName = UIAlertAction(title: "По названию", style: .default) { [weak self] _ in
+    let textSortingByName = NSLocalizedString("Sorting.forName", comment: "Sorting.forName")
+    let sortByName = UIAlertAction(title: textSortingByName, style: .default) { [weak self] _ in
       guard let self else { return }
       sort(sortBy: .byName)
     }
-    let close = UIAlertAction(title: "Закрыть", style: .cancel) { _ in }
+    let textSortingClose = NSLocalizedString("Sorting.Close", comment: "Sorting.Close")
+    let close = UIAlertAction(title: textSortingClose, style: .cancel) { _ in }
     alert.addAction(sortByPrice)
     alert.addAction(sortByRating)
     alert.addAction(sortByName)
