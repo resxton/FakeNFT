@@ -1,0 +1,11 @@
+"Tab.catalog" = "Catalog";
+"Catalog.openNft" = "Open NFT";
+"Catalog.alertTitle" = "Sorting";
+"Catalog.sortByNameActionTitle" = "By name";
+"Catalog.sortByCountActionTitle" = "By number of NFTs";
+"Catalog.cancelActionTitle" = "Close";
+"Error.network" = "Network error occurred";
+"Error.unknown" = "An unknown error occurred";
+"Error.repeat" = "Retry";
+"Error.title" = "Error";
+"Error.dismiss" = "Close";

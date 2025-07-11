@@ -1,17 +1,104 @@
 import UIKit
 
+// MARK: - AppDIContainer
+
 final class AppDIContainer {
   // MARK: - Private Properties
 
   private let servicesAssembly = ServicesAssembly(
     networkClient: DefaultNetworkClient(),
+    collectionStorage: CollectionStorage(),
     nftStorage: NftStorageImpl()
   )
 
   // MARK: - Public Methods
 
+  @MainActor
   func makeTabBarController() -> UITabBarController {
     let tabBarController = TabBarController(servicesAssembly: servicesAssembly)
+    let catalog = makeCatalogViewController()
+
+    tabBarController.viewControllers = [catalog]
+    tabBarController.tabBar.isTranslucent = false
+    tabBarController.tabBar.backgroundColor = .adaptiveWhite
+    tabBarController.tabBar.barTintColor = .adaptiveWhite
     return tabBarController
+  }
+
+  @MainActor
+  func makeCatalogViewController() -> UINavigationController {
+    let navigationController = configuredNavigationController()
+
+    let router = CatalogRouter(navigationController: navigationController, appDIContainer: self)
+    let presenter = CatalogPresenter(servicesAssembly: servicesAssembly, router: router)
+    let view = CatalogViewController(presenter: presenter)
+    presenter.view = view
+
+    navigationController.viewControllers = [view]
+    navigationController.tabBarItem = UITabBarItem(
+      title: NSLocalizedString("Tab.catalog", comment: ""),
+      image: UIImage(systemName: "square.stack.3d.up.fill"),
+      tag: 0
+    )
+
+    return navigationController
+  }
+
+  func makeCollectionViewController(with collection: CollectionDomain) -> UIViewController {
+    let presenter = CollectionPresenter(collection: collection, servicesAssembly: servicesAssembly)
+    let view = CollectionViewController(presenter: presenter)
+    presenter.view = view
+    return view
+  }
+
+  // MARK: - Private Methods
+
+  @MainActor
+  private func configuredNavigationController() -> UINavigationController {
+    let navigationController = UINavigationController()
+
+    func applyNavigationBarAppearance(for traitCollection: UITraitCollection) {
+      let appearance = UINavigationBarAppearance()
+      appearance.configureWithTransparentBackground()
+
+      guard let image = UIImage(
+        named: Constants.back,
+        in: nil, compatibleWith: traitCollection
+      ) else {
+        fatalError("[AppDIContainer] – Back icon not found")
+      }
+
+      let backImage = image.withRenderingMode(.alwaysOriginal)
+      appearance.setBackIndicatorImage(backImage, transitionMaskImage: backImage)
+
+      let backButtonAppearance = UIBarButtonItemAppearance()
+      backButtonAppearance.normal.titleTextAttributes = [.foregroundColor: UIColor.clear]
+      appearance.backButtonAppearance = backButtonAppearance
+
+      navigationController.navigationBar.standardAppearance = appearance
+      navigationController.navigationBar.scrollEdgeAppearance = appearance
+      navigationController.navigationBar.compactAppearance = appearance
+      navigationController.navigationBar.isTranslucent = true
+      navigationController.navigationBar.tintColor = .clear
+    }
+
+    applyNavigationBarAppearance(for: navigationController.traitCollection)
+
+    navigationController
+      .registerForTraitChanges(
+        [UITraitUserInterfaceStyle.self]
+      ) { (controller: UINavigationController, _) in
+        applyNavigationBarAppearance(for: controller.traitCollection)
+      }
+
+    return navigationController
+  }
+}
+
+// MARK: AppDIContainer.Constants
+
+extension AppDIContainer {
+  private enum Constants {
+    static let back = "Back"
   }
 }

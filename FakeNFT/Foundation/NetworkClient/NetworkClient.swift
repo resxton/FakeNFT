@@ -131,7 +131,12 @@ struct DefaultNetworkClient: NetworkClient {
     var urlRequest = URLRequest(url: endpoint)
     urlRequest.httpMethod = request.httpMethod.rawValue
 
-    urlRequest.addValue(RequestConstants.token, forHTTPHeaderField: "X-Practicum-Mobile-Token")
+    guard let token = Bundle.main.infoDictionary?["API_TOKEN"] as? String else {
+      assertionFailure("[NetworkClient] – Missing API_TOKEN in Info.plist")
+      return nil
+    }
+
+    urlRequest.addValue(token, forHTTPHeaderField: "X-Practicum-Mobile-Token")
 
     if let dtoDictionary = request.dto?.asDictionary() {
       var urlComponents = URLComponents()
