@@ -4,6 +4,7 @@ import UIKit
 
 class CartViewController: UIViewController {
   private let presenter = CartPresenter()
+  var blurEffectView = UIVisualEffectView()
   private lazy var countNTFLabel: UILabel = {
     let label = UILabel()
     label.text = "\(presenter.getCountOfItems()) NFT"
@@ -100,7 +101,7 @@ class CartViewController: UIViewController {
       tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
       tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
       tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-      tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -10)
+      tableView.bottomAnchor.constraint(equalTo: paymentView.topAnchor, constant: 0)
     ])
   }
 
@@ -121,7 +122,7 @@ class CartViewController: UIViewController {
       [
         paymentView.bottomAnchor.constraint(
           equalTo: view.safeAreaLayoutGuide.bottomAnchor,
-          constant: -20
+          constant: 0
         ),
         paymentView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
         paymentView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
@@ -159,8 +160,8 @@ class CartViewController: UIViewController {
   }
 
   private func setUI() {
-    setTableViewConstraints()
     setPaymentViewConstraints()
+    setTableViewConstraints()
     setPaymentStackView()
     setSortButton()
     setPlaceholderLabel()
@@ -174,6 +175,7 @@ class CartViewController: UIViewController {
     let ratingInt = cartItem.rating
     let image = UIImage(named: presenter.getStringRating(for: ratingInt))
     cell.starImage.image = image
+    cell.indexPath = indexPath
   }
 
   private func sort(sortBy: CartSortType) {
@@ -195,6 +197,15 @@ class CartViewController: UIViewController {
     sortButton.isHidden = !isHidden
     tableView.isHidden = !isHidden
   }
+
+  private func setBlurEffectView() {
+    let blurEffect = UIBlurEffect(style: .regular)
+    blurEffectView = UIVisualEffectView(effect: blurEffect)
+    blurEffectView.frame = view.bounds
+    blurEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+    view.addSubview(blurEffectView)
+    blurEffectView.alpha = 1
+  }
 }
 
 // MARK: UITableViewDataSource, UITableViewDelegate
@@ -213,6 +224,35 @@ extension CartViewController: UITableViewDataSource, UITableViewDelegate {
       return UITableViewCell()
     }
     configCell(cell: cell, indexPath: indexPath)
+    cell.delegate = self
     return cell
+  }
+}
+
+// MARK: CartCellDelegate
+
+extension CartViewController: CartCellDelegate {
+  func didTapRemoveButton(image: UIImage, indexPath: IndexPath) {
+    presenter.setNumberDeleteItem(indexPath.row)
+    setBlurEffectView()
+    let deleteNFTViewController = DeleteNFTViewController()
+    deleteNFTViewController.backgroundBlurView = blurEffectView
+    deleteNFTViewController.modalPresentationStyle = .overFullScreen
+    deleteNFTViewController.modalTransitionStyle = .crossDissolve
+    deleteNFTViewController.delegate = self
+    deleteNFTViewController.setNFTImage(image)
+    present(deleteNFTViewController, animated: true)
+  }
+}
+
+// MARK: DeleteNFTViewControllerDelegate
+
+extension CartViewController: DeleteNFTViewControllerDelegate {
+  func delete() {
+    presenter.removeItem()
+    tableView.reloadData()
+    setPlaceholderIsHidden(presenter.getCountOfItems() > 0)
+    countNTFLabel.text = "\(presenter.getCountOfItems()) NFT"
+    priceNTFLabel.text = "\(presenter.priceNFT()) ETH"
   }
 }

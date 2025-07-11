@@ -48,6 +48,8 @@ final class CartPresenter {
     "ratingFive"
   ]
 
+  private var numberDeleteItem = -1
+
   func getStringRating(for rating: Int) -> String {
     return cartRating[rating - 1]
   }
@@ -76,8 +78,16 @@ final class CartPresenter {
     store.sortSettings = sortBy
   }
 
+  func setNumberDeleteItem(_ numberDeleteItem: Int) {
+    self.numberDeleteItem = numberDeleteItem
+  }
+
   func viewDidLoad() {
     print(store.sortSettings)
     sort(sortBy: store.sortSettings)
+  }
+
+  func removeItem() {
+    cartItems.remove(at: numberDeleteItem)
   }
 }

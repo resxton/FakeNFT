@@ -1,6 +1,16 @@
 import UIKit
 
+// MARK: - CartCellDelegate
+
+protocol CartCellDelegate: AnyObject {
+  func didTapRemoveButton(image: UIImage, indexPath: IndexPath)
+}
+
+// MARK: - CartCell
+
 final class CartCell: UITableViewCell {
+  weak var delegate: CartCellDelegate?
+  var indexPath: IndexPath?
   var priceNFTLabel: UILabel = {
     let priceLabel = UILabel()
     priceLabel.font = UIFont.systemFont(ofSize: 17, weight: .bold)
@@ -74,6 +84,15 @@ final class CartCell: UITableViewCell {
     fatalError("init(coder:) has not been implemented")
   }
 
+  @objc func deleteButtonTapped() {
+    delegate?
+      .didTapRemoveButton(
+        image: imageNFT.image ?? UIImage(),
+        indexPath: indexPath ?? IndexPath()
+      )
+    print(indexPath)
+  }
+
   private func setImageNFT() {
     contentView.addSubview(imageNFT)
     NSLayoutConstraint.activate([
@@ -92,6 +111,7 @@ final class CartCell: UITableViewCell {
       deleteButton.heightAnchor.constraint(equalToConstant: 40),
       deleteButton.widthAnchor.constraint(equalToConstant: 40)
     ])
+    deleteButton.addTarget(self, action: #selector(deleteButtonTapped), for: .touchDown)
   }
 
   private func setNameAndPriceStackView() {
