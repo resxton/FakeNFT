@@ -17,8 +17,8 @@ final class DeleteNFTViewController: UIViewController {
     let button = UIButton()
     let text = NSLocalizedString("Delete.returnButton", comment: "Delete.returnButton")
     button.setTitle(text, for: .normal)
-    button.backgroundColor = .universalBlack
-    button.setTitleColor(.universalWhite, for: .normal)
+    button.backgroundColor = .adaptiveBlack
+    button.setTitleColor(.adaptiveWhite, for: .normal)
     button.layer.cornerRadius = 12
     button.layer.masksToBounds = true
     button.translatesAutoresizingMaskIntoConstraints = false
@@ -30,7 +30,7 @@ final class DeleteNFTViewController: UIViewController {
     let text = NSLocalizedString("Delete.deleteButton", comment: "Delete.deleteButton")
     button.setTitle(text, for: .normal)
     button.setTitleColor(.universalRed, for: .normal)
-    button.backgroundColor = .universalBlack
+    button.backgroundColor = .adaptiveBlack
     button.layer.cornerRadius = 12
     button.layer.masksToBounds = true
     button.translatesAutoresizingMaskIntoConstraints = false
@@ -53,7 +53,7 @@ final class DeleteNFTViewController: UIViewController {
     label.textAlignment = .center
     label.text = text
     label.font = .systemFont(ofSize: 17, weight: .regular)
-    label.textColor = .universalBlack
+    label.textColor = .adaptiveBlack
     label.translatesAutoresizingMaskIntoConstraints = false
     return label
   }()

@@ -8,7 +8,7 @@ class CartViewController: UIViewController {
   private lazy var countNTFLabel: UILabel = {
     let label = UILabel()
     label.text = "\(presenter.getCountOfItems()) NFT"
-    label.textColor = .universalBlack
+    label.textColor = .adaptiveBlack
     label.font = UIFont.systemFont(ofSize: 15, weight: .regular)
     return label
   }()
@@ -25,8 +25,8 @@ class CartViewController: UIViewController {
     let button = UIButton()
     let text = NSLocalizedString("Cart.forPayment", comment: "Cart.forPayment")
     button.setTitle(text, for: .normal)
-    button.backgroundColor = .universalBlack
-    button.tintColor = .universalWhite
+    button.backgroundColor = .adaptiveBlack
+    button.setTitleColor(.adaptiveWhite, for: .normal)
     button.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: .bold)
     button.layer.masksToBounds = true
     button.layer.cornerRadius = 16
@@ -46,6 +46,7 @@ class CartViewController: UIViewController {
     tableView.rowHeight = 140
     tableView.translatesAutoresizingMaskIntoConstraints = false
     tableView.separatorStyle = .none
+    tableView.backgroundColor = .clear
     return tableView
   }()
 
@@ -79,7 +80,7 @@ class CartViewController: UIViewController {
     let label = UILabel()
     let text = NSLocalizedString("Cart.placeholderText", comment: "Cart.placeholderText")
     label.text = text
-    label.textColor = .universalBlack
+    label.textColor = .adaptiveBlack
     label.font = .systemFont(ofSize: 17, weight: .bold)
     label.translatesAutoresizingMaskIntoConstraints = false
     return label
@@ -87,7 +88,7 @@ class CartViewController: UIViewController {
 
   override func viewDidLoad() {
     super.viewDidLoad()
-    view.backgroundColor = .universalWhite
+    view.backgroundColor = .adaptiveWhite
     presenter.viewDidLoad()
     setUI()
     setPlaceholderIsHidden(presenter.getCountOfItems() > 0)

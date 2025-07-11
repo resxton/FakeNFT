@@ -129,6 +129,6 @@ final class CartCell: UITableViewCell {
     setImageNFT()
     setDeleteButton()
     setNameAndPriceStackView()
-    contentView.backgroundColor = .universalWhite
+    contentView.backgroundColor = .adaptiveWhite
   }
 }
