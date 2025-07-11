@@ -12,7 +12,7 @@
 "Sorting.forPrice" = "By price";
 "Sorting.forRating" = "By rating";
 "Sorting.Close" = "Close";
-"ForPayment.navigationTitle" = "Choose payment method";
+"ForPay.navigationTitle" = "Choose payment method";
 "Delete.text" = "Are you sure you want to\n remove the item from the cart?";
 "Delete.deleteButton" = "Delete";
 "Delete.returnButton" = "Return";

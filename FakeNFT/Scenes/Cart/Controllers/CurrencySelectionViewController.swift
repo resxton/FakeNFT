@@ -11,7 +11,7 @@ class CurrencySelectionViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     view.backgroundColor = .universalWhite
-    let text = NSLocalizedString("ForPayment.navigationTitle", comment: "ForPayment.navigationTitle")
+    let text = NSLocalizedString("ForPay.navigationTitle", comment: "ForPay.navigationTitle")
     navigationItem.title = text
     navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
     backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchDown)

@@ -12,7 +12,7 @@
 "Sorting.forPrice" = "По цене";
 "Sorting.forRating" = "По рейтингу";
 "Sorting.Close" = "Закрыть";
-"ForPayment.navigationTitle" = "Выберите способ оплаты";
+"ForPay.navigationTitle" = "Выберите способ оплаты";
 "Delete.text" = "Вы уверены,что хотите\n удалить объект из корзины?";
 "Delete.deleteButton" = "Удалить";
 "Delete.returnButton" = "Вернуться";
