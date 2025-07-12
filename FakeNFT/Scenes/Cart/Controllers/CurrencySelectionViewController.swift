@@ -1,6 +1,6 @@
 import UIKit
 
-class CurrencySelectionViewController: UIViewController {
+final class CurrencySelectionViewController: UIViewController {
   private let backButton: UIButton = {
     let button = UIButton()
     button.setImage(UIImage(named: "backButton"), for: .normal)

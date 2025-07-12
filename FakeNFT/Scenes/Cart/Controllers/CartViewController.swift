@@ -2,9 +2,9 @@ import UIKit
 
 // MARK: - CartViewController
 
-class CartViewController: UIViewController {
+final class CartViewController: UIViewController {
   private let presenter = CartPresenter()
-  // var blurEffectView = UIVisualEffectView()
+
   private lazy var countNTFLabel: UILabel = {
     let label = UILabel()
     label.text = "\(presenter.itemCount()) NFT"
