@@ -48,19 +48,21 @@ final class CartPresenter {
     "ratingFive"
   ]
 
+  private var numberDeleteItem = -1
+
   func getStringRating(for rating: Int) -> String {
     return cartRating[rating - 1]
   }
 
-  func priceNFT() -> Double {
+  func nftCartTotal() -> Double {
     return cartItems.reduce(0) { $0 + $1.price }
   }
 
-  func getItemFromCartItems(at index: Int) -> NFTForCartModel {
+  func item(at index: Int) -> NFTForCartModel {
     return cartItems[index]
   }
 
-  func getCountOfItems() -> Int {
+  func itemCount() -> Int {
     return cartItems.count
   }
 
@@ -76,8 +78,16 @@ final class CartPresenter {
     store.sortSettings = sortBy
   }
 
+  func setNumberDeleteItem(_ numberDeleteItem: Int) {
+    self.numberDeleteItem = numberDeleteItem
+  }
+
   func viewDidLoad() {
     print(store.sortSettings)
     sort(sortBy: store.sortSettings)
+  }
+
+  func removeItem() {
+    cartItems.remove(at: numberDeleteItem)
   }
 }
