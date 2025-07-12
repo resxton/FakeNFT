@@ -20,8 +20,7 @@ final class CartCell: UITableViewCell {
 
   var imageNFT: UIImageView = {
     let imageView = UIImageView()
-    imageView.layer.masksToBounds = true
-    imageView.layer.cornerRadius = 12
+    HelperUI.setRadius(imageView, radius: 12)
     imageView.translatesAutoresizingMaskIntoConstraints = false
     return imageView
   }()

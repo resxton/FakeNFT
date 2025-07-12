@@ -19,8 +19,7 @@ final class DeleteNFTViewController: UIViewController {
     button.setTitle(text, for: .normal)
     button.backgroundColor = .adaptiveBlack
     button.setTitleColor(.adaptiveWhite, for: .normal)
-    button.layer.cornerRadius = 12
-    button.layer.masksToBounds = true
+    HelperUI.setRadius(button, radius: 12)
     button.translatesAutoresizingMaskIntoConstraints = false
     return button
   }()
@@ -31,16 +30,14 @@ final class DeleteNFTViewController: UIViewController {
     button.setTitle(text, for: .normal)
     button.setTitleColor(.universalRed, for: .normal)
     button.backgroundColor = .adaptiveBlack
-    button.layer.cornerRadius = 12
-    button.layer.masksToBounds = true
+    HelperUI.setRadius(button, radius: 12)
     button.translatesAutoresizingMaskIntoConstraints = false
     return button
   }()
 
   private var imageNFTView: UIImageView = {
     let imageView = UIImageView()
-    imageView.layer.cornerRadius = 12
-    imageView.layer.masksToBounds = true
+    HelperUI.setRadius(imageView, radius: 12)
     imageView.translatesAutoresizingMaskIntoConstraints = false
     imageView.image = UIImage(systemName: "trash")
     return imageView
@@ -112,14 +109,17 @@ final class DeleteNFTViewController: UIViewController {
     deleteButton.addTarget(self, action: #selector(deleteButtonTapped), for: .touchDown)
   }
 
-  private func setBackgroundBlurView() {
-    view.addSubview(backgroundBlurView)
+  private func setBlurEffectView() {
+    let blurEffect = UIBlurEffect(style: .regular)
+    backgroundBlurView = UIVisualEffectView(effect: blurEffect)
     backgroundBlurView.frame = view.bounds
     backgroundBlurView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+    view.addSubview(backgroundBlurView)
+    backgroundBlurView.alpha = 1
   }
 
   private func setUI() {
-    setBackgroundBlurView()
+    setBlurEffectView()
     setImageAndTextStackView()
     setButtonStackView()
   }

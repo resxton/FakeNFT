@@ -54,15 +54,15 @@ final class CartPresenter {
     return cartRating[rating - 1]
   }
 
-  func priceNFT() -> Double {
+  func nftCartTotal() -> Double {
     return cartItems.reduce(0) { $0 + $1.price }
   }
 
-  func getItemFromCartItems(at index: Int) -> NFTForCartModel {
+  func item(at index: Int) -> NFTForCartModel {
     return cartItems[index]
   }
 
-  func getCountOfItems() -> Int {
+  func itemCount() -> Int {
     return cartItems.count
   }
 
