@@ -3,6 +3,16 @@
     {
       "filename" : "tabler_trash-x.pdf",
       "idiom" : "universal"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "filename" : "tabler_trash-x 1.pdf",
+      "idiom" : "universal"
     }
   ],
   "info" : {

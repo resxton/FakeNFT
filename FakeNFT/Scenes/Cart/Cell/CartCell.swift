@@ -1,6 +1,16 @@
 import UIKit
 
+// MARK: - CartCellDelegate
+
+protocol CartCellDelegate: AnyObject {
+  func didTapRemoveButton(image: UIImage, indexPath: IndexPath)
+}
+
+// MARK: - CartCell
+
 final class CartCell: UITableViewCell {
+  weak var delegate: CartCellDelegate?
+  var indexPath: IndexPath?
   var priceNFTLabel: UILabel = {
     let priceLabel = UILabel()
     priceLabel.font = UIFont.systemFont(ofSize: 17, weight: .bold)
@@ -10,8 +20,7 @@ final class CartCell: UITableViewCell {
 
   var imageNFT: UIImageView = {
     let imageView = UIImageView()
-    imageView.layer.masksToBounds = true
-    imageView.layer.cornerRadius = 12
+    HelperUI.setRadius(imageView, radius: 12)
     imageView.translatesAutoresizingMaskIntoConstraints = false
     return imageView
   }()
@@ -52,7 +61,8 @@ final class CartCell: UITableViewCell {
   private var priceTextNFTLabel: UILabel = {
     let priceLabel = UILabel()
     priceLabel.font = UIFont.systemFont(ofSize: 13, weight: .regular)
-    priceLabel.text = "Цена"
+    let text = NSLocalizedString("NFT.price", comment: "NFT.price")
+    priceLabel.text = text
     priceLabel.translatesAutoresizingMaskIntoConstraints = false
     return priceLabel
   }()
@@ -74,6 +84,14 @@ final class CartCell: UITableViewCell {
     fatalError("init(coder:) has not been implemented")
   }
 
+  @objc func deleteButtonTapped() {
+    delegate?
+      .didTapRemoveButton(
+        image: imageNFT.image ?? UIImage(),
+        indexPath: indexPath ?? IndexPath()
+      )
+  }
+
   private func setImageNFT() {
     contentView.addSubview(imageNFT)
     NSLayoutConstraint.activate([
@@ -92,6 +110,7 @@ final class CartCell: UITableViewCell {
       deleteButton.heightAnchor.constraint(equalToConstant: 40),
       deleteButton.widthAnchor.constraint(equalToConstant: 40)
     ])
+    deleteButton.addTarget(self, action: #selector(deleteButtonTapped), for: .touchDown)
   }
 
   private func setNameAndPriceStackView() {
@@ -109,6 +128,6 @@ final class CartCell: UITableViewCell {
     setImageNFT()
     setDeleteButton()
     setNameAndPriceStackView()
-    contentView.backgroundColor = .universalWhite
+    contentView.backgroundColor = .adaptiveWhite
   }
 }
