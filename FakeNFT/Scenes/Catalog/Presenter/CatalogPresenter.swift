@@ -36,7 +36,14 @@ final class CatalogPresenter: CatalogPresenterProtocol {
 
   func didSelectRow(at indexPath: IndexPath) {
     let collection = collections[indexPath.row]
-    router.show(collection: collection)
+    let viewModel = CollectionDetailViewModel(
+      coverURL: collection.coverURL,
+      name: collection.name,
+      author: NSLocalizedString("Collection.author", comment: "") + collection.authorID,
+      description: collection.description,
+      nftIDs: collection.nftIDs
+    )
+    router.show(collection: viewModel)
   }
 
   func collection(at index: Int) -> CollectionViewModel {

@@ -1,6 +1,6 @@
 import Foundation
 
-typealias NftCompletion = (Result<Nft, Error>) -> Void
+typealias NftCompletion = (Result<NFTDTO, Error>) -> Void
 
 // MARK: - NftService
 
@@ -26,7 +26,7 @@ final class NftServiceImpl: NftService {
     }
 
     let request = NFTRequest(id: id)
-    networkClient.send(request: request, type: Nft.self) { [weak storage] result in
+    networkClient.send(request: request, type: NFTDTO.self) { [weak storage] result in
       switch result {
       case let .success(nft):
         storage?.saveNft(nft)

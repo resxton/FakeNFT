@@ -9,3 +9,6 @@
 "Error.repeat" = "Retry";
 "Error.title" = "Error";
 "Error.dismiss" = "Close";
+"NFT.currency" = "ETH";
+"Collection.author" = "Collection designer: ";
+"Catalog.unknownAuthor" = "Uknown author";

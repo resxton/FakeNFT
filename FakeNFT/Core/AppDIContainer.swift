@@ -1,4 +1,5 @@
 import UIKit
+import WebKit
 
 // MARK: - AppDIContainer
 
@@ -8,7 +9,17 @@ final class AppDIContainer {
   private let servicesAssembly = ServicesAssembly(
     networkClient: DefaultNetworkClient(),
     collectionStorage: CollectionStorage(),
-    nftStorage: NftStorageImpl()
+    nftStorage: NftStorageImpl(),
+    userStorage: UserStorage()
+  )
+
+  @MainActor
+  private lazy var catalogNavigationController: UINavigationController = configureNavigationController()
+
+  @MainActor
+  private lazy var catalogRouter: CatalogRouterProtocol = CatalogRouter(
+    navigationController: catalogNavigationController,
+    appDIContainer: self
   )
 
   // MARK: - Public Methods
@@ -27,34 +38,49 @@ final class AppDIContainer {
 
   @MainActor
   func makeCatalogViewController() -> UINavigationController {
-    let navigationController = configuredNavigationController()
-
-    let router = CatalogRouter(navigationController: navigationController, appDIContainer: self)
-    let presenter = CatalogPresenter(servicesAssembly: servicesAssembly, router: router)
+    let presenter = CatalogPresenter(
+      servicesAssembly: servicesAssembly,
+      router: catalogRouter
+    )
     let view = CatalogViewController(presenter: presenter)
     presenter.view = view
 
-    navigationController.viewControllers = [view]
-    navigationController.tabBarItem = UITabBarItem(
+    catalogNavigationController.viewControllers = [view]
+    catalogNavigationController.tabBarItem = UITabBarItem(
       title: NSLocalizedString("Tab.catalog", comment: ""),
-      image: UIImage(systemName: "square.stack.3d.up.fill"),
+      image: UIImage(systemName: "square.stack.fill"),
       tag: 0
     )
 
-    return navigationController
+    return catalogNavigationController
   }
 
-  func makeCollectionViewController(with collection: CollectionDomain) -> UIViewController {
-    let presenter = CollectionPresenter(collection: collection, servicesAssembly: servicesAssembly)
+  @MainActor
+  func makeCollectionViewController(
+    with collection: CollectionDetailViewModel
+  ) -> UIViewController {
+    let presenter = CollectionPresenter(
+      collection: collection,
+      services: servicesAssembly,
+      router: catalogRouter
+    )
     let view = CollectionViewController(presenter: presenter)
     presenter.view = view
     return view
   }
 
+  func makeWebViewController(with url: URL) -> UIViewController {
+    let webView = WKWebView(frame: .zero)
+    let viewController = UIViewController()
+    viewController.view = webView
+    webView.load(URLRequest(url: url))
+    return viewController
+  }
+
   // MARK: - Private Methods
 
   @MainActor
-  private func configuredNavigationController() -> UINavigationController {
+  private func configureNavigationController() -> UINavigationController {
     let navigationController = UINavigationController()
 
     func applyNavigationBarAppearance(for traitCollection: UITraitCollection) {
@@ -63,7 +89,8 @@ final class AppDIContainer {
 
       guard let image = UIImage(
         named: Constants.back,
-        in: nil, compatibleWith: traitCollection
+        in: nil,
+        compatibleWith: traitCollection
       ) else {
         fatalError("[AppDIContainer] – Back icon not found")
       }
@@ -79,17 +106,16 @@ final class AppDIContainer {
       navigationController.navigationBar.scrollEdgeAppearance = appearance
       navigationController.navigationBar.compactAppearance = appearance
       navigationController.navigationBar.isTranslucent = true
-      navigationController.navigationBar.tintColor = .clear
+      navigationController.navigationBar.tintColor = .systemBlue
     }
 
     applyNavigationBarAppearance(for: navigationController.traitCollection)
 
-    navigationController
-      .registerForTraitChanges(
-        [UITraitUserInterfaceStyle.self]
-      ) { (controller: UINavigationController, _) in
-        applyNavigationBarAppearance(for: controller.traitCollection)
-      }
+    navigationController.registerForTraitChanges(
+      [UITraitUserInterfaceStyle.self]
+    ) { (controller: UINavigationController, _) in
+      applyNavigationBarAppearance(for: controller.traitCollection)
+    }
 
     return navigationController
   }
