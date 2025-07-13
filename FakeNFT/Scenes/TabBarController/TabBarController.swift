@@ -38,8 +38,7 @@ final class TabBarController: UITabBarController {
     )
     catalogController.tabBarItem = catalogTabBarItem
 
-    let profilePresenter = ProfilePresenter(user: .phoenixMock)
-    let profileVC = ProfileViewController(presenter: profilePresenter)
+    let profileVC = ProfileViewController(profileID: "1")
     let profileNav = UINavigationController(rootViewController: profileVC)
 
     profileNav.tabBarItem = profileTabBarItem
@@ -49,7 +48,7 @@ final class TabBarController: UITabBarController {
 
     let appearance = UITabBarAppearance()
     appearance.configureWithOpaqueBackground()
-    appearance.backgroundColor = UIColor.yaWhite // твой цвет фона
+    appearance.backgroundColor = UIColor.yaWhite
 
     tabBar.standardAppearance = appearance
     tabBar.scrollEdgeAppearance = appearance

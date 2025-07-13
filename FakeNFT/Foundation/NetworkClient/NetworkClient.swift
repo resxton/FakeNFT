@@ -127,11 +127,17 @@ struct DefaultNetworkClient: NetworkClient {
       assertionFailure("Empty endpoint")
       return nil
     }
+    print("🛠 DEBUG: Creating URLRequest for \(endpoint)")
 
     var urlRequest = URLRequest(url: endpoint)
     urlRequest.httpMethod = request.httpMethod.rawValue
 
-    urlRequest.addValue(RequestConstants.token, forHTTPHeaderField: "X-Practicum-Mobile-Token")
+    guard let token = RequestConstants.token else {
+      print("DEBUG: TokenUnwrap failed")
+      return nil
+    }
+    print("DEBUG: Token Found")
+    urlRequest.addValue(token, forHTTPHeaderField: "X-Practicum-Mobile-Token")
 
     if let dtoDictionary = request.dto?.asDictionary() {
       var urlComponents = URLComponents()

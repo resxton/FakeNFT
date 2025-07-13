@@ -45,17 +45,32 @@ final class ProfileHeaderView: UIView {
 
     site.text = user.website?.absoluteString
 
-    if let url = user.avatarURL {
-      avatar.kf.setImage(
-        with: url,
-        placeholder: UIImage(systemName: "person.crop.circle")
-      )
-    } else {
-      avatar.image = UIImage(named: "Joaqiun")
-    }
+    let placeholder = UIImage(systemName: "person.crop.circle")
+    avatar.image = placeholder
 
     bio.setNeedsLayout()
     layoutIfNeeded()
+
+    DispatchQueue.main.async {
+      if let url = user.avatarURL {
+        self.avatar.kf.setImage(
+          with: url,
+          placeholder: placeholder,
+          options: [
+            .cacheOriginalImage,
+            .transition(.fade(0.2)),
+            .downloadPriority(URLSessionTask.highPriority)
+          ],
+          completionHandler: { result in
+            if case .failure = result {
+              self.avatar.image = placeholder
+            }
+          }
+        )
+      } else {
+        self.avatar.image = UIImage(systemName: "person.crop.circle")
+      }
+    }
   }
 
   // swiftlint:disable:next function_body_length

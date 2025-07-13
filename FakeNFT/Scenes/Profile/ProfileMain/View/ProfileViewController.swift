@@ -9,7 +9,19 @@ final class ProfileViewController: UIViewController {
 
   private let presenter: ProfilePresenter
 
-  init(presenter: ProfilePresenter) {
+  init(profileID: String) {
+    let stubUser = User(
+      avatarURL: nil,
+      name: "Loading...",
+      bio: "Loading...",
+      website: nil,
+      nfts: [],
+      likes: []
+    )
+    let presenter = ProfilePresenter(
+      profileID: profileID,
+      user: stubUser
+    )
     self.presenter = presenter
     super.init(nibName: nil, bundle: nil)
     presenter.view = self
@@ -18,6 +30,7 @@ final class ProfileViewController: UIViewController {
   required init?(coder: NSCoder) { nil }
 
   override func viewDidLoad() {
+    print("🛠 DEBUG: ProfileViewController.viewDidLoad()")
     super.viewDidLoad()
     view.backgroundColor = UIColor.yaWhite
     setupBackButton()
@@ -33,11 +46,6 @@ final class ProfileViewController: UIViewController {
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
     navigationController?.setNavigationBarHidden(true, animated: false)
-  }
-
-  override func viewWillDisappear(_ animated: Bool) {
-    super.viewWillDisappear(animated)
-    navigationController?.setNavigationBarHidden(false, animated: false)
   }
 
   override func viewDidLayoutSubviews() {
@@ -107,7 +115,7 @@ extension ProfileViewController: ProfileView {
   }
 
   func showMyNFT() {
-    let viewController = MyNFTViewController()
+    let viewController = MyNFTViewController(nftIDs: presenter.user.nfts)
     viewController.hidesBottomBarWhenPushed = true
     navigationController?.pushViewController(viewController, animated: true)
   }
@@ -168,7 +176,9 @@ extension ProfileViewController: UITableViewDataSource, UITableViewDelegate {
       return fallback
     }
 
-    cell.configure(item.title)
+    let title = presenter.title(for: item)
+    cell.configure(title)
+
     cell.selectionStyle = .none
 
     let chevron = UIImageView(image: UIImage(named: "ChevronForwardIcon"))

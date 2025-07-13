@@ -5,4 +5,6 @@ struct User {
   var name: String
   var bio: String
   var website: URL?
+  var nfts: [String]
+  var likes: [String]
 }
