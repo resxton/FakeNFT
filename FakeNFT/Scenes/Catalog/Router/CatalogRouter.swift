@@ -1,5 +1,4 @@
 import UIKit
-import WebKit
 
 final class CatalogRouter: @preconcurrency CatalogRouterProtocol {
   // MARK: - Private Properties
@@ -20,10 +19,5 @@ final class CatalogRouter: @preconcurrency CatalogRouterProtocol {
   func show(collection: CollectionDetailViewModel) {
     let collectionVC = appDIContainer.makeCollectionViewController(with: collection)
     navigationController?.pushViewController(collectionVC, animated: true)
-  }
-
-  func show(link: URL) {
-    let webVC = appDIContainer.makeWebViewController(with: link)
-    navigationController?.pushViewController(webVC, animated: true)
   }
 }

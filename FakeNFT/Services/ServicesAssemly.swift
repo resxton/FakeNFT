@@ -1,22 +1,26 @@
-final class ServicesAssembly {
+// MARK: - ServicesAssemblyProtocol
+
+protocol ServicesAssemblyProtocol {
+  var collectionService: CollectionServiceProtocol { get }
+  var nftService: NftService { get }
+  var profileService: ProfileServiceProtocol { get }
+}
+
+// MARK: - ServicesAssembly
+
+final class ServicesAssembly: ServicesAssemblyProtocol {
   private let networkClient: NetworkClient
   private let collectionStorage: CollectionStorageProtocol
   private let nftStorage: NftStorage
-  private let userStorage: UserStorageProtocol
-  private let orderStorage: OrderStorageProtocol
 
   init(
     networkClient: NetworkClient,
     collectionStorage: CollectionStorageProtocol,
-    nftStorage: NftStorage,
-    userStorage: UserStorageProtocol,
-    orderStorage: OrderStorageProtocol
+    nftStorage: NftStorage
   ) {
     self.networkClient = networkClient
     self.collectionStorage = collectionStorage
     self.nftStorage = nftStorage
-    self.userStorage = userStorage
-    self.orderStorage = orderStorage
   }
 
   var nftService: NftService {
@@ -33,10 +37,6 @@ final class ServicesAssembly {
     )
   }
 
-  var mockCollectionService: CollectionServiceProtocol {
-    MockCollectionService()
-  }
-
   var profileService: ProfileServiceProtocol {
     ProfileService(
       networkClient: networkClient
@@ -45,8 +45,7 @@ final class ServicesAssembly {
 
   var orderService: OrderServiceProtocol {
     OrderService(
-      networkClient: networkClient,
-      storage: orderStorage
+      networkClient: networkClient
     )
   }
 }

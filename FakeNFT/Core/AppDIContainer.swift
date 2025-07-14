@@ -1,5 +1,4 @@
 import UIKit
-import WebKit
 
 // MARK: - AppDIContainer
 
@@ -9,9 +8,7 @@ final class AppDIContainer {
   private let servicesAssembly = ServicesAssembly(
     networkClient: DefaultNetworkClient(),
     collectionStorage: CollectionStorage(),
-    nftStorage: NftStorageImpl(),
-    userStorage: UserStorage(),
-    orderStorage: OrderStorage()
+    nftStorage: NftStorageImpl()
   )
 
   @MainActor
@@ -69,14 +66,6 @@ final class AppDIContainer {
     let view = CollectionViewController(presenter: presenter)
     presenter.view = view
     return view
-  }
-
-  func makeWebViewController(with url: URL) -> UIViewController {
-    let webView = WKWebView(frame: .zero)
-    let viewController = UIViewController()
-    viewController.view = webView
-    webView.load(URLRequest(url: url))
-    return viewController
   }
 
   // MARK: - Private Methods

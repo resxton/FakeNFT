@@ -9,7 +9,7 @@ final class CollectionPresenter: CollectionPresenterProtocol {
 
   private(set) var collection: CollectionDetailViewModel
 
-  private let services: ServicesAssembly
+  private let services: ServicesAssemblyProtocol
   private let router: CatalogRouterProtocol
 
   private var nfts: [NFTViewModel] = []
@@ -20,7 +20,7 @@ final class CollectionPresenter: CollectionPresenterProtocol {
 
   init(
     collection: CollectionDetailViewModel,
-    services: ServicesAssembly,
+    services: ServicesAssemblyProtocol,
     router: CatalogRouterProtocol
   ) {
     self.collection = collection

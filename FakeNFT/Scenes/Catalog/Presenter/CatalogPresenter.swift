@@ -15,13 +15,13 @@ final class CatalogPresenter: CatalogPresenterProtocol {
   private var collections: [CollectionDomain] = []
   private var sortingOption: SortingOption?
 
-  private let services: ServicesAssembly
+  private let services: ServicesAssemblyProtocol
   private let router: CatalogRouterProtocol
 
   // MARK: - Initializers
 
   init(
-    servicesAssembly: ServicesAssembly,
+    servicesAssembly: ServicesAssemblyProtocol,
     router: CatalogRouterProtocol
   ) {
     services = servicesAssembly
