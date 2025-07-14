@@ -1,6 +1,6 @@
 import Foundation
 
-final class MyNFTPresenter {
+final class MyNFTPresenter: MyNFTPresenting {
   enum SortCriteria: String, CaseIterable {
     case price, rating, name
 
@@ -57,10 +57,10 @@ final class MyNFTPresenter {
       return
     }
 
-    let id = nftIDs[index]
-    let req = NFTRequest(id: id)
+    let idOfCurrentNft = nftIDs[index]
+    let nftByIdRequest = NFTRequest(id: idOfCurrentNft)
     networkClient.send(
-      request: req,
+      request: nftByIdRequest,
       type: NFTResponse.self,
       completionQueue: .main
     ) { [weak self] result in

@@ -79,6 +79,10 @@ final class ProfileViewController: UIViewController {
       self?.presenter.editProfileTapped()
     }
     tableView.tableHeaderView = headerView
+    headerView.translatesAutoresizingMaskIntoConstraints = false
+    NSLayoutConstraint.activate([
+      headerView.widthAnchor.constraint(equalTo: tableView.widthAnchor)
+    ])
   }
 
   private func layoutHeaderIfNeeded() {
@@ -167,7 +171,7 @@ extension ProfileViewController: UITableViewDataSource, UITableViewDelegate {
       fallback.textLabel?.text = item.title
       fallback.selectionStyle = .none
 
-      let chevron = UIImageView(image: UIImage(named: "ChevronForwardIcon"))
+      let chevron = UIImageView(image: UIImage(resource: .chevronForwardIcon))
       chevron.tintColor = UIColor.yaBlack
       chevron.frame = CGRect(x: 0, y: 0, width: 7.98, height: 13.86)
       chevron.contentMode = .scaleAspectFit
@@ -181,7 +185,7 @@ extension ProfileViewController: UITableViewDataSource, UITableViewDelegate {
 
     cell.selectionStyle = .none
 
-    let chevron = UIImageView(image: UIImage(named: "ChevronForwardIcon"))
+    let chevron = UIImageView(image: UIImage(resource: .chevronForwardIcon))
     chevron.tintColor = UIColor.yaBlack
     chevron.frame = CGRect(x: 0, y: 0, width: 7.98, height: 13.86)
     chevron.contentMode = .scaleAspectFit

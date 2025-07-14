@@ -51,30 +51,25 @@ final class ProfileHeaderView: UIView {
     bio.setNeedsLayout()
     layoutIfNeeded()
 
-    DispatchQueue.main.async {
-      if let url = user.avatarURL {
-        self.avatar.kf.setImage(
-          with: url,
-          placeholder: placeholder,
-          options: [
-            .cacheOriginalImage,
-            .transition(.fade(0.2)),
-            .downloadPriority(URLSessionTask.highPriority)
-          ],
-          completionHandler: { result in
-            if case .failure = result {
-              self.avatar.image = placeholder
-            }
-          }
-        )
-      } else {
-        self.avatar.image = UIImage(systemName: "person.crop.circle")
+    avatar.kf.setImage(
+      with: user.avatarURL,
+      placeholder: placeholder,
+      options: [
+        .cacheOriginalImage,
+        .transition(.fade(0.2)),
+        .downloadPriority(URLSessionTask.highPriority)
+      ],
+      completionHandler: { result in
+        if case .failure = result {
+          self.avatar.image = placeholder
+        }
       }
-    }
+    )
   }
 
   // swiftlint:disable:next function_body_length
   private func setupUI() {
+    translatesAutoresizingMaskIntoConstraints = false
     avatar.translatesAutoresizingMaskIntoConstraints = false
     avatar.contentMode = .scaleAspectFill
     avatar.layer.cornerRadius = 35
@@ -113,7 +108,7 @@ final class ProfileHeaderView: UIView {
     let tap = UITapGestureRecognizer(target: self, action: #selector(siteTapped))
     site.addGestureRecognizer(tap)
 
-    edit.setImage(UIImage(named: "EditIcon"), for: .normal)
+    edit.setImage(UIImage(resource: .editIcon), for: .normal)
     edit.tintColor = UIColor.yaBlack
     edit.addTarget(self, action: #selector(editTapped), for: .touchUpInside)
     edit.translatesAutoresizingMaskIntoConstraints = false

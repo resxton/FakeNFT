@@ -5,19 +5,31 @@ import UIKit
 final class MyNFTViewController: UIViewController {
   private let tableView = UITableView(frame: .zero, style: .plain)
   private var cards = [NFTCard]()
-  private let presenter: MyNFTPresenter
+
+  private let presenter: MyNFTPresenting
 
   private var sortBarButtonItem: UIBarButtonItem?
 
-  init(nftIDs: [String]) {
-    presenter = MyNFTPresenter(nftIDs: nftIDs)
+  init(presenter: MyNFTPresenting) {
+    self.presenter = presenter
     super.init(nibName: nil, bundle: nil)
+    bindPresenter()
+  }
 
-    presenter.onEmpty = { [weak self] msg in
+  convenience init(nftIDs: [String]) {
+    let realPresenter = MyNFTPresenter(nftIDs: nftIDs)
+    self.init(presenter: realPresenter)
+  }
+
+  @available(*, unavailable)
+  required init?(coder: NSCoder) { nil }
+
+  private func bindPresenter() {
+    presenter.onEmpty = { [weak self] message in
       guard let self else { return }
       navigationItem.title = ""
       navigationItem.rightBarButtonItem = nil
-      showEmpty(msg)
+      showEmpty(message)
     }
     presenter.onCards = { [weak self] cards in
       guard let self else { return }
@@ -31,8 +43,6 @@ final class MyNFTViewController: UIViewController {
       self?.showSortOptions(current: current)
     }
   }
-
-  required init?(coder: NSCoder) { nil }
 
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -52,7 +62,7 @@ final class MyNFTViewController: UIViewController {
   // MARK: – Sort Button
 
   private func setupSortButton() {
-    let image = UIImage(named: "SortButton")
+    let image = UIImage(resource: .sortButton)
     let item = UIBarButtonItem(
       image: image,
       style: .plain,

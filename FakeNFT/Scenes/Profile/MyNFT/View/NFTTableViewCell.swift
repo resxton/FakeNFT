@@ -4,17 +4,91 @@ import UIKit
 final class NFTTableViewCell: UITableViewCell {
   static let reuseID = "NFTTableViewCell"
 
-  private let nftImage = UIImageView()
-  private let heartButton = UIButton()
-  private let titleLabel = UILabel()
-  private let starsStack = UIStackView()
-  private let authorLabel = UILabel()
+  private let starsRange: ClosedRange<Int> = 1 ... 5
 
-  private let priceTitleLabel = UILabel()
-  private let priceValueLabel = UILabel()
-  private let priceStack = UIStackView()
+  private let nftImage: UIImageView = {
+    let nftImage = UIImageView()
+    nftImage.translatesAutoresizingMaskIntoConstraints = false
+    nftImage.layer.cornerRadius = 12
+    nftImage.clipsToBounds = true
+    nftImage.contentMode = .scaleAspectFill
+    return nftImage
+  }()
 
-  private let infoStack = UIStackView()
+  private let heartButton: UIButton = {
+    let heartButton = UIButton()
+    heartButton.setImage(UIImage(resource: .heart), for: .normal)
+    heartButton.translatesAutoresizingMaskIntoConstraints = false
+    return heartButton
+  }()
+
+  private let titleLabel: UILabel = {
+    let titleLabel = UILabel()
+    titleLabel.font = .systemFont(ofSize: 17, weight: .bold)
+    titleLabel.textColor = .yaBlack
+    titleLabel.numberOfLines = 0
+    titleLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+    return titleLabel
+  }()
+
+  private let starsStack: UIStackView = {
+    let starsStack = UIStackView()
+    starsStack.axis = .horizontal
+    starsStack.distribution = .fill
+    starsStack.spacing = 2
+    starsStack.alignment = .leading
+    starsStack.translatesAutoresizingMaskIntoConstraints = false
+    starsStack.setContentHuggingPriority(.required, for: .horizontal)
+    starsStack.setContentCompressionResistancePriority(.required, for: .horizontal)
+    return starsStack
+  }()
+
+  private let authorLabel: UILabel = {
+    let authorLabel = UILabel()
+    authorLabel.font = .systemFont(ofSize: 13)
+    authorLabel.textColor = .yaBlack
+    authorLabel.numberOfLines = 0
+    authorLabel.lineBreakMode = .byClipping
+    authorLabel.setContentCompressionResistancePriority(.required, for: .horizontal)
+    return authorLabel
+  }()
+
+  private let priceTitleLabel: UILabel = {
+    let priceTitleLabel = UILabel()
+    priceTitleLabel.font = .systemFont(ofSize: 13)
+    priceTitleLabel.textColor = .yaBlack
+    priceTitleLabel.text = "Цена"
+    return priceTitleLabel
+  }()
+
+  private let priceValueLabel: UILabel = {
+    let priceValueLabel = UILabel()
+    priceValueLabel.font = .systemFont(ofSize: 17, weight: .bold)
+    priceValueLabel.textColor = .yaBlack
+    return priceValueLabel
+  }()
+
+  private let priceStack: UIStackView = {
+    let priceStack = UIStackView()
+    priceStack.axis = .vertical
+    priceStack.spacing = 2
+    priceStack.alignment = .leading
+    priceStack.translatesAutoresizingMaskIntoConstraints = false
+    priceStack.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+    priceStack.setContentHuggingPriority(.defaultLow, for: .horizontal)
+    return priceStack
+  }()
+
+  private let infoStack: UIStackView = {
+    let infoStack = UIStackView()
+    infoStack.axis = .vertical
+    infoStack.alignment = .leading
+    infoStack.spacing = 4
+    infoStack.translatesAutoresizingMaskIntoConstraints = false
+    infoStack.setContentCompressionResistancePriority(.required, for: .horizontal)
+    infoStack.setContentHuggingPriority(.defaultHigh, for: .horizontal)
+    return infoStack
+  }()
 
   override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
     super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -28,10 +102,6 @@ final class NFTTableViewCell: UITableViewCell {
     backgroundColor = .yaWhite
     contentView.backgroundColor = .yaWhite
 
-    nftImage.translatesAutoresizingMaskIntoConstraints = false
-    nftImage.layer.cornerRadius = 12
-    nftImage.clipsToBounds = true
-    nftImage.contentMode = .scaleAspectFill
     contentView.addSubview(nftImage)
 
     NSLayoutConstraint.activate([
@@ -41,8 +111,6 @@ final class NFTTableViewCell: UITableViewCell {
       nftImage.centerYAnchor.constraint(equalTo: contentView.centerYAnchor)
     ])
 
-    heartButton.setImage(UIImage(named: "Heart"), for: .normal)
-    heartButton.translatesAutoresizingMaskIntoConstraints = false
     contentView.addSubview(heartButton)
 
     NSLayoutConstraint.activate([
@@ -52,20 +120,10 @@ final class NFTTableViewCell: UITableViewCell {
       heartButton.heightAnchor.constraint(equalToConstant: 42)
     ])
 
-    titleLabel.font = .systemFont(ofSize: 17, weight: .bold)
-    titleLabel.textColor = .yaBlack
-    titleLabel.numberOfLines = 1
+    NSLayoutConstraint.activate([
+      starsStack.widthAnchor.constraint(equalToConstant: 5 * 12 + 4 * 2)
+    ])
 
-    starsStack.axis = .horizontal
-    starsStack.spacing = 2
-    starsStack.alignment = .leading
-
-    authorLabel.font = .systemFont(ofSize: 13)
-    authorLabel.textColor = .yaBlack
-
-    infoStack.axis = .vertical
-    infoStack.spacing = 4
-    infoStack.translatesAutoresizingMaskIntoConstraints = false
     contentView.addSubview(infoStack)
 
     infoStack.addArrangedSubview(titleLabel)
@@ -77,24 +135,16 @@ final class NFTTableViewCell: UITableViewCell {
       infoStack.centerYAnchor.constraint(equalTo: contentView.centerYAnchor)
     ])
 
-    priceTitleLabel.font = .systemFont(ofSize: 13)
-    priceTitleLabel.textColor = .yaBlack
-    priceTitleLabel.text = "Цена"
-
-    priceValueLabel.font = .systemFont(ofSize: 17, weight: .bold)
-    priceValueLabel.textColor = .yaBlack
-
-    priceStack.axis = .vertical
-    priceStack.spacing = 2
-    priceStack.alignment = .leading
-    priceStack.translatesAutoresizingMaskIntoConstraints = false
     priceStack.addArrangedSubview(priceTitleLabel)
     priceStack.addArrangedSubview(priceValueLabel)
     contentView.addSubview(priceStack)
 
     NSLayoutConstraint.activate([
-      priceStack.leftAnchor.constraint(equalTo: infoStack.rightAnchor, constant: 39),
-      priceStack.centerYAnchor.constraint(equalTo: contentView.centerYAnchor)
+      priceStack.leftAnchor.constraint(equalTo: nftImage.rightAnchor, constant: 137),
+      priceStack.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+
+      infoStack.rightAnchor.constraint(equalTo: priceStack.leftAnchor, constant: -8)
+
     ])
   }
 
@@ -103,16 +153,21 @@ final class NFTTableViewCell: UITableViewCell {
     priceValueLabel.text = card.priceText
 
     starsStack.arrangedSubviews.forEach { $0.removeFromSuperview() }
-    for starIndex in 1 ... 5 {
+
+    for starIndex in starsRange {
       let imgName = starIndex <= card.rating ? "StarFill" : "Star"
       let starImageView = UIImageView(image: UIImage(named: imgName))
-      starImageView.tintColor = .yaYellowUniversal
       starImageView.contentMode = .scaleAspectFit
+      starImageView.tintColor = .yaYellowUniversal
       starImageView.translatesAutoresizingMaskIntoConstraints = false
+
       NSLayoutConstraint.activate([
         starImageView.widthAnchor.constraint(equalToConstant: 12),
         starImageView.heightAnchor.constraint(equalToConstant: 12)
       ])
+      starImageView.setContentHuggingPriority(.required, for: .horizontal)
+      starImageView.setContentCompressionResistancePriority(.required, for: .horizontal)
+
       starsStack.addArrangedSubview(starImageView)
     }
 
