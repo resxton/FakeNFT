@@ -10,11 +10,13 @@ final class AppDIContainer {
     networkClient: DefaultNetworkClient(),
     collectionStorage: CollectionStorage(),
     nftStorage: NftStorageImpl(),
-    userStorage: UserStorage()
+    userStorage: UserStorage(),
+    orderStorage: OrderStorage()
   )
 
   @MainActor
-  private lazy var catalogNavigationController: UINavigationController = configureNavigationController()
+  private lazy var catalogNavigationController: UINavigationController =
+    configureNavigationController()
 
   @MainActor
   private lazy var catalogRouter: CatalogRouterProtocol = CatalogRouter(
@@ -31,8 +33,8 @@ final class AppDIContainer {
 
     tabBarController.viewControllers = [catalog]
     tabBarController.tabBar.isTranslucent = false
-    tabBarController.tabBar.backgroundColor = .adaptiveWhite
-    tabBarController.tabBar.barTintColor = .adaptiveWhite
+    tabBarController.tabBar.backgroundColor = UIColor.adaptiveWhite
+    tabBarController.tabBar.barTintColor = UIColor.adaptiveWhite
     return tabBarController
   }
 

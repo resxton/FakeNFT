@@ -66,7 +66,12 @@ final class CollectionViewController: UIViewController {
     }
 
     let totalCellWidth = Constants.cellSize.width * CGFloat(Constants.itemsPerRow)
-    let totalSpacing = view.bounds.width - Constants.edgeInsets.left - Constants.edgeInsets.right - totalCellWidth
+    let totalSpacing = (
+      view.bounds.width
+        - Constants.edgeInsets.left
+        - Constants.edgeInsets.right
+        - totalCellWidth
+    )
 
     let interItemSpacing = totalSpacing / CGFloat(Constants.itemsPerRow - 1)
     layout.minimumInteritemSpacing = interItemSpacing

@@ -30,21 +30,21 @@ final class NFTCell: UICollectionViewCell {
 
   private let nftTitleLabel: UILabel = {
     let label = UILabel()
-    label.font = .systemFont(ofSize: Constants.titleFontSize, weight: .bold)
+    label.font = .title
     label.textColor = .adaptiveBlack
     return label
   }()
 
   private let nftPriceLabel: UILabel = {
     let label = UILabel()
-    label.font = .systemFont(ofSize: Constants.priceFontSize, weight: .medium)
+    label.font = .labelSmall
     label.textColor = .adaptiveBlack
     return label
   }()
 
   private let cartButton: UIButton = {
     let button = UIButton(type: .custom)
-    button.setImage(UIImage(resource: .add), for: .normal)
+    button.setImage(UIImage(resource: .cartAdd), for: .normal)
     return button
   }()
 
@@ -78,7 +78,7 @@ final class NFTCell: UICollectionViewCell {
   // MARK: - Public Methods
 
   func configure(with viewModel: NFTViewModel) {
-    print("[NFTCell] Конфигурация ячейки с NFT ID: \(viewModel.name)")
+    print("[NFTCell] Конфигурация ячейки с названием: \(viewModel.name)")
     nftImageView.image = nil
 
     nftImageView.kf.setImage(
@@ -105,7 +105,7 @@ final class NFTCell: UICollectionViewCell {
 
     cartButton.setImage(
       UIImage(
-        resource: viewModel.isInCart ? .delete : .add
+        resource: viewModel.isInCart ? .cartDelete : .cartAdd
       ),
       for: .normal
     )
@@ -114,7 +114,7 @@ final class NFTCell: UICollectionViewCell {
   func setCartButton(to state: ButtonState) {
     cartButton.setImage(
       UIImage(
-        resource: state == .active ? .delete : .add
+        resource: state == .active ? .cartDelete : .cartAdd
       ),
       for: .normal
     )
@@ -134,7 +134,7 @@ final class NFTCell: UICollectionViewCell {
   private func setupRatingView(with value: Int) {
     ratingStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
 
-    for index in 0 ..< 5 {
+    for index in 0 ..< Constants.starsCount {
       let imageView = UIImageView()
       imageView.image = UIImage(
         resource: index < value ? .ratingStarActive : .ratingStar
@@ -216,9 +216,8 @@ extension NFTCell {
 
 extension NFTCell {
   private enum Constants {
+    static let starsCount = 5
     static let cornerRadius: CGFloat = 12
-    static let titleFontSize: CGFloat = 17
-    static let priceFontSize: CGFloat = 10
     static let ratingSpacing: CGFloat = 2
     static let imageWidth = 108
     static let buttonWidth = 40

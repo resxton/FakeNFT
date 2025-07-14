@@ -1,6 +1,6 @@
 import Foundation
 
-typealias NftCompletion = (Result<NFTDTO, Error>) -> Void
+typealias NftCompletion = (Result<NFTDomain, Error>) -> Void
 
 // MARK: - NftService
 
@@ -21,7 +21,7 @@ final class NftServiceImpl: NftService {
 
   func loadNft(id: String, completion: @escaping NftCompletion) {
     if let nft = storage.getNft(with: id) {
-      completion(.success(nft))
+      completion(.success(nft.toDomain()))
       return
     }
 
@@ -30,7 +30,7 @@ final class NftServiceImpl: NftService {
       switch result {
       case let .success(nft):
         storage?.saveNft(nft)
-        completion(.success(nft))
+        completion(.success(nft.toDomain()))
       case let .failure(error):
         completion(.failure(error))
       }
