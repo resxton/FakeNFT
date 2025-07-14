@@ -41,6 +41,7 @@ final class CartPresenter {
   ] // в дальнейшем перенесем в сервис и в сервисе  NFT будут получены с помощью сетевого запроса
 
   private let cartRating = [
+    "ratingZero",
     "ratingOne",
     "ratingTwo",
     "ratingThree",
@@ -51,7 +52,7 @@ final class CartPresenter {
   private var numberDeleteItem = -1
 
   func getStringRating(for rating: Int) -> String {
-    return cartRating[rating - 1]
+    return cartRating[rating]
   }
 
   func nftCartTotal() -> Double {

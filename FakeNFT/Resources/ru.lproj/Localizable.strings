@@ -17,3 +17,6 @@
 "Delete.deleteButton" = "Удалить";
 "Delete.returnButton" = "Вернуться";
 "NFT.price" = "Цена";
+"Currency.payment" = "Оплатить";
+"Currency.link" = "Пользовательского соглашения";
+"Currency.text" = "Совершая покупку, вы соглашаетесь с условиями";

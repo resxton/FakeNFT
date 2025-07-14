@@ -66,11 +66,7 @@ final class CartViewController: UIViewController {
   }()
 
   private var paymentView: UIView = {
-    let view = UIView()
-    view.backgroundColor = .adaptiveLightGrey
-    HelperUI.setRadius(view, radius: 12)
-    view.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
-    view.translatesAutoresizingMaskIntoConstraints = false
+    let view = HelperUI.getPaymentView()
     return view
   }()
 

@@ -17,3 +17,6 @@
 "Delete.deleteButton" = "Delete";
 "Delete.returnButton" = "Return";
 "NFT.price" = "Price";
+"Currency.payment" = "Pay";
+"Currency.link" = "User Agreement";
+"Currency.text" = "By making a purchase, you agree to the terms";
