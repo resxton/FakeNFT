@@ -80,4 +80,11 @@ final class StatisticsTableViewCell: UITableViewCell {
       numberOfNft.centerYAnchor.constraint(equalTo: cardView.centerYAnchor)
     ])
   }
+
+  func setUpValues(number: Int, avatarImage: UIImage, name: String, numberOfNft: Int) {
+    numberLabel.text = String(number)
+    self.avatarImage.image = avatarImage
+    nameLabel.text = name
+    self.numberOfNft.text = String(numberOfNft)
+  }
 }

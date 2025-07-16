@@ -38,9 +38,13 @@ final class TabBarController: UITabBarController {
     )
     catalogController.tabBarItem = catalogTabBarItem
 
+    let statisticsPresenter = StatisticsPresenter()
     let statisticsController = StatisticsViewController(
-      servicesAssembly: servicesAssembly
+      servicesAssembly: servicesAssembly,
+      presenter: statisticsPresenter
     )
+    statisticsPresenter.view = statisticsController
+
     let navigationStatisticsController = UINavigationController(
       rootViewController: statisticsController
     )

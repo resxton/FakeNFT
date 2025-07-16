@@ -1,9 +1,16 @@
 import UIKit
 
+// MARK: - StatisticsViewControllerProtocol
+
+protocol StatisticsViewControllerProtocol: UIViewController {
+  func reloadStatistics()
+}
+
 // MARK: - StatisticsViewController
 
 final class StatisticsViewController: UIViewController {
   private let servicesAssembly: ServicesAssembly
+  private let presenter: StatisticsPresenterProtocol
 
   private lazy var filterButton: UIButton = {
     let button = UIButton.systemButton(
@@ -26,7 +33,8 @@ final class StatisticsViewController: UIViewController {
     return tableView
   }()
 
-  init(servicesAssembly: ServicesAssembly) {
+  init(servicesAssembly: ServicesAssembly, presenter: StatisticsPresenterProtocol) {
+    self.presenter = presenter
     self.servicesAssembly = servicesAssembly
     super.init(nibName: nil, bundle: nil)
   }
@@ -56,14 +64,35 @@ final class StatisticsViewController: UIViewController {
   }
 
   @objc
-  private func didTapFilterButton() {}
+  private func didTapFilterButton() {
+    let alertController = UIAlertController(
+      title: "Сортировка",
+      message: nil,
+      preferredStyle: .actionSheet
+    )
+
+    let nameSort = UIAlertAction(title: "По имени", style: .default) { _ in
+      self.presenter.changeSort(sortType: SortTypes.name)
+    }
+
+    let ratingSort = UIAlertAction(title: "По рейтингу", style: .default) { _ in
+      self.presenter.changeSort(sortType: SortTypes.rating)
+    }
+
+    let cancelAction = UIAlertAction(title: "Отменить", style: .cancel)
+    alertController.addAction(nameSort)
+    alertController.addAction(ratingSort)
+    alertController.addAction(cancelAction)
+
+    present(alertController, animated: true)
+  }
 }
 
 // MARK: UITableViewDataSource
 
 extension StatisticsViewController: UITableViewDataSource {
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    10
+    presenter.getNumberOfUsers()
   }
 
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -74,6 +103,15 @@ extension StatisticsViewController: UITableViewDataSource {
     else {
       return UITableViewCell()
     }
+
+    let user = presenter.getUser(index: indexPath.row)
+    cell.setUpValues(
+      number: indexPath.row,
+      avatarImage: UIImage(resource: .userpick),
+      name: user.name,
+      numberOfNft: user.nfts.count
+    )
+
     return cell
   }
 }
@@ -83,5 +121,13 @@ extension StatisticsViewController: UITableViewDataSource {
 extension StatisticsViewController: UITableViewDelegate {
   func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
     return 88
+  }
+}
+
+// MARK: StatisticsViewControllerProtocol
+
+extension StatisticsViewController: StatisticsViewControllerProtocol {
+  func reloadStatistics() {
+    statisticsTableView.reloadData()
   }
 }
