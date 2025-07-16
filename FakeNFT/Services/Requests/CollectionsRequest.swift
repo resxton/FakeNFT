@@ -10,6 +10,4 @@ struct CollectionsRequest: NetworkRequest {
     }
     return components?.url
   }
-
-  var dto: Dto?
 }

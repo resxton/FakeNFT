@@ -1,5 +1,4 @@
 import UIKit
-import WebKit
 
 // MARK: - AppDIContainer
 
@@ -8,13 +7,12 @@ final class AppDIContainer {
 
   private let servicesAssembly = ServicesAssembly(
     networkClient: DefaultNetworkClient(),
-    collectionStorage: CollectionStorage(),
-    nftStorage: NftStorageImpl(),
-    userStorage: UserStorage()
+    collectionStorage: CollectionStorage()
   )
 
   @MainActor
-  private lazy var catalogNavigationController: UINavigationController = configureNavigationController()
+  private lazy var catalogNavigationController: UINavigationController =
+    configureNavigationController()
 
   @MainActor
   private lazy var catalogRouter: CatalogRouterProtocol = CatalogRouter(
@@ -31,8 +29,8 @@ final class AppDIContainer {
 
     tabBarController.viewControllers = [catalog]
     tabBarController.tabBar.isTranslucent = false
-    tabBarController.tabBar.backgroundColor = .adaptiveWhite
-    tabBarController.tabBar.barTintColor = .adaptiveWhite
+    tabBarController.tabBar.backgroundColor = UIColor.adaptiveWhite
+    tabBarController.tabBar.barTintColor = UIColor.adaptiveWhite
     return tabBarController
   }
 
@@ -67,14 +65,6 @@ final class AppDIContainer {
     let view = CollectionViewController(presenter: presenter)
     presenter.view = view
     return view
-  }
-
-  func makeWebViewController(with url: URL) -> UIViewController {
-    let webView = WKWebView(frame: .zero)
-    let viewController = UIViewController()
-    viewController.view = webView
-    webView.load(URLRequest(url: url))
-    return viewController
   }
 
   // MARK: - Private Methods

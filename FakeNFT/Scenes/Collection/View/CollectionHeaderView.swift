@@ -18,7 +18,7 @@ final class CollectionHeaderView: UICollectionReusableView {
 
   private let titleLabel: UILabel = {
     let label = UILabel()
-    label.font = .systemFont(ofSize: Constants.titleFontSize, weight: .bold)
+    label.font = .title
     label.textColor = .adaptiveBlack
     label.numberOfLines = 1
     return label
@@ -26,7 +26,7 @@ final class CollectionHeaderView: UICollectionReusableView {
 
   private let authorLabel: UILabel = {
     let label = UILabel()
-    label.font = .systemFont(ofSize: Constants.normalFontSize, weight: .regular)
+    label.font = .labelNormal
     label.textColor = .adaptiveBlack
     label.numberOfLines = 1
     return label
@@ -34,7 +34,7 @@ final class CollectionHeaderView: UICollectionReusableView {
 
   private let descriptionTextView: UITextView = {
     let textView = UITextView()
-    textView.font = .systemFont(ofSize: Constants.normalFontSize, weight: .regular)
+    textView.font = .labelNormal
     textView.textColor = .adaptiveBlack
     textView.textAlignment = .natural
     textView.textContainer.lineFragmentPadding = 0
@@ -88,22 +88,19 @@ final class CollectionHeaderView: UICollectionReusableView {
 
     let imageHeight = width / Constants.imageAspectRatio
 
-    let titleFont = UIFont.systemFont(ofSize: Constants.titleFontSize, weight: .bold)
     let titleHeight = viewModel.name.labelHeight(
       width: width - inset * 2,
-      font: titleFont
+      font: .title
     )
 
-    let authorFont = UIFont.systemFont(ofSize: Constants.normalFontSize, weight: .regular)
     let authorHeight = viewModel.author.labelHeight(
       width: width - inset * 2,
-      font: authorFont
+      font: .labelNormal
     )
 
-    let descriptionFont = UIFont.systemFont(ofSize: Constants.normalFontSize, weight: .regular)
     let descriptionHeight = viewModel.description.textViewHeight(
       width: width - inset * 2,
-      font: descriptionFont
+      font: .labelNormal
     )
 
     return imageHeight
@@ -175,8 +172,6 @@ extension CollectionHeaderView {
   private enum Constants {
     static let coverCornerRadius: CGFloat = 12
     static let imageAspectRatio: CGFloat = 1.21
-    static let titleFontSize: CGFloat = 17
-    static let normalFontSize: CGFloat = 13
     static let inset: CGFloat = 16
     static let largeSpacing: CGFloat = 16
     static let mediumSpacing: CGFloat = 8

@@ -66,7 +66,12 @@ final class CollectionViewController: UIViewController {
     }
 
     let totalCellWidth = Constants.cellSize.width * CGFloat(Constants.itemsPerRow)
-    let totalSpacing = view.bounds.width - Constants.edgeInsets.left - Constants.edgeInsets.right - totalCellWidth
+    let totalSpacing = (
+      view.bounds.width
+        - Constants.edgeInsets.left
+        - Constants.edgeInsets.right
+        - totalCellWidth
+    )
 
     let interItemSpacing = totalSpacing / CGFloat(Constants.itemsPerRow - 1)
     layout.minimumInteritemSpacing = interItemSpacing
@@ -105,8 +110,29 @@ extension CollectionViewController: CollectionViewProtocol {
     ProgressHUD.dismiss()
   }
 
-  func showError(_ message: String) {
-    ProgressHUD.banner(NSLocalizedString("Error.title", comment: ""), message)
+  func showError(_ message: String, withRetry: Bool = false) {
+    let alert = UIAlertController(
+      title: NSLocalizedString("Alert.title", comment: ""),
+      message: message,
+      preferredStyle: .alert
+    )
+    let dismiss = UIAlertAction(
+      title: NSLocalizedString("Alert.dismiss", comment: ""),
+      style: .cancel,
+      handler: nil
+    )
+    alert.addAction(dismiss)
+    if withRetry {
+      let retryAction = UIAlertAction(
+        title: NSLocalizedString("Alert.retry", comment: ""),
+        style: .default
+      ) { [weak self] _ in
+        guard let self else { return }
+        presenter.viewDidLoad()
+      }
+      alert.addAction(retryAction)
+    }
+    present(alert, animated: true, completion: nil)
   }
 
   func setUserInteraction(enabled: Bool) {
@@ -115,6 +141,10 @@ extension CollectionViewController: CollectionViewProtocol {
 
   func reloadData() {
     collectionView.reloadData()
+  }
+
+  func reloadItem(at indexPath: IndexPath) {
+    collectionView.reloadItems(at: [indexPath])
   }
 }
 
@@ -126,7 +156,6 @@ extension CollectionViewController: UICollectionViewDataSource {
     numberOfItemsInSection section: Int
   ) -> Int {
     let count = presenter.numberOfItems(in: section)
-    print("[CollectionViewController] Количество элементов в секции \(section): \(count)")
     return count
   }
 
@@ -142,6 +171,7 @@ extension CollectionViewController: UICollectionViewDataSource {
     }
 
     let nft = presenter.nft(at: indexPath)
+    cell.delegate = self
     cell.configure(with: nft)
     return cell
   }
@@ -177,6 +207,26 @@ extension CollectionViewController: UICollectionViewDelegateFlowLayout {
     let width = collectionView.bounds.width
     let height = CollectionHeaderView.height(for: presenter.collection, width: width)
     return CGSize(width: width, height: height)
+  }
+}
+
+// MARK: NFTCellDelegate
+
+extension CollectionViewController: NFTCellDelegate {
+  func didTapFavoritesButton(_ cell: NFTCell) {
+    guard let indexPath = collectionView.indexPath(for: cell) else {
+      print("[CollectionViewController] – Failed to get indexPath for cell")
+      return
+    }
+    presenter.didTapFavoritesButton(at: indexPath)
+  }
+
+  func didTapCartButton(_ cell: NFTCell) {
+    guard let indexPath = collectionView.indexPath(for: cell) else {
+      print("[CollectionViewController] – Failed to get indexPath for cell")
+      return
+    }
+    presenter.didTapCartButton(at: indexPath)
   }
 }
 

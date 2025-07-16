@@ -1,5 +1,7 @@
 import Foundation
 
+// MARK: - CollectionDetailViewModel
+
 struct CollectionDetailViewModel {
   let coverURL: URL?
   let name: String
