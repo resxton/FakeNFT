@@ -67,6 +67,11 @@ final class AppDIContainer {
     return view
   }
 
+  func makeWebViewController(url: URL) -> UIViewController {
+    let viewController = WebViewController(website: url)
+    return viewController
+  }
+
   // MARK: - Private Methods
 
   @MainActor

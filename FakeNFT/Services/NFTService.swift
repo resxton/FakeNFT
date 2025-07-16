@@ -1,11 +1,11 @@
 import Foundation
 
-typealias NFTComplection = (Result<NFTDomain, Error>) -> Void
+typealias NFTCompletion = (Result<NFTDomain, Error>) -> Void
 
 // MARK: - NFTServiceProtocol
 
 protocol NFTServiceProtocol {
-  func loadNft(id: String, completion: @escaping NFTComplection)
+  func loadNft(id: String, completion: @escaping NFTCompletion)
 }
 
 // MARK: - NFTService
@@ -23,7 +23,7 @@ final class NFTService: NFTServiceProtocol {
 
   // MARK: - Public Methods
 
-  func loadNft(id: String, completion: @escaping NFTComplection) {
+  func loadNft(id: String, completion: @escaping NFTCompletion) {
     let request = NFTRequest(id: id)
     networkClient.send(request: request, type: NFTDTO.self) { result in
       switch result {

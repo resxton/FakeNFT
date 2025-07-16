@@ -4,7 +4,7 @@ import Foundation
 final class StubNFTService: NFTServiceProtocol {
   // MARK: - Public Methods
 
-  func loadNft(id: String, completion: @escaping NFTComplection) {
+  func loadNft(id: String, completion: @escaping NFTCompletion) {
     let fixedDate = DateFormatter
       .defaultDateFormatter
       .date(from: "2023-01-01T12:00:00Z") ?? Date()

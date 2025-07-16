@@ -7,6 +7,7 @@ protocol ServicesAssemblyProtocol {
   var nftService: NFTServiceProtocol { get }
   var profileService: ProfileServiceProtocol { get }
   var orderService: OrderServiceProtocol { get }
+  var userService: UserServiceProtocol { get }
 }
 
 // MARK: - ServicesAssembly
@@ -29,16 +30,16 @@ final class ServicesAssembly: ServicesAssemblyProtocol {
 
   // MARK: - Public Properties
 
-  var nftService: NFTServiceProtocol {
-    NFTService(
-      networkClient: networkClient
-    )
-  }
-
   var collectionService: CollectionServiceProtocol {
     CollectionService(
       networkClient: networkClient,
       collectionStorage: collectionStorage
+    )
+  }
+
+  var nftService: NFTServiceProtocol {
+    NFTService(
+      networkClient: networkClient
     )
   }
 
@@ -50,6 +51,12 @@ final class ServicesAssembly: ServicesAssemblyProtocol {
 
   var orderService: OrderServiceProtocol {
     OrderService(
+      networkClient: networkClient
+    )
+  }
+
+  var userService: UserServiceProtocol {
+    UserService(
       networkClient: networkClient
     )
   }
