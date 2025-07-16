@@ -2,8 +2,9 @@
 
 protocol ServicesAssemblyProtocol {
   var collectionService: CollectionServiceProtocol { get }
-  var nftService: NftService { get }
+  var nftService: NFTServiceProtocol { get }
   var profileService: ProfileServiceProtocol { get }
+  var orderService: OrderServiceProtocol { get }
 }
 
 // MARK: - ServicesAssembly
@@ -11,22 +12,18 @@ protocol ServicesAssemblyProtocol {
 final class ServicesAssembly: ServicesAssemblyProtocol {
   private let networkClient: NetworkClient
   private let collectionStorage: CollectionStorageProtocol
-  private let nftStorage: NftStorage
 
   init(
     networkClient: NetworkClient,
-    collectionStorage: CollectionStorageProtocol,
-    nftStorage: NftStorage
+    collectionStorage: CollectionStorageProtocol
   ) {
     self.networkClient = networkClient
     self.collectionStorage = collectionStorage
-    self.nftStorage = nftStorage
   }
 
-  var nftService: NftService {
-    NftServiceImpl(
-      networkClient: networkClient,
-      storage: nftStorage
+  var nftService: NFTServiceProtocol {
+    NFTService(
+      networkClient: networkClient
     )
   }
 

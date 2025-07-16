@@ -2,11 +2,28 @@ import Foundation
 
 // MARK: - NetworkClientError
 
-enum NetworkClientError: Error {
+enum NetworkClientError: Error, CustomStringConvertible {
   case httpStatusCode(Int)
+  case detailedHttpError(statusCode: Int, body: String?)
   case urlRequestError(Error)
   case urlSessionError
-  case parsingError
+  case parsingError(Data?)
+
+  var description: String {
+    switch self {
+    case let .httpStatusCode(code):
+      return "Received HTTP error code: \(code)"
+    case let .detailedHttpError(code, body):
+      return "HTTP \(code) Error\nBody: \(body ?? "<empty>")"
+    case let .urlRequestError(error):
+      return "URL request failed: \(error.localizedDescription)"
+    case .urlSessionError:
+      return "Failed to connect: URLSession error"
+    case let .parsingError(data):
+      let string = data.flatMap { String(data: $0, encoding: .utf8) } ?? "<nil>"
+      return "Failed to parse response:\n\(string)"
+    }
+  }
 }
 
 // MARK: - NetworkClient
@@ -47,19 +64,18 @@ extension NetworkClient {
   }
 }
 
+// MARK: - DefaultNetworkClient
+
 struct DefaultNetworkClient: NetworkClient {
   private let session: URLSession
   private let decoder: JSONDecoder
-  private let encoder: JSONEncoder
 
   init(
-    session: URLSession = URLSession.shared,
-    decoder: JSONDecoder = JSONDecoder(),
-    encoder: JSONEncoder = JSONEncoder()
+    session: URLSession = .shared,
+    decoder: JSONDecoder = .init()
   ) {
     self.session = session
     self.decoder = decoder
-    self.encoder = encoder
   }
 
   @discardableResult
@@ -68,38 +84,57 @@ struct DefaultNetworkClient: NetworkClient {
     completionQueue: DispatchQueue,
     onResponse: @escaping (Result<Data, Error>) -> Void
   ) -> NetworkTask? {
-    let onResponse: (Result<Data, Error>) -> Void = { result in
+    let wrappedResponse: (Result<Data, Error>) -> Void = { result in
       completionQueue.async {
         onResponse(result)
       }
     }
-    guard let urlRequest = create(request: request) else { return nil }
+
+    guard let urlRequest = create(request: request) else {
+      print("❌ Failed to create URLRequest")
+      return nil
+    }
+
+    print("📡 Sending request to: \(urlRequest.url?.absoluteString ?? "<nil>")")
+    print("🔨 Method: \(urlRequest.httpMethod ?? "<nil>")")
+    print("📋 Headers: \(urlRequest.allHTTPHeaderFields ?? [:])")
 
     let task = session.dataTask(with: urlRequest) { data, response, error in
-      guard let response = response as? HTTPURLResponse else {
-        onResponse(.failure(NetworkClientError.urlSessionError))
+      guard let httpResponse = response as? HTTPURLResponse else {
+        print("❌ No HTTP response")
+        wrappedResponse(.failure(NetworkClientError.urlSessionError))
         return
       }
 
-      guard 200 ..< 300 ~= response.statusCode else {
-        onResponse(.failure(NetworkClientError.httpStatusCode(response.statusCode)))
+      let statusCode = httpResponse.statusCode
+      print("🌐 Response status code: \(statusCode)")
+
+      if !(200 ..< 300).contains(statusCode) {
+        let bodyString = data.flatMap { String(data: $0, encoding: .utf8) }
+        print("❌ HTTP Error \(statusCode):\n\(bodyString ?? "<no body>")")
+        wrappedResponse(
+          .failure(
+            NetworkClientError.detailedHttpError(
+              statusCode: statusCode,
+              body: bodyString
+            )
+          )
+        )
         return
       }
 
       if let data {
-        onResponse(.success(data))
-        return
+        print("✅ Received response: \(data.count) bytes")
+        wrappedResponse(.success(data))
       } else if let error {
-        onResponse(.failure(NetworkClientError.urlRequestError(error)))
-        return
+        print("❌ URL request error: \(error.localizedDescription)")
+        wrappedResponse(.failure(NetworkClientError.urlRequestError(error)))
       } else {
-        assertionFailure("Unexpected condition!")
-        return
+        assertionFailure("❗️ Unexpected: no data, no error")
       }
     }
 
     task.resume()
-
     return DefaultNetworkTask(dataTask: task)
   }
 
@@ -136,22 +171,27 @@ struct DefaultNetworkClient: NetworkClient {
       return nil
     }
 
-    urlRequest.addValue(token, forHTTPHeaderField: "X-Practicum-Mobile-Token")
+    urlRequest.setValue(token, forHTTPHeaderField: "X-Practicum-Mobile-Token")
+    urlRequest.setValue("application/json", forHTTPHeaderField: "Accept")
 
-    if let dtoDictionary = request.dto?.asDictionary() {
-      var urlComponents = URLComponents()
-      let queryItems = dtoDictionary.map { field in
-        URLQueryItem(
-          name: field.key,
-          value: field.value
-        )
+    if let dtoDict = request.dto?.asDictionary() {
+      let formPairs = dtoDict.map { key, value in
+        let encodedValue = value.addingPercentEncoding(
+          withAllowedCharacters: .urlQueryAllowed
+        ) ?? ""
+        return "\(key)=\(encodedValue)"
       }
-      urlComponents.queryItems = queryItems
-      urlRequest.httpBody = urlComponents.query?.data(using: .utf8)
-      urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
-    }
 
-    urlRequest.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
+      let formBody = formPairs.joined(separator: "&")
+
+      urlRequest.httpBody = formBody.data(using: .utf8)
+      urlRequest.setValue(
+        "application/x-www-form-urlencoded",
+        forHTTPHeaderField: "Content-Type"
+      )
+
+      print("📤 Form-urlencoded body: \(formBody)")
+    }
 
     return urlRequest
   }
@@ -162,10 +202,12 @@ struct DefaultNetworkClient: NetworkClient {
     onResponse: @escaping (Result<T, Error>) -> Void
   ) {
     do {
-      let response = try decoder.decode(T.self, from: data)
-      onResponse(.success(response))
+      let decoded = try decoder.decode(T.self, from: data)
+      onResponse(.success(decoded))
     } catch {
-      onResponse(.failure(NetworkClientError.parsingError))
+      let raw = String(data: data, encoding: .utf8) ?? "<non-UTF8>"
+      print("❌ Parsing error: \(error)\n📦 Raw response:\n\(raw)")
+      onResponse(.failure(NetworkClientError.parsingError(data)))
     }
   }
 }

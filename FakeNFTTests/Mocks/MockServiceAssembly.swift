@@ -6,7 +6,7 @@ final class MockServiceAssembly: ServicesAssemblyProtocol {
     StubCollectionService()
   }
 
-  var nftService: NftService {}
+  var nftService: NFTServiceProtocol {}
 
   var profileService: ProfileServiceProtocol {}
 }

@@ -121,6 +121,10 @@ extension CollectionViewController: CollectionViewProtocol {
   func reloadData() {
     collectionView.reloadData()
   }
+
+  func reloadItem(at indexPath: IndexPath) {
+    collectionView.reloadItems(at: [indexPath])
+  }
 }
 
 // MARK: UICollectionViewDataSource
@@ -131,7 +135,6 @@ extension CollectionViewController: UICollectionViewDataSource {
     numberOfItemsInSection section: Int
   ) -> Int {
     let count = presenter.numberOfItems(in: section)
-    print("[CollectionViewController] Количество элементов в секции \(section): \(count)")
     return count
   }
 
@@ -147,6 +150,7 @@ extension CollectionViewController: UICollectionViewDataSource {
     }
 
     let nft = presenter.nft(at: indexPath)
+    cell.delegate = self
     cell.configure(with: nft)
     return cell
   }
@@ -182,6 +186,26 @@ extension CollectionViewController: UICollectionViewDelegateFlowLayout {
     let width = collectionView.bounds.width
     let height = CollectionHeaderView.height(for: presenter.collection, width: width)
     return CGSize(width: width, height: height)
+  }
+}
+
+// MARK: NFTCellDelegate
+
+extension CollectionViewController: NFTCellDelegate {
+  func didTapFavoritesButton(_ cell: NFTCell) {
+    guard let indexPath = collectionView.indexPath(for: cell) else {
+      print("[CollectionViewController] – Failed to get indexPath for cell")
+      return
+    }
+    presenter.didTapFavoritesButton(at: indexPath)
+  }
+
+  func didTapCartButton(_ cell: NFTCell) {
+    guard let indexPath = collectionView.indexPath(for: cell) else {
+      print("[CollectionViewController] – Failed to get indexPath for cell")
+      return
+    }
+    presenter.didTapCartButton(at: indexPath)
   }
 }
 

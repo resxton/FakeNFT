@@ -78,7 +78,6 @@ final class NFTCell: UICollectionViewCell {
   // MARK: - Public Methods
 
   func configure(with viewModel: NFTViewModel) {
-    print("[NFTCell] Конфигурация ячейки с названием: \(viewModel.name)")
     nftImageView.image = nil
 
     nftImageView.kf.setImage(
@@ -106,24 +105,6 @@ final class NFTCell: UICollectionViewCell {
     cartButton.setImage(
       UIImage(
         resource: viewModel.isInCart ? .cartDelete : .cartAdd
-      ),
-      for: .normal
-    )
-  }
-
-  func setCartButton(to state: ButtonState) {
-    cartButton.setImage(
-      UIImage(
-        resource: state == .active ? .cartDelete : .cartAdd
-      ),
-      for: .normal
-    )
-  }
-
-  func setFavoritesButton(to state: ButtonState) {
-    favoritesButton.setImage(
-      UIImage(
-        resource: state == .active ? .favoritesActive : .favorites
       ),
       for: .normal
     )
@@ -194,21 +175,12 @@ final class NFTCell: UICollectionViewCell {
 
   @objc
   private func didTapFavoritesButton() {
-    delegate?.didTapFavoritesButton()
+    delegate?.didTapFavoritesButton(self)
   }
 
   @objc
   private func didTapCartButton() {
-    delegate?.didTapCartButton()
-  }
-}
-
-// MARK: NFTCell.ButtonState
-
-extension NFTCell {
-  enum ButtonState {
-    case active
-    case nonActive
+    delegate?.didTapCartButton(self)
   }
 }
 

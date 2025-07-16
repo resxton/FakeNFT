@@ -19,6 +19,7 @@ extension NFTDomain {
     let displayName = name.components(separatedBy: .whitespaces).first ?? name
 
     return NFTViewModel(
+      id: id,
       name: displayName,
       imageURL: imageURL,
       rating: rating,

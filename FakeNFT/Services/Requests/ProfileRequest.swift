@@ -6,6 +6,4 @@ struct ProfileRequest: NetworkRequest {
   var endpoint: URL? {
     URL(string: "\(RequestConstants.baseURL)/api/v1/profile/\(id)")
   }
-
-  var dto: Dto?
 }

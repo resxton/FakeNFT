@@ -6,4 +6,5 @@ protocol CollectionViewProtocol: AnyObject {
   func hideLoader()
   func showError(_ message: String)
   func reloadData()
+  func reloadItem(at indexPath: IndexPath)
 }

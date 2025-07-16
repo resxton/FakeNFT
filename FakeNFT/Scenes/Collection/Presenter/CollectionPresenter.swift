@@ -1,5 +1,7 @@
 import Foundation
 
+// MARK: - CollectionPresenter
+
 final class CollectionPresenter: CollectionPresenterProtocol {
   // MARK: - Public Properties
 
@@ -38,11 +40,11 @@ final class CollectionPresenter: CollectionPresenterProtocol {
       case .success(let (profile, order)):
         favorites = Set(profile.likedNFTIDs)
         cart = Set(order.nftIDs)
+        loadNFT()
       case let .failure(error):
         view?.showError(error.localizedDescription)
       }
     }
-    loadNFT()
   }
 
   func nft(at indexPath: IndexPath) -> NFTViewModel {
@@ -51,6 +53,64 @@ final class CollectionPresenter: CollectionPresenterProtocol {
 
   func numberOfItems(in section: Int) -> Int {
     nfts.count
+  }
+
+  func didTapFavoritesButton(at indexPath: IndexPath) {
+    let nft = nfts[indexPath.row]
+    let nftID = nft.id
+
+    if favorites.contains(nftID) {
+      favorites.remove(nftID)
+    } else {
+      favorites.insert(nftID)
+    }
+
+    let updatedIDs = Array(favorites)
+    print(updatedIDs)
+
+    view?.showLoader()
+    services.profileService.putProfile(with: updatedIDs) { [weak self] result in
+      guard let self else { return }
+      view?.hideLoader()
+      switch result {
+      case let .success(profile):
+        nfts[indexPath.row].isFavorite.toggle()
+        view?.reloadItem(at: indexPath)
+        print(profile.likedNFTIDs)
+      case let .failure(error):
+        print("[CollectionPresenter] – Failed to update favorites: \(error.localizedDescription)")
+        view?.showError(error.localizedDescription)
+      }
+    }
+  }
+
+  func didTapCartButton(at indexPath: IndexPath) {
+    let nft = nfts[indexPath.row]
+    let nftIDs = nft.id
+
+    if cart.contains(nftIDs) {
+      cart.remove(nftIDs)
+    } else {
+      cart.insert(nftIDs)
+    }
+
+    let updatedIDs = Array(cart)
+    print(updatedIDs)
+
+    view?.showLoader()
+    services.orderService.putOrder(with: updatedIDs) { [weak self] result in
+      guard let self else { return }
+      view?.hideLoader()
+      switch result {
+      case let .success(order):
+        print(order.nftIDs)
+        nfts[indexPath.row].isInCart.toggle()
+        view?.reloadItem(at: indexPath)
+      case let .failure(error):
+        print("[CollectionPresenter] – Failed to update cart: \(error.localizedDescription)")
+        view?.showError(error.localizedDescription)
+      }
+    }
   }
 
   // MARK: - Private Methods

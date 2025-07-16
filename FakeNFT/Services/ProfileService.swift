@@ -6,6 +6,7 @@ typealias ProfileCompletion = (Result<ProfileDomain, Error>) -> Void
 
 protocol ProfileServiceProtocol {
   func loadProfile(completion: @escaping ProfileCompletion)
+  func putProfile(with favorites: [String], completion: @escaping ProfileCompletion)
 }
 
 // MARK: - ProfileService
@@ -20,23 +21,24 @@ final class ProfileService: ProfileServiceProtocol {
   func loadProfile(completion: @escaping ProfileCompletion) {
     let request = ProfileRequest(id: Constants.profileId)
 
-    print("📡 [ProfileService] Sending request to: \(request.endpoint?.absoluteString ?? "nil")")
+    networkClient.send(request: request, type: ProfileDTO.self) { result in
+      switch result {
+      case let .success(profile):
+        completion(.success(profile.toDomain()))
+      case let .failure(error):
+        completion(.failure(error))
+      }
+    }
+  }
+
+  func putProfile(with favorites: [String], completion: @escaping ProfileCompletion) {
+    let request = FavoritesRequest(id: Constants.profileId, likes: favorites)
 
     networkClient.send(request: request, type: ProfileDTO.self) { result in
       switch result {
       case let .success(profile):
-        print("✅ [ProfileService] Success:")
-        print("    id: \(profile.id)")
-        print("    name: \(profile.name)")
-        print("    avatar: \(profile.avatar)")
-        print("    description: \(profile.description)")
-        print("    website: \(profile.website)")
-        print("    nfts: \(profile.nfts)")
-        print("    likes: \(profile.likes)")
         completion(.success(profile.toDomain()))
-
       case let .failure(error):
-        print("❌ [ProfileService] Error: \(error.localizedDescription)")
         completion(.failure(error))
       }
     }
