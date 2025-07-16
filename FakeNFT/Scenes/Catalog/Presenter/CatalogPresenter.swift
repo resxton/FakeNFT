@@ -73,38 +73,33 @@ final class CatalogPresenter: CatalogPresenterProtocol {
   }
 
   func refresh() {
-    view?.setUserInteraction(enabled: false)
-    loadCollections(with: false)
-    view?.setUserInteraction(enabled: true)
+    loadCollections(showLoader: false)
   }
 
   // MARK: - Private Methods
 
-  private func loadCollections(with loader: Bool = true) {
-    if loader {
+  private func loadCollections(showLoader: Bool = true) {
+    if showLoader {
       view?.showLoader()
+    } else {
+      view?.setUserInteraction(enabled: false)
     }
     services.collectionService.loadCollections(sortBy: sortingOption) { result in
       DispatchQueue.main.async { [weak self] in
         guard let self else { return }
-        if loader {
+        if showLoader {
           view?.hideLoader()
+        } else {
+          view?.setUserInteraction(enabled: true)
         }
         switch result {
         case let .success(collections):
           self.collections = collections
           view?.reloadData()
         case let .failure(error):
-          print("Error: \(error)")
-          view?.showError(error.localizedDescription)
+          view?.showError(error.localizedDescription, withRetry: true)
         }
       }
     }
   }
-}
-
-// MARK: CatalogPresenter.Constants
-
-extension CatalogPresenter {
-  private enum Constants {}
 }

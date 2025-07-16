@@ -1,5 +1,7 @@
 import Foundation
 
+// MARK: - CollectionPresenterProtocol
+
 protocol CollectionPresenterProtocol {
   var collection: CollectionDetailViewModel { get }
 

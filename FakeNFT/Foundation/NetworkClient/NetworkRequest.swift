@@ -20,7 +20,7 @@ protocol Dto: Encodable {
 protocol NetworkRequest {
   var endpoint: URL? { get }
   var httpMethod: HttpMethod { get }
-  var dto: Dto? { get } // вот так
+  var dto: Dto? { get }
 }
 
 extension NetworkRequest {

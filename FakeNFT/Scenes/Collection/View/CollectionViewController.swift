@@ -110,8 +110,29 @@ extension CollectionViewController: CollectionViewProtocol {
     ProgressHUD.dismiss()
   }
 
-  func showError(_ message: String) {
-    ProgressHUD.banner(NSLocalizedString("Error.title", comment: ""), message)
+  func showError(_ message: String, withRetry: Bool = false) {
+    let alert = UIAlertController(
+      title: NSLocalizedString("Alert.title", comment: ""),
+      message: message,
+      preferredStyle: .alert
+    )
+    let dismiss = UIAlertAction(
+      title: NSLocalizedString("Alert.dismiss", comment: ""),
+      style: .cancel,
+      handler: nil
+    )
+    alert.addAction(dismiss)
+    if withRetry {
+      let retryAction = UIAlertAction(
+        title: NSLocalizedString("Alert.retry", comment: ""),
+        style: .default
+      ) { [weak self] _ in
+        guard let self else { return }
+        presenter.viewDidLoad()
+      }
+      alert.addAction(retryAction)
+    }
+    present(alert, animated: true, completion: nil)
   }
 
   func setUserInteraction(enabled: Bool) {

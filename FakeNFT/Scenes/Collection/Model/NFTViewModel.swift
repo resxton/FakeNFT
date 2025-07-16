@@ -1,5 +1,7 @@
 import Foundation
 
+// MARK: - NFTViewModel
+
 struct NFTViewModel {
   let id: String
   let name: String

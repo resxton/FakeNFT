@@ -2,6 +2,8 @@
 import Foundation
 
 final class StubCollectionService: CollectionServiceProtocol {
+  // MARK: - Public Methods
+
   func loadCollections(
     sortBy: SortingOption?,
     completion: @escaping CollectionsCompletion

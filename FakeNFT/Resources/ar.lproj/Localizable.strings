@@ -6,9 +6,9 @@
 "Catalog.cancelActionTitle" = "إغلاق";
 "Error.network" = "حدث خطأ في الشبكة";
 "Error.unknown" = "حدث خطأ غير معروف";
-"Error.repeat" = "إعادة المحاولة";
-"Error.title" = "خطأ";
-"Error.dismiss" = "إغلاق";
+"Alert.retry" = "إعادة المحاولة";
+"Alert.title" = "خطأ";
+"Alert.dismiss" = "إغلاق";
 "NFT.currency" = "إيثريوم";
 "Collection.author" = "مصمم المجموعة: ";
 "Catalog.unknownAuthor" = "مؤلف غير معروف";

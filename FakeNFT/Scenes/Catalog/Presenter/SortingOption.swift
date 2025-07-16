@@ -1,5 +1,7 @@
 import Foundation
 
+// MARK: - SortingOption
+
 enum SortingOption {
   case name
   case nftCount

@@ -1,5 +1,7 @@
 import UIKit
 
+// MARK: - CatalogRouter
+
 final class CatalogRouter: @preconcurrency CatalogRouterProtocol {
   // MARK: - Private Properties
 

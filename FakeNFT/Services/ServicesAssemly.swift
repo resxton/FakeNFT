@@ -1,3 +1,5 @@
+import Foundation
+
 // MARK: - ServicesAssemblyProtocol
 
 protocol ServicesAssemblyProtocol {
@@ -10,8 +12,12 @@ protocol ServicesAssemblyProtocol {
 // MARK: - ServicesAssembly
 
 final class ServicesAssembly: ServicesAssemblyProtocol {
+  // MARK: - Private Properties
+
   private let networkClient: NetworkClient
   private let collectionStorage: CollectionStorageProtocol
+
+  // MARK: - Initializers
 
   init(
     networkClient: NetworkClient,
@@ -20,6 +26,8 @@ final class ServicesAssembly: ServicesAssemblyProtocol {
     self.networkClient = networkClient
     self.collectionStorage = collectionStorage
   }
+
+  // MARK: - Public Properties
 
   var nftService: NFTServiceProtocol {
     NFTService(

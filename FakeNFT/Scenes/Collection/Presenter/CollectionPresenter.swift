@@ -33,16 +33,17 @@ final class CollectionPresenter: CollectionPresenterProtocol {
   // MARK: - Public Methods
 
   func viewDidLoad() {
+    view?.showLoader()
     loadProfileAndOrder { [weak self] result in
       guard let self else { return }
-
       switch result {
       case .success(let (profile, order)):
         favorites = Set(profile.likedNFTIDs)
         cart = Set(order.nftIDs)
         loadNFT()
       case let .failure(error):
-        view?.showError(error.localizedDescription)
+        view?.hideLoader()
+        view?.showError(error.localizedDescription, withRetry: true)
       }
     }
   }
@@ -66,19 +67,20 @@ final class CollectionPresenter: CollectionPresenterProtocol {
     }
 
     let updatedIDs = Array(favorites)
-    print(updatedIDs)
 
     view?.showLoader()
     services.profileService.putProfile(with: updatedIDs) { [weak self] result in
       guard let self else { return }
       view?.hideLoader()
       switch result {
-      case let .success(profile):
+      case .success:
         nfts[indexPath.row].isFavorite.toggle()
         view?.reloadItem(at: indexPath)
-        print(profile.likedNFTIDs)
       case let .failure(error):
-        print("[CollectionPresenter] – Failed to update favorites: \(error.localizedDescription)")
+        print("""
+        [CollectionPresenter.didTapFavoritesButton] - Failed to update \
+        favorites: \(error.localizedDescription)"
+        """)
         view?.showError(error.localizedDescription)
       }
     }
@@ -95,19 +97,20 @@ final class CollectionPresenter: CollectionPresenterProtocol {
     }
 
     let updatedIDs = Array(cart)
-    print(updatedIDs)
 
     view?.showLoader()
     services.orderService.putOrder(with: updatedIDs) { [weak self] result in
       guard let self else { return }
       view?.hideLoader()
       switch result {
-      case let .success(order):
-        print(order.nftIDs)
+      case .success:
         nfts[indexPath.row].isInCart.toggle()
         view?.reloadItem(at: indexPath)
       case let .failure(error):
-        print("[CollectionPresenter] – Failed to update cart: \(error.localizedDescription)")
+        print("""
+        [CollectionPresenter.didTapCartButton] - Failed to update \
+        cart: \(error.localizedDescription)
+        """)
         view?.showError(error.localizedDescription)
       }
     }
@@ -164,10 +167,16 @@ final class CollectionPresenter: CollectionPresenterProtocol {
   }
 
   private func loadNFT() {
+    guard !collection.nftIDs.isEmpty else {
+      print("[CollectionPresenter.loadNFT] - No NFTs to load (empty nftIDs)")
+      nfts = []
+      view?.reloadData()
+      view?.hideLoader()
+      return
+    }
+
     let group = DispatchGroup()
     var loadedNFTs: [NFTViewModel] = []
-
-    view?.showLoader()
 
     for id in collection.nftIDs {
       group.enter()
@@ -191,16 +200,17 @@ final class CollectionPresenter: CollectionPresenterProtocol {
           loadedNFTs.append(viewModel)
 
         case let .failure(error):
-          print("[ERROR] Ошибка загрузки NFT \(id): \(error.localizedDescription)")
+          print("""
+          [CollectionPresenter.loadNFT] - Failed to load \
+          NFT \(id): \(error.localizedDescription)
+          """)
           view?.showError(error.localizedDescription)
         }
       }
     }
 
     group.notify(queue: .main) { [weak self] in
-      guard let self else {
-        return
-      }
+      guard let self else { return }
       nfts = loadedNFTs
       view?.reloadData()
       view?.hideLoader()

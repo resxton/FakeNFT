@@ -12,11 +12,17 @@ protocol OrderServiceProtocol {
 // MARK: - OrderService
 
 final class OrderService: OrderServiceProtocol {
+  // MARK: - Private Properties
+
   private let networkClient: NetworkClient
+
+  // MARK: - Initializers
 
   init(networkClient: NetworkClient) {
     self.networkClient = networkClient
   }
+
+  // MARK: - Public Methods
 
   func loadOrder(completion: @escaping OrderCompletion) {
     let request = OrderRequest(id: Constants.orderId)

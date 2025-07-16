@@ -12,11 +12,17 @@ protocol ProfileServiceProtocol {
 // MARK: - ProfileService
 
 final class ProfileService: ProfileServiceProtocol {
+  // MARK: - Private Properties
+
   private let networkClient: NetworkClient
+
+  // MARK: - Initializers
 
   init(networkClient: NetworkClient) {
     self.networkClient = networkClient
   }
+
+  // MARK: - Public Methods
 
   func loadProfile(completion: @escaping ProfileCompletion) {
     let request = ProfileRequest(id: Constants.profileId)

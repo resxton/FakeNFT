@@ -67,8 +67,12 @@ extension NetworkClient {
 // MARK: - DefaultNetworkClient
 
 struct DefaultNetworkClient: NetworkClient {
+  // MARK: - Private Properties
+
   private let session: URLSession
   private let decoder: JSONDecoder
+
+  // MARK: - Initializers
 
   init(
     session: URLSession = .shared,
@@ -77,6 +81,8 @@ struct DefaultNetworkClient: NetworkClient {
     self.session = session
     self.decoder = decoder
   }
+
+  // MARK: - Public Methods
 
   @discardableResult
   func send(
@@ -91,27 +97,30 @@ struct DefaultNetworkClient: NetworkClient {
     }
 
     guard let urlRequest = create(request: request) else {
-      print("❌ Failed to create URLRequest")
+      print("[NetworkClient.send] - Failed to create URLRequest")
       return nil
     }
 
-    print("📡 Sending request to: \(urlRequest.url?.absoluteString ?? "<nil>")")
-    print("🔨 Method: \(urlRequest.httpMethod ?? "<nil>")")
-    print("📋 Headers: \(urlRequest.allHTTPHeaderFields ?? [:])")
+    print("[NetworkClient.send] - Sending request to: \(urlRequest.url?.absoluteString ?? "<nil>")")
+    print("[NetworkClient.send] - Method: \(urlRequest.httpMethod ?? "<nil>")")
+    print("[NetworkClient.send] - Headers: \(urlRequest.allHTTPHeaderFields ?? [:])")
 
     let task = session.dataTask(with: urlRequest) { data, response, error in
       guard let httpResponse = response as? HTTPURLResponse else {
-        print("❌ No HTTP response")
+        print("[NetworkClient.send] - No HTTP response received")
         wrappedResponse(.failure(NetworkClientError.urlSessionError))
         return
       }
 
       let statusCode = httpResponse.statusCode
-      print("🌐 Response status code: \(statusCode)")
+      print("[NetworkClient.send] - Response status code: \(statusCode)")
 
       if !(200 ..< 300).contains(statusCode) {
         let bodyString = data.flatMap { String(data: $0, encoding: .utf8) }
-        print("❌ HTTP Error \(statusCode):\n\(bodyString ?? "<no body>")")
+        print("""
+        [NetworkClient.send] - HTTP error \(statusCode) \
+        with body: \(bodyString ?? "<no body>")
+        """)
         wrappedResponse(
           .failure(
             NetworkClientError.detailedHttpError(
@@ -124,13 +133,14 @@ struct DefaultNetworkClient: NetworkClient {
       }
 
       if let data {
-        print("✅ Received response: \(data.count) bytes")
+        print("[NetworkClient.send] - Received response: \(data.count) bytes")
         wrappedResponse(.success(data))
       } else if let error {
-        print("❌ URL request error: \(error.localizedDescription)")
+        print("[NetworkClient.send] - URL request failed: \(error.localizedDescription)")
         wrappedResponse(.failure(NetworkClientError.urlRequestError(error)))
       } else {
-        assertionFailure("❗️ Unexpected: no data, no error")
+        print("[NetworkClient.send] - Unexpected: no data and no error")
+        wrappedResponse(.failure(NetworkClientError.urlSessionError))
       }
     }
 
@@ -150,16 +160,17 @@ struct DefaultNetworkClient: NetworkClient {
       case let .success(data):
         parse(data: data, type: type, onResponse: onResponse)
       case let .failure(error):
+        print("[NetworkClient.send] - Failed to fetch data: \(error.localizedDescription)")
         onResponse(.failure(error))
       }
     }
   }
 
-  // MARK: - Private
+  // MARK: - Private Methods
 
   private func create(request: NetworkRequest) -> URLRequest? {
     guard let endpoint = request.endpoint else {
-      assertionFailure("Empty endpoint")
+      print("[NetworkClient.create] - Empty endpoint provided")
       return nil
     }
 
@@ -167,7 +178,7 @@ struct DefaultNetworkClient: NetworkClient {
     urlRequest.httpMethod = request.httpMethod.rawValue
 
     guard let token = Bundle.main.infoDictionary?["API_TOKEN"] as? String else {
-      assertionFailure("[NetworkClient] – Missing API_TOKEN in Info.plist")
+      print("[NetworkClient.create] - Missing API_TOKEN in Info.plist")
       return nil
     }
 
@@ -190,7 +201,7 @@ struct DefaultNetworkClient: NetworkClient {
         forHTTPHeaderField: "Content-Type"
       )
 
-      print("📤 Form-urlencoded body: \(formBody)")
+      print("[NetworkClient.create] - Form-urlencoded body: \(formBody)")
     }
 
     return urlRequest
@@ -203,10 +214,14 @@ struct DefaultNetworkClient: NetworkClient {
   ) {
     do {
       let decoded = try decoder.decode(T.self, from: data)
+      print("[NetworkClient.parse] - Successfully parsed response to \(T.self)")
       onResponse(.success(decoded))
     } catch {
       let raw = String(data: data, encoding: .utf8) ?? "<non-UTF8>"
-      print("❌ Parsing error: \(error)\n📦 Raw response:\n\(raw)")
+      print("""
+      [NetworkClient.parse] - Failed to parse response: \(error.localizedDescription), \
+      data: \(raw)")
+      """)
       onResponse(.failure(NetworkClientError.parsingError(data)))
     }
   }

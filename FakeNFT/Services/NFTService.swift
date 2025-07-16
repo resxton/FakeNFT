@@ -11,11 +11,17 @@ protocol NFTServiceProtocol {
 // MARK: - NFTService
 
 final class NFTService: NFTServiceProtocol {
+  // MARK: - Private Properties
+
   private let networkClient: NetworkClient
+
+  // MARK: - Initializers
 
   init(networkClient: NetworkClient) {
     self.networkClient = networkClient
   }
+
+  // MARK: - Public Methods
 
   func loadNft(id: String, completion: @escaping NFTComplection) {
     let request = NFTRequest(id: id)
