@@ -11,7 +11,7 @@ struct CollectionDetailViewModel {
   let nftIDs: [String]
 
   var attributedAuthorText: NSAttributedString {
-    let prefix = NSLocalizedString("Collection.author", comment: "") + ": "
+    let prefix = String(localized: "Collection.author") + ": "
     let fullText = prefix + author
     let attributed = NSMutableAttributedString(string: fullText)
 

@@ -45,7 +45,7 @@ final class AppDIContainer {
 
     catalogNavigationController.viewControllers = [view]
     catalogNavigationController.tabBarItem = UITabBarItem(
-      title: NSLocalizedString("Tab.catalog", comment: ""),
+      title: String(localized: "Tab.catalog"),
       image: UIImage(systemName: "square.stack.fill"),
       tag: 0
     )

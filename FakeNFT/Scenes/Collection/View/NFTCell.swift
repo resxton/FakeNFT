@@ -97,9 +97,8 @@ final class NFTCell: UICollectionViewCell {
     nftTitleLabel.text = viewModel.name
 
     let formattedPrice = String(format: "%.2f ", viewModel.price)
-    nftPriceLabel.text = formattedPrice + NSLocalizedString(
-      "NFT.currency",
-      comment: ""
+    nftPriceLabel.text = formattedPrice + String(localized:
+      "NFT.currency"
     )
 
     cartButton.setImage(

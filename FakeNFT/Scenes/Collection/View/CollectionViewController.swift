@@ -112,19 +112,19 @@ extension CollectionViewController: CollectionViewProtocol {
 
   func showError(_ message: String, withRetry: Bool = false) {
     let alert = UIAlertController(
-      title: NSLocalizedString("Alert.title", comment: ""),
+      title: String(localized: "Alert.title"),
       message: message,
       preferredStyle: .alert
     )
     let dismiss = UIAlertAction(
-      title: NSLocalizedString("Alert.dismiss", comment: ""),
+      title: String(localized: "Alert.dismiss"),
       style: .cancel,
       handler: nil
     )
     alert.addAction(dismiss)
     if withRetry {
       let retryAction = UIAlertAction(
-        title: NSLocalizedString("Alert.retry", comment: ""),
+        title: String(localized: "Alert.retry"),
         style: .default
       ) { [weak self] _ in
         guard let self else { return }
