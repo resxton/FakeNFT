@@ -53,18 +53,19 @@ final class StatisticsPresenter: StatisticsPresenterProtocol {
   ].sorted { $0.rating > $1.rating }
 
   func getNumberOfUsers() -> Int {
-    return users.count
+    users.count
   }
 
   func getUser(index: Int) -> UserDomain {
-    return users[index]
+    users[index]
   }
 
   func changeSort(sortType: SortTypes) {
-    if sortType == SortTypes.name {
-      users = users.sorted { $0.name < $1.name }
-    } else {
-      users = users.sorted { $0.rating > $1.rating }
+    switch sortType {
+    case .name:
+      users.sort { $0.name < $1.name }
+    case .rating:
+      users.sort { $0.rating > $1.rating }
     }
 
     view?.reloadStatistics()
