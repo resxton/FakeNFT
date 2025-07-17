@@ -88,7 +88,6 @@ final class CartPresenter {
       type: NFTForCartResponse.self,
       completionQueue: .main
     ) { [weak self] result in
-      print(3)
       guard let self else { return }
       switch result {
       case let .success(response):
@@ -131,7 +130,6 @@ final class CartPresenter {
           isError = true
         }
         completedRequests += 1
-        print(cartItems, completedRequests)
         if completedRequests == totalRequests {
           sort(sortBy: store.sortSettings)
           completion()
@@ -154,8 +152,7 @@ final class CartPresenter {
       guard let self else { return }
       switch result {
       case let .success(nfts):
-        print(nfts)
-        print(11)
+        print("Нфт удалилось из корзины")
         cartItems = cartItemsCopy
         completion()
       case let .failure(error):

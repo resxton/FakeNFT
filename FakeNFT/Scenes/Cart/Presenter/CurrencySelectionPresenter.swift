@@ -63,7 +63,6 @@ final class CurrencySelectionPresenter {
             id: item.id
           ))
         }
-        print(currencyList, 1)
         print(response)
         completion()
       case let .failure(error):

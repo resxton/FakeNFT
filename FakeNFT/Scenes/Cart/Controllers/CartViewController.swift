@@ -152,7 +152,6 @@ final class CartViewController: UIViewController {
     tableView.translatesAutoresizingMaskIntoConstraints = false
     view.addSubview(tableView)
     tableView.delegate = self
-    print(1)
     tableView.dataSource = self
     NSLayoutConstraint.activate([
       tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
@@ -230,7 +229,6 @@ final class CartViewController: UIViewController {
 
 extension CartViewController: UITableViewDataSource, UITableViewDelegate {
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    print(presenter.itemCount(), 4)
     return presenter.itemCount()
   }
 

@@ -1,6 +1,6 @@
 import UIKit
 
-class SuccessPaymentViewController: UIViewController {
+final class SuccessPaymentViewController: UIViewController {
   private let imageView: UIImageView = {
     let imageView = UIImageView(image: UIImage(named: "successImage"))
     imageView.translatesAutoresizingMaskIntoConstraints = false

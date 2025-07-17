@@ -276,11 +276,9 @@ extension CurrencySelectionViewController: UICollectionViewDelegateFlowLayout {
 
 extension CurrencySelectionViewController: UICollectionViewDelegate {
   func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-    print(indexPath)
     guard let cell = collectionView.cellForItem(at: indexPath) as? CryptoCell else { return }
     cell.select()
     presenter.setCurrentCurrencyID(indexPath.row)
-    print(presenter.getCurrentCurrencyID().count, "ddd")
   }
 
   func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
