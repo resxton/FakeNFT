@@ -34,26 +34,10 @@ final class CartCell: UITableViewCell {
 
   var starImage = UIImageView()
 
-  private lazy var nameNFTStackView: UIStackView = {
-    let stackView = UIStackView(arrangedSubviews: [nameNFTLabel, starImage])
-    stackView.axis = .vertical
-    stackView.spacing = 4
-    stackView.translatesAutoresizingMaskIntoConstraints = false
-    return stackView
-  }()
-
   private lazy var priceNFTStackView: UIStackView = {
     let stackView = UIStackView(arrangedSubviews: [priceTextNFTLabel, priceNFTLabel])
     stackView.axis = .vertical
     stackView.spacing = 2
-    stackView.translatesAutoresizingMaskIntoConstraints = false
-    return stackView
-  }()
-
-  private lazy var nameAndPriceStack: UIStackView = {
-    let stackView = UIStackView(arrangedSubviews: [nameNFTStackView, priceNFTStackView])
-    stackView.axis = .vertical
-    stackView.spacing = 12
     stackView.translatesAutoresizingMaskIntoConstraints = false
     return stackView
   }()
@@ -92,6 +76,18 @@ final class CartCell: UITableViewCell {
       )
   }
 
+  func setImage(url: URL) {
+    imageNFT.kf.setImage(with: url)
+  }
+
+  private func setNameLabel() {
+    contentView.addSubview(nameNFTLabel)
+    NSLayoutConstraint.activate([
+      nameNFTLabel.leadingAnchor.constraint(equalTo: imageNFT.trailingAnchor, constant: 20),
+      nameNFTLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 24)
+    ])
+  }
+
   private func setImageNFT() {
     contentView.addSubview(imageNFT)
     NSLayoutConstraint.activate([
@@ -113,21 +109,33 @@ final class CartCell: UITableViewCell {
     deleteButton.addTarget(self, action: #selector(deleteButtonTapped), for: .touchDown)
   }
 
-  private func setNameAndPriceStackView() {
-    contentView.addSubview(nameAndPriceStack)
+  private func setStarImage() {
+    starImage.translatesAutoresizingMaskIntoConstraints = false
+    contentView.addSubview(starImage)
     NSLayoutConstraint.activate([
-      nameAndPriceStack.leadingAnchor.constraint(
+      starImage.leadingAnchor.constraint(equalTo: imageNFT.trailingAnchor, constant: 20),
+      starImage.topAnchor.constraint(equalTo: nameNFTLabel.bottomAnchor, constant: 4),
+      starImage.heightAnchor.constraint(equalToConstant: 12),
+      starImage.widthAnchor.constraint(equalToConstant: 68)
+    ])
+  }
+
+  private func setPriceNFTStackView() {
+    contentView.addSubview(priceNFTStackView)
+    NSLayoutConstraint.activate([
+      priceNFTStackView.leadingAnchor.constraint(
         equalTo: imageNFT.trailingAnchor, constant: 20
       ),
-      nameAndPriceStack.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 24),
-      nameAndPriceStack.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -24)
+      priceNFTStackView.topAnchor.constraint(equalTo: starImage.bottomAnchor, constant: 12)
     ])
   }
 
   private func setUI() {
     setImageNFT()
     setDeleteButton()
-    setNameAndPriceStackView()
+    setNameLabel()
+    setStarImage()
+    setPriceNFTStackView()
     contentView.backgroundColor = .adaptiveWhite
   }
 }

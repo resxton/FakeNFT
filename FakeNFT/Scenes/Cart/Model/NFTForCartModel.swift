@@ -1,9 +1,18 @@
 import UIKit
 
-struct NFTForCartModel {
-  // let id: String - добавим,когда будем брать нфт из сети
+// MARK: - NFTForCartResponse
+
+struct NFTForCartResponse: Decodable {
+  let id: String
+  let nfts: [String]
+}
+
+// MARK: - NFTForCartData
+
+struct NFTForCartData: Decodable {
+  let id: String
   let name: String
-  let price: Double
-  let image: UIImage // изменим,когда будем брать нфт из сети
   let rating: Int
+  let price: Double
+  let images: [String]
 }

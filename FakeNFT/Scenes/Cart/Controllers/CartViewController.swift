@@ -1,10 +1,10 @@
+import Kingfisher
 import UIKit
 
 // MARK: - CartViewController
 
 final class CartViewController: UIViewController {
   private let presenter = CartPresenter()
-
   private lazy var countNTFLabel: UILabel = {
     let label = UILabel()
     label.text = "\(presenter.itemCount()) NFT"
@@ -85,7 +85,12 @@ final class CartViewController: UIViewController {
     view.backgroundColor = .adaptiveWhite
     presenter.viewDidLoad()
     setUI()
-    setPlaceholderIsHidden(presenter.itemCount() > 0)
+    UIBlockingProgressHUD.show()
+    presenter.getCartListId {
+      UIBlockingProgressHUD.dismiss()
+      print(3)
+      self.checkingEmptyBasket()
+    }
   }
 
   @objc private func handleSortButtonTapped() {
@@ -183,11 +188,13 @@ final class CartViewController: UIViewController {
   }
 
   private func configCell(cell: CartCell, indexPath: IndexPath) {
-    let cartItem = presenter.item(at: indexPath.row)
+    let cartItem = presenter.item1(index: indexPath.row)
     cell.priceNFTLabel.text = "\(cartItem.price) ETH"
-    cell.imageNFT.image = cartItem.image
     cell.nameNFTLabel.text = cartItem.name
     let ratingInt = cartItem.rating
+    if let url = URL(string: cartItem.images[0]) {
+      cell.setImage(url: url)
+    }
     let image = UIImage(named: presenter.getStringRating(for: ratingInt))
     cell.starImage.image = image
     cell.indexPath = indexPath
@@ -204,6 +211,7 @@ final class CartViewController: UIViewController {
       placeholderLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
       placeholderLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor)
     ])
+    placeholderLabel.isHidden = true
   }
 
   private func setPlaceholderIsHidden(_ isHidden: Bool) {
@@ -212,12 +220,20 @@ final class CartViewController: UIViewController {
     sortButton.isHidden = !isHidden
     tableView.isHidden = !isHidden
   }
+
+  private func checkingEmptyBasket() {
+    setPlaceholderIsHidden(presenter.itemCount() > 0)
+    countNTFLabel.text = "\(presenter.itemCount()) NFT"
+    priceNTFLabel.text = "\(presenter.nftCartTotal()) ETH"
+    tableView.reloadData()
+  }
 }
 
 // MARK: UITableViewDataSource, UITableViewDelegate
 
 extension CartViewController: UITableViewDataSource, UITableViewDelegate {
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    print(presenter.itemCount(), 4)
     return presenter.itemCount()
   }
 
@@ -256,9 +272,6 @@ extension CartViewController: CartCellDelegate {
 extension CartViewController: DeleteNFTViewControllerDelegate {
   func delete() {
     presenter.removeItem()
-    tableView.reloadData()
-    setPlaceholderIsHidden(presenter.itemCount() > 0)
-    countNTFLabel.text = "\(presenter.itemCount()) NFT"
-    priceNTFLabel.text = "\(presenter.nftCartTotal()) ETH"
+    checkingEmptyBasket()
   }
 }

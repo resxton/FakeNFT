@@ -1,3 +1,4 @@
+import Kingfisher
 import UIKit
 
 final class CryptoCell: UICollectionViewCell {
@@ -32,6 +33,9 @@ final class CryptoCell: UICollectionViewCell {
     super.init(frame: frame)
     setUI()
     contentView.backgroundColor = .adaptiveLightGrey
+    // contentView.layer.borderWidth = 1
+    HelperUI.setRadius(contentView, radius: 12)
+    // contentView.layer.borderColor = UIColor.green.cgColor
   }
 
   @available(*, unavailable)
@@ -70,5 +74,24 @@ final class CryptoCell: UICollectionViewCell {
   private func setUI() {
     setCryptoImageView()
     setNameAndAbbreviationStackView()
+  }
+
+  func deleteSelect() {
+    contentView.layer.borderWidth = 0
+  }
+
+  func select() {
+    contentView.layer.borderWidth = 1
+    contentView.layer.borderColor = UIColor.adaptiveBlack.cgColor
+  }
+
+  func setImage(url: URL) {
+    let processor = RoundCornerImageProcessor(cornerRadius: 0, backgroundColor: .universalBlack)
+    cryptoImageView.kf.indicatorType = .activity
+    cryptoImageView.kf.setImage(
+      with: url,
+      placeholder: UIImage(named: "placeholder.jpeg"),
+      options: [.processor(processor)]
+    )
   }
 }

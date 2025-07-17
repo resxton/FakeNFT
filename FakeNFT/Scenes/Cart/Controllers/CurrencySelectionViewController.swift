@@ -70,6 +70,11 @@ final class CurrencySelectionViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     setUI()
+    UIBlockingProgressHUD.show()
+    presenter.getCurrencyList {
+      self.collectionView.reloadData()
+      UIBlockingProgressHUD.dismiss()
+    }
   }
 
   @objc func backButtonTapped() {
@@ -149,11 +154,12 @@ final class CurrencySelectionViewController: UIViewController {
   }
 
   private func configCell(cell: CryptoCell, indexPath: IndexPath) {
-    HelperUI.setRadius(cell, radius: 12)
     let item = presenter.item(at: indexPath.row)
     cell.cryptoAbbreviationLabel.text = item.abbreviated
     cell.cryptoNameLabel.text = item.name
-    cell.cryptoImageView.image = item.image
+    if let url = URL(string: item.image) {
+      cell.setImage(url: url)
+    }
   }
 }
 
@@ -208,5 +214,20 @@ extension CurrencySelectionViewController: UICollectionViewDelegateFlowLayout {
     insetForSectionAt section: Int
   ) -> UIEdgeInsets {
     return UIEdgeInsets(top: 0, left: 16, bottom: 16, right: 16)
+  }
+}
+
+// MARK: UICollectionViewDelegate
+
+extension CurrencySelectionViewController: UICollectionViewDelegate {
+  func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+    print(indexPath)
+    guard let cell = collectionView.cellForItem(at: indexPath) as? CryptoCell else { return }
+    cell.select()
+  }
+
+  func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
+    guard let cell = collectionView.cellForItem(at: indexPath) as? CryptoCell else { return }
+    cell.deleteSelect()
   }
 }
