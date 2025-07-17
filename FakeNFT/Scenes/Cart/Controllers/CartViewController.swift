@@ -83,10 +83,12 @@ final class CartViewController: UIViewController {
     view.backgroundColor = .adaptiveWhite
     presenter.viewDidLoad()
     setUI()
+  }
+
+  override func viewWillAppear(_ animated: Bool) {
     UIBlockingProgressHUD.show()
     presenter.getCartListId {
       UIBlockingProgressHUD.dismiss()
-      print(3)
       self.checkingEmptyBasket()
     }
   }

@@ -16,6 +16,8 @@ final class CartPresenter {
 
   private let networkClient = DefaultNetworkClient()
 
+  private var requestIsRunning: Bool = false
+
   private let cartRating = [
     "ratingZero",
     "ratingOne",
@@ -105,6 +107,8 @@ final class CartPresenter {
   }
 
   private func getCartList(ids: [String], completion: @escaping () -> Void) {
+    cartItems = []
+
     guard !ids.isEmpty else {
       completion()
       return
@@ -127,7 +131,6 @@ final class CartPresenter {
         case let .failure(error):
           print(error)
         }
-
         completedRequests += 1
         print(cartItems, completedRequests)
         if completedRequests == totalRequests {

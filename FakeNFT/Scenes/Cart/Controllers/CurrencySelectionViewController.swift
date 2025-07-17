@@ -29,7 +29,7 @@ final class CurrencySelectionViewController: UIViewController {
     button.backgroundColor = .adaptiveBlack
     button.setTitleColor(.adaptiveWhite, for: .normal)
     button.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: .bold)
-    HelperUI.setRadius(button, radius: 12)
+    HelperUI.setRadius(button, radius: 16)
     button.translatesAutoresizingMaskIntoConstraints = false
     return button
   }()
@@ -70,6 +70,7 @@ final class CurrencySelectionViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     setUI()
+    print(presenter.getCurrentCurrencyID().count, "ddd")
     UIBlockingProgressHUD.show()
     presenter.getCurrencyList {
       self.collectionView.reloadData()
@@ -79,6 +80,29 @@ final class CurrencySelectionViewController: UIViewController {
 
   @objc func backButtonTapped() {
     dismiss(animated: true)
+  }
+
+  @objc func paymentButtonAction() {
+    if !presenter.getCurrentCurrencyID().isEmpty {
+      UIBlockingProgressHUD.show()
+      presenter.payOrder { [weak self] in
+        guard let self else { return }
+        UIBlockingProgressHUD.dismiss()
+        if !presenter.getPaymentHasBeenMade() {
+          let alert = UIAlertController(title: "", message: "fggg", preferredStyle: .alert)
+          let alertAction = UIAlertAction(title: "Повторить", style: .cancel) { _ in
+            self.paymentButtonAction()
+          }
+          let cancel = UIAlertAction(title: "Отмена", style: .default)
+          alert.addAction(alertAction)
+          alert.addAction(cancel)
+          present(alert, animated: true)
+        } else {
+          let viewController = SuccessPaymentViewController()
+          navigationController?.pushViewController(viewController, animated: true)
+        }
+      }
+    }
   }
 
   private func setCollectionView() {
@@ -139,6 +163,7 @@ final class CurrencySelectionViewController: UIViewController {
         paymentButton.heightAnchor.constraint(equalToConstant: 60)
       ]
     )
+    paymentButton.addTarget(self, action: #selector(paymentButtonAction), for: .touchUpInside)
   }
 
   private func setUI() {
@@ -224,6 +249,8 @@ extension CurrencySelectionViewController: UICollectionViewDelegate {
     print(indexPath)
     guard let cell = collectionView.cellForItem(at: indexPath) as? CryptoCell else { return }
     cell.select()
+    presenter.setCurrentCurrencyID(indexPath.row)
+    print(presenter.getCurrentCurrencyID().count, "ddd")
   }
 
   func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
