@@ -13,7 +13,9 @@ enum CartSortType {
 
 final class CartPresenter {
   private let store = SortTypeStore.shared
+
   private let networkClient = DefaultNetworkClient()
+
   private let cartRating = [
     "ratingZero",
     "ratingOne",
@@ -22,7 +24,8 @@ final class CartPresenter {
     "ratingFour",
     "ratingFive"
   ]
-  private var elemetCount: Int = 0
+  private var isError: Bool = false
+
   private var cartItems = [NFTForCartData]()
 
   private var numberDeleteItem = -1
@@ -31,7 +34,7 @@ final class CartPresenter {
     return cartRating[rating]
   }
 
-  func nftCartTotal() -> Double {
+  func nftCartTotal() -> Decimal {
     return cartItems.reduce(0) { $0 + $1.price }
   }
 
@@ -39,12 +42,25 @@ final class CartPresenter {
     return cartItems[index]
   }
 
-  func item1(index: Int) -> NFTForCartData {
-    return cartItems[index]
+  func itemCount() -> Int {
+    return cartItems.count
   }
 
-  func itemCount() -> Int {
-    return elemetCount
+  func getCartItemsIdList() -> [String] {
+    let list = cartItems.map(\.id)
+    return list
+  }
+
+  func delete(completion: @escaping () -> Void) {
+    deleteRequest {
+      completion()
+    }
+  }
+
+  func isErrorState() -> Bool {
+    let newIsError = isError
+    isError = false
+    return newIsError
   }
 
   func sort(sortBy: CartSortType) {
@@ -64,15 +80,10 @@ final class CartPresenter {
   }
 
   func viewDidLoad() {
-    print(store.sortSettings)
     sort(sortBy: store.sortSettings)
   }
 
-  func removeItem() {
-    cartItems.remove(at: numberDeleteItem)
-  }
-
-  func getCartListId(completeion: @escaping () -> Void) {
+  func getCartListId(completeion: @escaping () -> Void?) {
     let request = CartRequest(id: "1")
     networkClient.send(
       request: request,
@@ -84,7 +95,6 @@ final class CartPresenter {
       switch result {
       case let .success(response):
         print(response)
-        elemetCount = response.nfts.count
         getCartList(ids: response.nfts) {
           completeion()
         }
@@ -102,7 +112,7 @@ final class CartPresenter {
 
     var completedRequests = 0
     let totalRequests = ids.count
-
+    print("Начали получать информацию о конкретных НФТ")
     for id in ids {
       let request = NFTRequest(id: id)
       networkClient.send(
@@ -118,13 +128,37 @@ final class CartPresenter {
           print(error)
         }
 
-        // Увеличиваем счетчик завершенных запросов
         completedRequests += 1
-
-        // Проверяем, завершились ли все запросы
+        print(cartItems, completedRequests)
         if completedRequests == totalRequests {
           completion()
         }
+      }
+    }
+  }
+
+  func deleteRequest(completion: @escaping () -> Void) {
+    var cartItemsCopy = cartItems
+    cartItemsCopy.remove(at: numberDeleteItem)
+    let nfts = cartItemsCopy.map(\.id)
+    print(nfts)
+    let request = RemoveFromTheBasket(id: "1", nfts: nfts)
+    networkClient.send(
+      request: request,
+      type: NFTForCartResponse.self,
+      completionQueue: .main
+    ) { [weak self] result in
+      guard let self else { return }
+      switch result {
+      case let .success(nfts):
+        print(nfts)
+        print(11)
+        cartItems = cartItemsCopy
+        completion()
+      case let .failure(error):
+        isError = true
+        completion()
+        print(error)
       }
     }
   }

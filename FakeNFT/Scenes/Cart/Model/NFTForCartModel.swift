@@ -13,6 +13,6 @@ struct NFTForCartData: Decodable {
   let id: String
   let name: String
   let rating: Int
-  let price: Double
+  let price: Decimal
   let images: [String]
 }

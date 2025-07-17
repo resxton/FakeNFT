@@ -5,6 +5,7 @@ import UIKit
 
 final class CartViewController: UIViewController {
   private let presenter = CartPresenter()
+
   private lazy var countNTFLabel: UILabel = {
     let label = UILabel()
     label.text = "\(presenter.itemCount()) NFT"
@@ -65,10 +66,7 @@ final class CartViewController: UIViewController {
     return stackView
   }()
 
-  private var paymentView: UIView = {
-    let view = HelperUI.getPaymentView()
-    return view
-  }()
+  private var paymentView: UIView = HelperUI.getPaymentView()
 
   private var placeholderLabel: UILabel = {
     let label = UILabel()
@@ -188,7 +186,7 @@ final class CartViewController: UIViewController {
   }
 
   private func configCell(cell: CartCell, indexPath: IndexPath) {
-    let cartItem = presenter.item1(index: indexPath.row)
+    let cartItem = presenter.item(at: indexPath.row)
     cell.priceNFTLabel.text = "\(cartItem.price) ETH"
     cell.nameNFTLabel.text = cartItem.name
     let ratingInt = cartItem.rating
@@ -271,7 +269,21 @@ extension CartViewController: CartCellDelegate {
 
 extension CartViewController: DeleteNFTViewControllerDelegate {
   func delete() {
-    presenter.removeItem()
-    checkingEmptyBasket()
+    UIBlockingProgressHUD.show()
+    presenter.delete { [weak self] in
+      guard let self else { return }
+      checkingEmptyBasket()
+      UIBlockingProgressHUD.dismiss()
+      if presenter.isErrorState() {
+        let alert = UIAlertController(
+          title: "Не получилось удалить из корзины",
+          message: "",
+          preferredStyle: .alert
+        )
+        let action = UIAlertAction(title: "Ок", style: .cancel) { _ in }
+        alert.addAction(action)
+        present(alert, animated: true)
+      }
+    }
   }
 }

@@ -1,68 +1,14 @@
 import UIKit
 
+// MARK: - AbbreviatedCurrency
+
+// MARK: - CurrencySelectionPresenter
+
 final class CurrencySelectionPresenter {
   private let networkCliet = DefaultNetworkClient()
+
   private var wasThereARequest: Bool = false
-  /*
-   let cryptoList = [
-   CryptoModel(
-   name: "Bitcoin",
-   image: UIImage(
-   named: "Bitcoin"
-   ) ?? UIImage(),
-   abbreviated: "BTC"
-   ),
-   CryptoModel(
-   name: "Dogecoin",
-   image: UIImage(
-   named: "Dogecoin"
-   ) ?? UIImage(),
-   abbreviated: "DOGE"
-   ),
-   CryptoModel(
-   name: "Tether",
-   image: UIImage(
-   named: "Tether"
-   ) ?? UIImage(),
-   abbreviated: "USDT"
-   ),
-   CryptoModel(
-   name: "Apecoin",
-   image: UIImage(
-   named: "ApeCoin"
-   ) ?? UIImage(),
-   abbreviated: "APE"
-   ),
-   CryptoModel(
-   name: "Solana",
-   image: UIImage(
-   named: "Solana"
-   ) ?? UIImage(),
-   abbreviated: "SOL"
-   ),
-   CryptoModel(
-   name: "Ethereum",
-   image: UIImage(
-   named: "Ethereum"
-   ) ?? UIImage(),
-   abbreviated: "ETH"
-   ),
-   CryptoModel(
-   name: "Cardano",
-   image: UIImage(
-   named: "Cardano"
-   ) ?? UIImage(),
-   abbreviated: "ADA"
-   ),
-   CryptoModel(
-   name: "Shiba Inu",
-   image: UIImage(
-   named: "Shiba Inu"
-   ) ?? UIImage(),
-   abbreviated: "SHIB"
-   )
-   ]
-   */
+
   var currencyList: [CurrenciesModel] = []
   func item(at index: Int) -> CurrenciesModel {
     return currencyList[index]
