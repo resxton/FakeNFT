@@ -11,6 +11,8 @@ final class CurrencySelectionPresenter {
 
   private var currentCurrencyID = ""
 
+  private var isError: Bool = false
+
   var currencyList: [CurrenciesModel] = []
   func item(at index: Int) -> CurrenciesModel {
     return currencyList[index]
@@ -37,6 +39,12 @@ final class CurrencySelectionPresenter {
     return currentCurrencyID
   }
 
+  func isErrorState() -> Bool {
+    let newIsError = isError
+    isError = false
+    return newIsError
+  }
+
   func getCurrencyList(completion: @escaping (() -> Void)) {
     let request = CurrenciesRequest()
     networkCliet.send(
@@ -60,6 +68,8 @@ final class CurrencySelectionPresenter {
         completion()
       case let .failure(error):
         print("Error: \(error)")
+        isError = true
+        completion()
       }
     }
   }
@@ -71,9 +81,13 @@ final class CurrencySelectionPresenter {
   }
 
   func payOrderRequest(completion: @escaping (() -> Void)) {
-    if currentCurrencyID != "" {
+    if !currentCurrencyID.isEmpty {
       let request = PayOrderRequest(currencyId: currentCurrencyID)
-      networkCliet.send(request: request, type: PayOrder.self, completionQueue: .main) { [weak self] result in
+      networkCliet.send(
+        request: request,
+        type: PayOrder.self,
+        completionQueue: .main
+      ) { [weak self] result in
         guard let self else { return }
         switch result {
         case let .success(response):
@@ -90,7 +104,7 @@ final class CurrencySelectionPresenter {
           completion()
         }
       }
-    }
+    } else {}
   }
 
   func removeAll(completion: @escaping () -> Void) {
@@ -103,7 +117,7 @@ final class CurrencySelectionPresenter {
     ) { [weak self] result in
       guard let self else { return }
       switch result {
-      case let .success(nfts):
+      case .success:
         print("Успех")
         paymentHasBeenMade = true
         completion()

@@ -81,10 +81,6 @@ final class CartPresenter {
     self.numberDeleteItem = numberDeleteItem
   }
 
-  func viewDidLoad() {
-    sort(sortBy: store.sortSettings)
-  }
-
   func getCartListId(completeion: @escaping () -> Void?) {
     let request = CartRequest(id: "1")
     networkClient.send(
@@ -102,6 +98,8 @@ final class CartPresenter {
         }
       case let .failure(error):
         print(error)
+        isError = true
+        completeion()
       }
     }
   }
@@ -130,10 +128,12 @@ final class CartPresenter {
           cartItems.append(response)
         case let .failure(error):
           print(error)
+          isError = true
         }
         completedRequests += 1
         print(cartItems, completedRequests)
         if completedRequests == totalRequests {
+          sort(sortBy: store.sortSettings)
           completion()
         }
       }

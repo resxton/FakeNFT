@@ -3,6 +3,8 @@ import UIKit
 // MARK: - CurrencySelectionViewController
 
 final class CurrencySelectionViewController: UIViewController {
+  private lazy var alertPresenter = AlertPresenter(viewController: self)
+
   private let presenter = CurrencySelectionPresenter()
 
   private let backButton: UIButton = {
@@ -70,12 +72,7 @@ final class CurrencySelectionViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     setUI()
-    print(presenter.getCurrentCurrencyID().count, "ddd")
-    UIBlockingProgressHUD.show()
-    presenter.getCurrencyList {
-      self.collectionView.reloadData()
-      UIBlockingProgressHUD.dismiss()
-    }
+    getCurrencyList()
   }
 
   @objc func backButtonTapped() {
@@ -89,19 +86,52 @@ final class CurrencySelectionViewController: UIViewController {
         guard let self else { return }
         UIBlockingProgressHUD.dismiss()
         if !presenter.getPaymentHasBeenMade() {
-          let alert = UIAlertController(title: "", message: "fggg", preferredStyle: .alert)
-          let alertAction = UIAlertAction(title: "Повторить", style: .cancel) { _ in
-            self.paymentButtonAction()
-          }
-          let cancel = UIAlertAction(title: "Отмена", style: .default)
-          alert.addAction(alertAction)
-          alert.addAction(cancel)
-          present(alert, animated: true)
+          actionsInCaseOfNonPayment()
         } else {
           let viewController = SuccessPaymentViewController()
           navigationController?.pushViewController(viewController, animated: true)
         }
       }
+    } else {
+      warningThatYouNeedToChooseCurrency()
+    }
+  }
+
+  private func warningThatYouNeedToChooseCurrency() {
+    alertPresenter.alertWithOneActions(
+      title: "Вы не выбрали валюту",
+      buttonTitle: "Ок"
+    ) {}
+  }
+
+  private func actionsInCaseOfNonPayment() {
+    alertPresenter.alertForErrorWithPayment { [weak self] in
+      guard let self else { return }
+      paymentButtonAction()
+    }
+  }
+
+  private func getCurrencyList() {
+    UIBlockingProgressHUD.show()
+    presenter.getCurrencyList { [weak self] in
+      guard let self else { return }
+      collectionView.reloadData()
+      UIBlockingProgressHUD.dismiss()
+      if presenter.isErrorState() {
+        callAnAlertIfYouCantGetAList()
+      }
+    }
+  }
+
+  private func callAnAlertIfYouCantGetAList() {
+    alertPresenter.alertWithOneActions(
+      title: "Не удалось получить список валют",
+      buttonTitle: "Повторить"
+    ) { [weak self] in
+      guard let self else {
+        return
+      }
+      getCurrencyList()
     }
   }
 
