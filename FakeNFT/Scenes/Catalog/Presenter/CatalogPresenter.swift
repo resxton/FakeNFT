@@ -15,13 +15,13 @@ final class CatalogPresenter: CatalogPresenterProtocol {
   private var collections: [CollectionDomain] = []
   private var sortingOption: SortingOption?
 
-  private let services: ServicesAssembly
+  private let services: ServicesAssemblyProtocol
   private let router: CatalogRouterProtocol
 
   // MARK: - Initializers
 
   init(
-    servicesAssembly: ServicesAssembly,
+    servicesAssembly: ServicesAssemblyProtocol,
     router: CatalogRouterProtocol
   ) {
     services = servicesAssembly
@@ -36,7 +36,14 @@ final class CatalogPresenter: CatalogPresenterProtocol {
 
   func didSelectRow(at indexPath: IndexPath) {
     let collection = collections[indexPath.row]
-    router.show(collection: collection)
+    let viewModel = CollectionDetailViewModel(
+      coverURL: collection.coverURL,
+      name: collection.name,
+      author: NSLocalizedString("Collection.author", comment: "") + collection.authorID,
+      description: collection.description,
+      nftIDs: collection.nftIDs
+    )
+    router.show(collection: viewModel)
   }
 
   func collection(at index: Int) -> CollectionViewModel {
@@ -66,38 +73,33 @@ final class CatalogPresenter: CatalogPresenterProtocol {
   }
 
   func refresh() {
-    view?.setUserInteraction(enabled: false)
-    loadCollections(with: false)
-    view?.setUserInteraction(enabled: true)
+    loadCollections(showLoader: false)
   }
 
   // MARK: - Private Methods
 
-  private func loadCollections(with loader: Bool = true) {
-    if loader {
+  private func loadCollections(showLoader: Bool = true) {
+    if showLoader {
       view?.showLoader()
+    } else {
+      view?.setUserInteraction(enabled: false)
     }
     services.collectionService.loadCollections(sortBy: sortingOption) { result in
       DispatchQueue.main.async { [weak self] in
         guard let self else { return }
-        if loader {
+        if showLoader {
           view?.hideLoader()
+        } else {
+          view?.setUserInteraction(enabled: true)
         }
         switch result {
         case let .success(collections):
           self.collections = collections
           view?.reloadData()
         case let .failure(error):
-          print("Error: \(error)")
-          view?.showError(error.localizedDescription)
+          view?.showError(error.localizedDescription, withRetry: true)
         }
       }
     }
   }
-}
-
-// MARK: CatalogPresenter.Constants
-
-extension CatalogPresenter {
-  private enum Constants {}
 }

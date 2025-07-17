@@ -1,5 +1,7 @@
 import Foundation
 
+// MARK: - CatalogRouterProtocol
+
 protocol CatalogRouterProtocol: AnyObject {
-  func show(collection: CollectionDomain)
+  func show(collection: CollectionDetailViewModel)
 }

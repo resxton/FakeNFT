@@ -1,6 +1,8 @@
 import UIKit
 
-final class CatalogRouter: CatalogRouterProtocol {
+// MARK: - CatalogRouter
+
+final class CatalogRouter: @preconcurrency CatalogRouterProtocol {
   // MARK: - Private Properties
 
   private weak var navigationController: UINavigationController?
@@ -15,7 +17,8 @@ final class CatalogRouter: CatalogRouterProtocol {
 
   // MARK: - Public Methods
 
-  func show(collection: CollectionDomain) {
+  @MainActor
+  func show(collection: CollectionDetailViewModel) {
     let collectionVC = appDIContainer.makeCollectionViewController(with: collection)
     navigationController?.pushViewController(collectionVC, animated: true)
   }

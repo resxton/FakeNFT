@@ -19,7 +19,7 @@ final class CatalogTableViewCell: UITableViewCell {
   private lazy var titleLabel: UILabel = {
     let label = UILabel()
     label.numberOfLines = 1
-    label.font = .systemFont(ofSize: Constants.titleFontSize, weight: .bold)
+    label.font = .title
     label.textColor = .adaptiveBlack
     return label
   }()
@@ -46,7 +46,7 @@ final class CatalogTableViewCell: UITableViewCell {
   func configure(with viewModel: CollectionViewModel) {
     previewImage.kf.setImage(
       with: viewModel.coverURL,
-      placeholder: UIImage(resource: .collectionStub)
+      placeholder: UIImage(resource: .collectionCover)
     )
     titleLabel.text = viewModel.nameWithCount
   }
@@ -84,7 +84,6 @@ final class CatalogTableViewCell: UITableViewCell {
 
 extension CatalogTableViewCell {
   enum Constants {
-    static let titleFontSize: CGFloat = 17
     static let titleHeight: CGFloat = 22
 
     static let imageCornerRadius: CGFloat = 12

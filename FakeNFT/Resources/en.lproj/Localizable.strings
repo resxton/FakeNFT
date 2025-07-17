@@ -6,6 +6,9 @@
 "Catalog.cancelActionTitle" = "Close";
 "Error.network" = "Network error occurred";
 "Error.unknown" = "An unknown error occurred";
-"Error.repeat" = "Retry";
-"Error.title" = "Error";
-"Error.dismiss" = "Close";
+"Alert.retry" = "Retry";
+"Alert.title" = "Error";
+"Alert.dismiss" = "Close";
+"NFT.currency" = "ETH";
+"Collection.author" = "Collection designer: ";
+"Catalog.unknownAuthor" = "Uknown author";

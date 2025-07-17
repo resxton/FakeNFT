@@ -1,3 +1,4 @@
+import ProgressHUD
 import SnapKit
 import UIKit
 
@@ -6,13 +7,26 @@ import UIKit
 final class CollectionViewController: UIViewController {
   // MARK: - Visual Components
 
-  private lazy var coverImage: UIImageView = {
-    let imageView = UIImageView()
-    imageView.layer.cornerRadius = Constants.coverCornerRadius
-    imageView.layer.maskedCorners = [.layerMinXMaxYCorner, .layerMaxXMaxYCorner]
-    imageView.clipsToBounds = true
-    imageView.contentMode = .scaleAspectFill
-    return imageView
+  private lazy var collectionView: UICollectionView = {
+    let layout = UICollectionViewFlowLayout()
+    layout.itemSize = Constants.cellSize
+    layout.minimumLineSpacing = Constants.lineSpacing
+    layout.sectionInset = Constants.edgeInsets
+
+    let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+    collectionView.dataSource = self
+    collectionView.delegate = self
+    collectionView.register(NFTCell.self, forCellWithReuseIdentifier: NFTCell.cellIdentifier)
+    collectionView
+      .register(
+        CollectionHeaderView.self,
+        forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader,
+        withReuseIdentifier: CollectionHeaderView
+          .reuseIdentifier
+      )
+    collectionView.backgroundColor = .adaptiveWhite
+
+    return collectionView
   }()
 
   // MARK: - Private Properties
@@ -42,20 +56,41 @@ final class CollectionViewController: UIViewController {
     presenter.viewDidLoad()
   }
 
+  override func viewDidLayoutSubviews() {
+    super.viewDidLayoutSubviews()
+
+    guard let layout = collectionView
+      .collectionViewLayout as? UICollectionViewFlowLayout
+    else {
+      return
+    }
+
+    let totalCellWidth = Constants.cellSize.width * CGFloat(Constants.itemsPerRow)
+    let totalSpacing = (
+      view.bounds.width
+        - Constants.edgeInsets.left
+        - Constants.edgeInsets.right
+        - totalCellWidth
+    )
+
+    let interItemSpacing = totalSpacing / CGFloat(Constants.itemsPerRow - 1)
+    layout.minimumInteritemSpacing = interItemSpacing
+  }
+
   // MARK: - Private Methods
 
   private func setupUI() {
+    view.addSubview(collectionView)
     view.backgroundColor = .adaptiveWhite
     edgesForExtendedLayout = [.top, .left, .right]
     extendedLayoutIncludesOpaqueBars = true
-
-    view.addSubview(coverImage)
+    collectionView.contentInsetAdjustmentBehavior = .never
   }
 
   private func setupConstraints() {
-    coverImage.snp.makeConstraints { make in
+    collectionView.snp.makeConstraints { make in
       make.horizontalEdges.top.equalToSuperview()
-      make.height.equalTo(coverImage.snp.width).dividedBy(Constants.imageAspectRatio)
+      make.bottom.equalTo(view.safeAreaLayoutGuide)
     }
   }
 }
@@ -63,14 +98,135 @@ final class CollectionViewController: UIViewController {
 // MARK: CollectionViewProtocol
 
 extension CollectionViewController: CollectionViewProtocol {
-  func show(collection: CollectionViewModel) {
-    coverImage.kf
-      .setImage(
-        with: collection.coverURL,
-        placeholder: UIImage(
-          named: "CollectionStubImageFull"
-        )
-      )
+  func show(viewModel: CollectionDetailViewModel) {
+    collectionView.reloadData()
+  }
+
+  func showLoader() {
+    ProgressHUD.animate(interaction: false)
+  }
+
+  func hideLoader() {
+    ProgressHUD.dismiss()
+  }
+
+  func showError(_ message: String, withRetry: Bool = false) {
+    let alert = UIAlertController(
+      title: NSLocalizedString("Alert.title", comment: ""),
+      message: message,
+      preferredStyle: .alert
+    )
+    let dismiss = UIAlertAction(
+      title: NSLocalizedString("Alert.dismiss", comment: ""),
+      style: .cancel,
+      handler: nil
+    )
+    alert.addAction(dismiss)
+    if withRetry {
+      let retryAction = UIAlertAction(
+        title: NSLocalizedString("Alert.retry", comment: ""),
+        style: .default
+      ) { [weak self] _ in
+        guard let self else { return }
+        presenter.viewDidLoad()
+      }
+      alert.addAction(retryAction)
+    }
+    present(alert, animated: true, completion: nil)
+  }
+
+  func setUserInteraction(enabled: Bool) {
+    view.isUserInteractionEnabled = enabled
+  }
+
+  func reloadData() {
+    collectionView.reloadData()
+  }
+
+  func reloadItem(at indexPath: IndexPath) {
+    collectionView.reloadItems(at: [indexPath])
+  }
+}
+
+// MARK: UICollectionViewDataSource
+
+extension CollectionViewController: UICollectionViewDataSource {
+  func collectionView(
+    _ collectionView: UICollectionView,
+    numberOfItemsInSection section: Int
+  ) -> Int {
+    let count = presenter.numberOfItems(in: section)
+    return count
+  }
+
+  func collectionView(
+    _ collectionView: UICollectionView,
+    cellForItemAt indexPath: IndexPath
+  ) -> UICollectionViewCell {
+    guard let cell = collectionView.dequeueReusableCell(
+      withReuseIdentifier: NFTCell.cellIdentifier,
+      for: indexPath
+    ) as? NFTCell else {
+      return UICollectionViewCell()
+    }
+
+    let nft = presenter.nft(at: indexPath)
+    cell.delegate = self
+    cell.configure(with: nft)
+    return cell
+  }
+
+  func collectionView(
+    _ collectionView: UICollectionView,
+    viewForSupplementaryElementOfKind kind: String,
+    at indexPath: IndexPath
+  ) -> UICollectionReusableView {
+    guard kind == UICollectionView.elementKindSectionHeader,
+          let header = collectionView.dequeueReusableSupplementaryView(
+            ofKind: kind,
+            withReuseIdentifier: CollectionHeaderView.reuseIdentifier,
+            for: indexPath
+          ) as? CollectionHeaderView
+    else {
+      return UICollectionReusableView()
+    }
+
+    header.configure(with: presenter.collection)
+    return header
+  }
+}
+
+// MARK: UICollectionViewDelegateFlowLayout
+
+extension CollectionViewController: UICollectionViewDelegateFlowLayout {
+  func collectionView(
+    _ collectionView: UICollectionView,
+    layout collectionViewLayout: UICollectionViewLayout,
+    referenceSizeForHeaderInSection section: Int
+  ) -> CGSize {
+    let width = collectionView.bounds.width
+    let height = CollectionHeaderView.height(for: presenter.collection, width: width)
+    return CGSize(width: width, height: height)
+  }
+}
+
+// MARK: NFTCellDelegate
+
+extension CollectionViewController: NFTCellDelegate {
+  func didTapFavoritesButton(_ cell: NFTCell) {
+    guard let indexPath = collectionView.indexPath(for: cell) else {
+      print("[CollectionViewController] – Failed to get indexPath for cell")
+      return
+    }
+    presenter.didTapFavoritesButton(at: indexPath)
+  }
+
+  func didTapCartButton(_ cell: NFTCell) {
+    guard let indexPath = collectionView.indexPath(for: cell) else {
+      print("[CollectionViewController] – Failed to get indexPath for cell")
+      return
+    }
+    presenter.didTapCartButton(at: indexPath)
   }
 }
 
@@ -78,7 +234,14 @@ extension CollectionViewController: CollectionViewProtocol {
 
 extension CollectionViewController {
   private enum Constants {
-    static let coverCornerRadius: CGFloat = 12
-    static let imageAspectRatio: CGFloat = 1.21
+    static let cellSize = CGSize(width: 108, height: 172)
+    static let itemsPerRow = 3
+    static let edgeInsets = UIEdgeInsets(
+      top: 24,
+      left: 16,
+      bottom: 24,
+      right: 16
+    )
+    static let lineSpacing: CGFloat = 24
   }
 }
