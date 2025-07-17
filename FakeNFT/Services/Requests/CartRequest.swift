@@ -20,7 +20,11 @@ struct CartRequest: NetworkRequest {
     let nfts: [String]
 
     func asDictionary() -> [String: String] {
-      ["nfts": nfts.joined(separator: ",")]
+      if nfts.isEmpty {
+        return ["nfts": "null"]
+      } else {
+        return ["nfts": nfts.joined(separator: ",")]
+      }
     }
   }
 }
