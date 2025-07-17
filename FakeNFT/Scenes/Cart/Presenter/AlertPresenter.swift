@@ -1,12 +1,13 @@
 import UIKit
 
 final class AlertPresenter {
-  let viewController: UIViewController
+  private let viewController: UIViewController
+
+  var sortType: CartSortType?
+
   init(viewController: UIViewController) {
     self.viewController = viewController
   }
-
-  var sortType: CartSortType?
 
   func alertForErrorWithPayment(completion: @escaping () -> Void) {
     let alert = UIAlertController(

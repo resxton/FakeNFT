@@ -151,7 +151,7 @@ final class CartPresenter {
     ) { [weak self] result in
       guard let self else { return }
       switch result {
-      case let .success(nfts):
+      case .success:
         print("Нфт удалилось из корзины")
         cartItems = cartItemsCopy
         completion()

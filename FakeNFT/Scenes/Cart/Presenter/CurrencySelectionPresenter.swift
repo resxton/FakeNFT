@@ -97,8 +97,8 @@ final class CurrencySelectionPresenter {
               completion()
             }
           }
-        case .failure:
-          print("ошибка")
+        case let .failure(error):
+          print(error)
           paymentHasBeenMade = false
           completion()
         }

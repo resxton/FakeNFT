@@ -20,6 +20,7 @@ final class CurrencySelectionViewController: UIViewController {
       collectionViewLayout: UICollectionViewFlowLayout()
     )
     collectionView.register(CryptoCell.self, forCellWithReuseIdentifier: "Cell")
+    collectionView.backgroundColor = .clear
     collectionView.translatesAutoresizingMaskIntoConstraints = false
     return collectionView
   }()
@@ -42,17 +43,18 @@ final class CurrencySelectionViewController: UIViewController {
     label.text = text
     label.textColor = .adaptiveBlack
     label.font = UIFont.systemFont(ofSize: 13, weight: .regular)
-    label.translatesAutoresizingMaskIntoConstraints = false
     return label
   }()
 
-  private let linkLabel: UILabel = {
+  private lazy var linkLabel: UILabel = {
     let label = UILabel()
     let text = NSLocalizedString("Currency.link", comment: "Currency.link")
     label.text = text
     label.textColor = .universalBlue
     label.font = UIFont.systemFont(ofSize: 13, weight: .regular)
-    label.translatesAutoresizingMaskIntoConstraints = false
+    label.isUserInteractionEnabled = true // очень важно!
+    let tapGesture = UITapGestureRecognizer(target: self, action: #selector(goTo))
+    label.addGestureRecognizer(tapGesture)
     return label
   }()
 
@@ -95,6 +97,13 @@ final class CurrencySelectionViewController: UIViewController {
     } else {
       warningThatYouNeedToChooseCurrency()
     }
+  }
+
+  @objc func goTo() {
+    let webViewController = WebViewController()
+    let viewController = UINavigationController(rootViewController: webViewController)
+    viewController.modalPresentationStyle = .fullScreen
+    present(viewController, animated: true)
   }
 
   private func warningThatYouNeedToChooseCurrency() {
