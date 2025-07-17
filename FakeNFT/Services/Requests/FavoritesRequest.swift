@@ -20,7 +20,11 @@ struct FavoritesRequest: NetworkRequest {
     let likes: [String]
 
     func asDictionary() -> [String: String] {
-      ["likes": likes.joined(separator: ",")]
+      if likes.isEmpty {
+        return ["likes": "null"]
+      } else {
+        return ["likes": likes.joined(separator: ",")]
+      }
     }
   }
 }
