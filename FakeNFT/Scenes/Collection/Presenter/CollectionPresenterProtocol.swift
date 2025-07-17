@@ -10,4 +10,5 @@ protocol CollectionPresenterProtocol {
   func numberOfItems(in section: Int) -> Int
   func didTapFavoritesButton(at indexPath: IndexPath)
   func didTapCartButton(at indexPath: IndexPath)
+  func didTapAuthorLink(_ url: URL)
 }

@@ -192,6 +192,7 @@ extension CollectionViewController: UICollectionViewDataSource {
     }
 
     header.configure(with: presenter.collection)
+    header.delegate = self
     return header
   }
 }
@@ -227,6 +228,14 @@ extension CollectionViewController: NFTCellDelegate {
       return
     }
     presenter.didTapCartButton(at: indexPath)
+  }
+}
+
+// MARK: CollectionHeaderViewDelegate
+
+extension CollectionViewController: CollectionHeaderViewDelegate {
+  func collectionHeaderViewDidTapAuthorLink(url: URL) {
+    presenter.didTapAuthorLink(url)
   }
 }
 

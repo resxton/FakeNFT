@@ -116,6 +116,10 @@ final class CollectionPresenter: CollectionPresenterProtocol {
     }
   }
 
+  func didTapAuthorLink(_ url: URL) {
+    router.show(website: url)
+  }
+
   // MARK: - Private Methods
 
   private func loadInitialData(
