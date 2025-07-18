@@ -32,7 +32,7 @@ final class CurrencySelectionPresenter {
 
   func setCurrentCurrencyID(_ numberInList: Int) {
     currentCurrencyID = currencyList[numberInList].id
-    print(currentCurrencyID)
+    print("Вы выбрали валюту:\n\(item(at: numberInList).name)")
   }
 
   func getCurrentCurrencyID() -> String {
@@ -63,7 +63,7 @@ final class CurrencySelectionPresenter {
             id: item.id
           ))
         }
-        print(response)
+        print("Успех!\nМы получили список валют")
         completion()
       case let .failure(error):
         print("Error: \(error)")
@@ -90,15 +90,14 @@ final class CurrencySelectionPresenter {
         guard let self else { return }
         switch result {
         case let .success(response):
-          print(response)
           if response.success {
             removeAll {
-              print("успех")
+              print("Успех!")
               completion()
             }
           }
         case let .failure(error):
-          print(error)
+          print("Ошибка:\n\(error)")
           paymentHasBeenMade = false
           completion()
         }
@@ -117,13 +116,13 @@ final class CurrencySelectionPresenter {
       guard let self else { return }
       switch result {
       case .success:
-        print("Успех")
+        print("Оплата прошла успешно")
         paymentHasBeenMade = true
         completion()
       case let .failure(error):
         paymentHasBeenMade = false
         completion()
-        print(error)
+        print("Ошибка:\n\(error)")
       }
     }
   }

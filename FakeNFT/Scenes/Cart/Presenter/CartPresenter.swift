@@ -66,6 +66,7 @@ final class CartPresenter {
   }
 
   func sort(sortBy: CartSortType) {
+    print("Вид сортировки:\n\(sortBy)")
     switch sortBy {
     case .byRating:
       cartItems.sort { $0.rating < $1.rating }
@@ -91,12 +92,12 @@ final class CartPresenter {
       guard let self else { return }
       switch result {
       case let .success(response):
-        print(response)
+        print("Успех!\nМы получили:\n\(response)")
         getCartList(ids: response.nfts) {
           completeion()
         }
       case let .failure(error):
-        print(error)
+        print("Ошибка:\n\(error)")
         isError = true
         completeion()
       }
@@ -126,11 +127,12 @@ final class CartPresenter {
         case let .success(response):
           cartItems.append(response)
         case let .failure(error):
-          print(error)
+          print("Ошибка:\n\(error)")
           isError = true
         }
         completedRequests += 1
         if completedRequests == totalRequests {
+          print("Успех!\nМы получили все НФТ")
           sort(sortBy: store.sortSettings)
           completion()
         }
@@ -142,7 +144,6 @@ final class CartPresenter {
     var cartItemsCopy = cartItems
     cartItemsCopy.remove(at: numberDeleteItem)
     let nfts = cartItemsCopy.map(\.id)
-    print(nfts)
     let request = RemoveFromTheBasket(id: "1", nfts: nfts)
     networkClient.send(
       request: request,
@@ -152,13 +153,13 @@ final class CartPresenter {
       guard let self else { return }
       switch result {
       case .success:
-        print("Нфт удалилось из корзины")
+        print("Успех!\nНфт удалось удалить из корзины")
         cartItems = cartItemsCopy
         completion()
       case let .failure(error):
         isError = true
         completion()
-        print(error)
+        print("Ошибка:\n\(error)")
       }
     }
   }
