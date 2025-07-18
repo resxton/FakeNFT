@@ -5,4 +5,5 @@ extension UIColor {
   static let yaWhite = UIColor(hexString: "FFFFFF")
   static let yaBlueUniversal = UIColor(hexString: "0A84FF")
   static let yaLightGray = UIColor(hexString: "F7F7F8")
+  static let yaYellowUniversal = UIColor(hexString: "FEEF0D")
 }

@@ -30,19 +30,82 @@ final class ProfilePresenter {
   }
 
   weak var view: ProfileView?
+  private let profileID: String
   private(set) var user: User
+  private let networkClient: NetworkClient
+
+  private var isLoaded = false
 
   // MARK: – Init
 
-  init(user: User) {
+  init(profileID: String, user: User, networkClient: NetworkClient = DefaultNetworkClient()) {
+    self.profileID = profileID
     self.user = user
+    self.networkClient = networkClient
   }
 
   // MARK: – View life-cycle
 
   func viewDidLoad() {
+    print("🛠 DEBUG: ProfilePresenter.viewDidLoad() called")
     view?.updateHeader(with: user)
     view?.reloadData()
+
+    loadProfile()
+  }
+
+  // MARK: – Data loading
+
+  private func loadProfile() {
+    print("🛠 DEBUG: loadProfile() start, profileID = \(profileID)")
+
+    let request = ProfileRequest(id: profileID)
+    networkClient.send(
+      request: request,
+      type: ProfileResponse.self,
+      completionQueue: .main
+    ) { [weak self] result in
+      guard let self else {
+        print("🛠 DEBUG: send completion — self was nil")
+        return
+      }
+      print("🛠 DEBUG: send completion — result: \(result)")
+      switch result {
+      case let .success(response):
+        print("DEBUG: ProfileResponse:", response)
+        apply(response: response)
+      case let .failure(error):
+        print("Не удалось загрузить профиль:", error)
+      }
+    }
+  }
+
+  private func apply(response: ProfileResponse) {
+    let updated = User(
+      avatarURL: URL(string: response.avatar),
+      name: response.name,
+      bio: response.bio ?? "",
+      website: URL(string: response.website ?? ""),
+      nfts: response.nfts,
+      likes: response.likes
+    )
+    isLoaded = true
+    print("DEBUG: Mapped User:", updated)
+    user = updated
+    view?.updateHeader(with: updated)
+    view?.reloadData()
+  }
+
+  func title(for item: MenuItem) -> String {
+    guard isLoaded else {
+      return item.title
+    }
+    switch item {
+    case .myNFT:
+      return "\(item.title) (\(user.nfts.count))"
+    case .favorites:
+      return "\(item.title) (\(user.likes.count))"
+    }
   }
 
   // MARK: – Actions

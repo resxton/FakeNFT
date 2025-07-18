@@ -8,6 +8,11 @@ final class FavoritesViewController: UIViewController {
     showEmpty("У Вас ещё нет избранных NFT")
   }
 
+  override func viewWillAppear(_ animated: Bool) {
+    super.viewWillAppear(animated)
+    navigationController?.setNavigationBarHidden(false, animated: false)
+  }
+
   private func setupCustomBackButton() {
     let button = UIButton(type: .system)
 

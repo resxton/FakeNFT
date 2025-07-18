@@ -45,21 +45,31 @@ final class ProfileHeaderView: UIView {
 
     site.text = user.website?.absoluteString
 
-    if let url = user.avatarURL {
-      avatar.kf.setImage(
-        with: url,
-        placeholder: UIImage(systemName: "person.crop.circle")
-      )
-    } else {
-      avatar.image = UIImage(named: "Joaqiun")
-    }
+    let placeholder = UIImage(systemName: "person.crop.circle")
+    avatar.image = placeholder
 
     bio.setNeedsLayout()
     layoutIfNeeded()
+
+    avatar.kf.setImage(
+      with: user.avatarURL,
+      placeholder: placeholder,
+      options: [
+        .cacheOriginalImage,
+        .transition(.fade(0.2)),
+        .downloadPriority(URLSessionTask.highPriority)
+      ],
+      completionHandler: { result in
+        if case .failure = result {
+          self.avatar.image = placeholder
+        }
+      }
+    )
   }
 
   // swiftlint:disable:next function_body_length
   private func setupUI() {
+    translatesAutoresizingMaskIntoConstraints = false
     avatar.translatesAutoresizingMaskIntoConstraints = false
     avatar.contentMode = .scaleAspectFill
     avatar.layer.cornerRadius = 35
@@ -98,7 +108,7 @@ final class ProfileHeaderView: UIView {
     let tap = UITapGestureRecognizer(target: self, action: #selector(siteTapped))
     site.addGestureRecognizer(tap)
 
-    edit.setImage(UIImage(named: "EditIcon"), for: .normal)
+    edit.setImage(UIImage(resource: .editIcon), for: .normal)
     edit.tintColor = UIColor.yaBlack
     edit.addTarget(self, action: #selector(editTapped), for: .touchUpInside)
     edit.translatesAutoresizingMaskIntoConstraints = false

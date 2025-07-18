@@ -11,6 +11,8 @@ extension User {
     В моей коллекции уже 100+ NFT, 
     и еще больше — на моём сайте. Открыт к коллаборациям.
     """,
-    website: URL(string: "Joaquin Phoenix.com")
+    website: URL(string: "Joaquin Phoenix.com"),
+    nfts: [],
+    likes: []
   )
 }
