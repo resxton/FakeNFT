@@ -22,6 +22,7 @@ final class CartPresenter {
       ) ?? UIImage(),
       rating: 1
     ),
+
     NFTForCartModel(
       name: "Greena",
       price: 1.78,
