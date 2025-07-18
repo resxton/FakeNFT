@@ -1,8 +1,8 @@
 import Foundation
 
 final class WebViewPresenter {
-  var view: WebViewController?
-  lazy var url: URL? = {
+  private let view: WebViewController?
+  private lazy var url: URL? = {
     if let url = URL(string: "https://yandex.ru/legal/rules/") {
       return url
     }

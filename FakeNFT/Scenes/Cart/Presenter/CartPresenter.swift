@@ -28,7 +28,7 @@ final class CartPresenter {
   ]
   private var isError: Bool = false
 
-  private var cartItems = [NFTForCartData]()
+  private var cartItems = [NFTForCartModel]()
 
   private var numberDeleteItem = -1
 
@@ -40,7 +40,7 @@ final class CartPresenter {
     return cartItems.reduce(0) { $0 + $1.price }
   }
 
-  func item(at index: Int) -> NFTForCartData {
+  func item(at index: Int) -> NFTForCartModel {
     return cartItems[index]
   }
 
@@ -106,12 +106,10 @@ final class CartPresenter {
 
   private func getCartList(ids: [String], completion: @escaping () -> Void) {
     cartItems = []
-
     guard !ids.isEmpty else {
       completion()
       return
     }
-
     var completedRequests = 0
     let totalRequests = ids.count
     print("Начали получать информацию о конкретных НФТ")
@@ -119,7 +117,7 @@ final class CartPresenter {
       let request = NFTRequest(id: id)
       networkClient.send(
         request: request,
-        type: NFTForCartData.self,
+        type: NFTForCartModel.self,
         completionQueue: .main
       ) { [weak self] result in
         guard let self else { return }

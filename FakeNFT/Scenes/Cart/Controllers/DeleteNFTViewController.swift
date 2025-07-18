@@ -11,7 +11,7 @@ protocol DeleteNFTViewControllerDelegate: AnyObject {
 final class DeleteNFTViewController: UIViewController {
   weak var delegate: DeleteNFTViewControllerDelegate?
 
-  var backgroundBlurView = UIVisualEffectView()
+  private var backgroundBlurView = UIVisualEffectView()
 
   private var returnButton: UIButton = {
     let button = UIButton()

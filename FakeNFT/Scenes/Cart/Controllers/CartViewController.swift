@@ -5,7 +5,9 @@ import UIKit
 
 final class CartViewController: UIViewController {
   private let presenter = CartPresenter()
+
   private lazy var alertPresenter = AlertPresenter(viewController: self)
+
   private lazy var countNTFLabel: UILabel = {
     let label = UILabel()
     label.text = "\(presenter.itemCount()) NFT"

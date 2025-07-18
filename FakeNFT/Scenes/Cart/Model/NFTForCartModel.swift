@@ -7,9 +7,9 @@ struct NFTForCartResponse: Decodable {
   let nfts: [String]
 }
 
-// MARK: - NFTForCartData
+// MARK: - NFTForCartModel
 
-struct NFTForCartData: Decodable {
+struct NFTForCartModel: Decodable {
   let id: String
   let name: String
   let rating: Int

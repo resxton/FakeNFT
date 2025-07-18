@@ -25,6 +25,7 @@ final class WebViewController: UIViewController {
   }()
 
   private var estimatedProgressObservation: NSKeyValueObservation?
+
   override func viewDidLoad() {
     super.viewDidLoad()
     setLoad()
@@ -35,6 +36,10 @@ final class WebViewController: UIViewController {
   override func viewDidAppear(_ animated: Bool) {
     super.viewDidAppear(animated)
     presenter.didUpdateProgressValue(webView.estimatedProgress)
+  }
+
+  @objc private func backButtonTapped() {
+    dismiss(animated: true)
   }
 
   private func setEstimatedProgressObservation() {
@@ -83,10 +88,6 @@ final class WebViewController: UIViewController {
     backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
     navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
     view.backgroundColor = .universalWhite
-  }
-
-  @objc private func backButtonTapped() {
-    dismiss(animated: true)
   }
 
   func setProgressValue(_ newValue: Float) {

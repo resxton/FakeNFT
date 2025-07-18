@@ -1,7 +1,5 @@
 import UIKit
 
-// MARK: - AbbreviatedCurrency
-
 // MARK: - CurrencySelectionPresenter
 
 final class CurrencySelectionPresenter {
@@ -13,7 +11,8 @@ final class CurrencySelectionPresenter {
 
   private var isError: Bool = false
 
-  var currencyList: [CurrenciesModel] = []
+  private var currencyList: [CurrenciesModel] = []
+
   func item(at index: Int) -> CurrenciesModel {
     return currencyList[index]
   }
