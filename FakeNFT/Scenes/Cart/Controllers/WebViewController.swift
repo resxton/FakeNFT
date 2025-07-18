@@ -76,7 +76,8 @@ final class WebViewController: UIViewController {
   private func setupUI() {
     setWebView()
     setProgressView()
-    navigationItem.title = "Пользовательское соглашение"
+    let text = NSLocalizedString("WebView.title", comment: "WebView.title")
+    navigationItem.title = text
     let color = UIColor.universalBlack
     navigationController?.navigationBar.titleTextAttributes = [.foregroundColor: color]
     backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)

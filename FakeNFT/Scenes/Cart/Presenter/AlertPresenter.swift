@@ -9,14 +9,16 @@ final class AlertPresenter {
     self.viewController = viewController
   }
 
-  func alertForErrorWithPayment(completion: @escaping () -> Void) {
+  func alertForErrorWithTwoActions(title: String, completion: @escaping () -> Void) {
     let alert = UIAlertController(
-      title: "Не удалось произвести оплату",
+      title: title,
       message: "",
       preferredStyle: .alert
     )
-    let cancel = UIAlertAction(title: "Отмена", style: .default)
-    let alertAction = UIAlertAction(title: "Повторить", style: .default) { _ in
+    let textRepeat = NSLocalizedString("Error.repeat", comment: "Error.repeat.Curriencies")
+    let textCancel = NSLocalizedString("Alert.Cancel", comment: "Alert.Cancel")
+    let cancel = UIAlertAction(title: textCancel, style: .default)
+    let alertAction = UIAlertAction(title: textRepeat, style: .default) { _ in
       completion()
     }
     alert.addAction(cancel)

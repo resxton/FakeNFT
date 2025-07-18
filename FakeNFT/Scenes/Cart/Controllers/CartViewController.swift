@@ -35,7 +35,7 @@ final class CartViewController: UIViewController {
 
   private var sortButton: UIButton = {
     let button = UIButton()
-    button.setImage(UIImage(named: "sortButton"), for: .normal)
+    button.setImage(UIImage(named: "Sort"), for: .normal)
     button.translatesAutoresizingMaskIntoConstraints = false
     return button
   }()
@@ -120,9 +120,8 @@ final class CartViewController: UIViewController {
   }
 
   private func ifYouDidntManageToGetTheListOfNftsInYourCart() {
-    alertPresenter.alertWithOneActions(
-      title: "Не получилось получить заказ",
-      buttonTitle: "Повторить"
+    alertPresenter.alertForErrorWithTwoActions(
+      title: NSLocalizedString("Alert.DontLoadOrder", comment: "Alert.DontLoadOrder")
     ) { [weak self] in
       guard let self else { return }
       getCartList()
@@ -273,8 +272,8 @@ extension CartViewController: DeleteNFTViewControllerDelegate {
       UIBlockingProgressHUD.dismiss()
       if presenter.isErrorState() {
         alertPresenter.alertWithOneActions(
-          title: "Не получилось удалить из корзины",
-          buttonTitle: "Ок"
+          title: NSLocalizedString("Alert.DontRemoveInCart", comment: "Alert.DontRemoveInCart"),
+          buttonTitle: "OK"
         ) {}
       }
     }

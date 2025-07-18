@@ -9,7 +9,7 @@ final class SuccessPaymentViewController: UIViewController {
 
   private let successLabel: UILabel = {
     let label = UILabel()
-    let text = "Успех! Оплата прошла,\n поздравляем с покупкой!"
+    let text = NSLocalizedString("Success.title", comment: "Success.title")
     label.text = text
     label.textColor = .adaptiveBlack
     label.numberOfLines = 2
@@ -21,7 +21,7 @@ final class SuccessPaymentViewController: UIViewController {
 
   private let paymentButton: UIButton = {
     let button = UIButton()
-    let text = "Вернуться в корзину"
+    let text = NSLocalizedString("Success.button", comment: "Success.button")
     button.setTitle(text, for: .normal)
     button.backgroundColor = .adaptiveBlack
     button.setTitleColor(.adaptiveWhite, for: .normal)

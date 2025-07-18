@@ -9,7 +9,7 @@ final class CurrencySelectionViewController: UIViewController {
 
   private let backButton: UIButton = {
     let button = UIButton()
-    button.setImage(UIImage(named: "backButton"), for: .normal)
+    button.setImage(UIImage(named: "Back"), for: .normal)
     button.translatesAutoresizingMaskIntoConstraints = false
     return button
   }()
@@ -52,8 +52,8 @@ final class CurrencySelectionViewController: UIViewController {
     label.text = text
     label.textColor = .universalBlue
     label.font = UIFont.systemFont(ofSize: 13, weight: .regular)
-    label.isUserInteractionEnabled = true // очень важно!
-    let tapGesture = UITapGestureRecognizer(target: self, action: #selector(goTo))
+    label.isUserInteractionEnabled = true
+    let tapGesture = UITapGestureRecognizer(target: self, action: #selector(goToUserAgreement))
     label.addGestureRecognizer(tapGesture)
     return label
   }()
@@ -99,7 +99,7 @@ final class CurrencySelectionViewController: UIViewController {
     }
   }
 
-  @objc func goTo() {
+  @objc func goToUserAgreement() {
     let webViewController = WebViewController()
     let viewController = UINavigationController(rootViewController: webViewController)
     viewController.modalPresentationStyle = .fullScreen
@@ -107,14 +107,13 @@ final class CurrencySelectionViewController: UIViewController {
   }
 
   private func warningThatYouNeedToChooseCurrency() {
-    alertPresenter.alertWithOneActions(
-      title: "Вы не выбрали валюту",
-      buttonTitle: "Ок"
-    ) {}
+    let text = NSLocalizedString("Alert.NotSelectedCurrency", comment: "Alert.NotSelectedCurrency")
+    alertPresenter.alertWithOneActions(title: text, buttonTitle: "OK") {}
   }
 
   private func actionsInCaseOfNonPayment() {
-    alertPresenter.alertForErrorWithPayment { [weak self] in
+    let text = NSLocalizedString("Alert.FailedToPayment", comment: "Alert.FailedToPayment")
+    alertPresenter.alertForErrorWithTwoActions(title: text) { [weak self] in
       guard let self else { return }
       paymentButtonAction()
     }
@@ -133,9 +132,8 @@ final class CurrencySelectionViewController: UIViewController {
   }
 
   private func callAnAlertIfYouCantGetAList() {
-    alertPresenter.alertWithOneActions(
-      title: "Не удалось получить список валют",
-      buttonTitle: "Повторить"
+    alertPresenter.alertForErrorWithTwoActions(
+      title: NSLocalizedString("Alert.UnableToGetListOfCurrencies", comment: "noListOfCurrencies")
     ) { [weak self] in
       guard let self else {
         return

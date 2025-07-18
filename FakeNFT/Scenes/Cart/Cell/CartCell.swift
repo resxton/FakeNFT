@@ -53,7 +53,7 @@ final class CartCell: UITableViewCell {
 
   private var deleteButton: UIButton = {
     let button = UIButton()
-    button.setImage(UIImage(named: "trash"), for: .normal)
+    button.setImage(UIImage(named: "CartDelete"), for: .normal)
     button.translatesAutoresizingMaskIntoConstraints = false
     return button
   }()
