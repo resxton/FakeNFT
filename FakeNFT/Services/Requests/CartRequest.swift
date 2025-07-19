@@ -1,9 +1,9 @@
 import Foundation
 
-struct NFTRequest: NetworkRequest {
+struct CartRequest: NetworkRequest {
   let id: String
   var endpoint: URL? {
-    URL(string: "\(RequestConstants.baseURL)/api/v1/nft/\(id)")
+    URL(string: "\(RequestConstants.baseURL)/api/v1/orders/\(id)")
   }
 
   var HTTPMethod: HttpMethod { .get }
