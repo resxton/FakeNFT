@@ -1,9 +1,12 @@
+import Kingfisher
 import UIKit
 
 // MARK: - CartViewController
 
 final class CartViewController: UIViewController {
   private let presenter = CartPresenter()
+
+  private lazy var alertPresenter = AlertPresenter(viewController: self)
 
   private lazy var countNTFLabel: UILabel = {
     let label = UILabel()
@@ -34,7 +37,7 @@ final class CartViewController: UIViewController {
 
   private var sortButton: UIButton = {
     let button = UIButton()
-    button.setImage(UIImage(named: "sortButton"), for: .normal)
+    button.setImage(UIImage(named: "Sort"), for: .normal)
     button.translatesAutoresizingMaskIntoConstraints = false
     return button
   }()
@@ -65,14 +68,7 @@ final class CartViewController: UIViewController {
     return stackView
   }()
 
-  private var paymentView: UIView = {
-    let view = UIView()
-    view.backgroundColor = .adaptiveLightGrey
-    HelperUI.setRadius(view, radius: 12)
-    view.layer.maskedCorners = [.layerMinXMinYCorner, .layerMaxXMinYCorner]
-    view.translatesAutoresizingMaskIntoConstraints = false
-    return view
-  }()
+  private var paymentView: UIView = HelperUI.getPaymentView()
 
   private var placeholderLabel: UILabel = {
     let label = UILabel()
@@ -87,38 +83,20 @@ final class CartViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     view.backgroundColor = .adaptiveWhite
-    presenter.viewDidLoad()
     setUI()
-    setPlaceholderIsHidden(presenter.itemCount() > 0)
+  }
+
+  override func viewWillAppear(_ animated: Bool) {
+    getCartList()
   }
 
   @objc private func handleSortButtonTapped() {
-    let textSorting = NSLocalizedString("Cart.Sorting", comment: "Cart.Sorting")
-    let alert = UIAlertController(title: textSorting, message: nil, preferredStyle: .actionSheet)
-
-    let textSortingByPrice = NSLocalizedString("Sorting.forPrice", comment: "Sorting.forPrice")
-
-    let sortByPrice = UIAlertAction(title: textSortingByPrice, style: .default) { [weak self] _ in
+    alertPresenter.presentSortOptions { [weak self] in
       guard let self else { return }
-      sort(sortBy: .byPrice)
+      if let sortType = alertPresenter.sortType {
+        sort(sortBy: sortType)
+      }
     }
-    let textSortingByRating = NSLocalizedString("Sorting.forRating", comment: "Sorting.forRating")
-    let sortByRating = UIAlertAction(title: textSortingByRating, style: .default) { [weak self] _ in
-      guard let self else { return }
-      sort(sortBy: .byRating)
-    }
-    let textSortingByName = NSLocalizedString("Sorting.forName", comment: "Sorting.forName")
-    let sortByName = UIAlertAction(title: textSortingByName, style: .default) { [weak self] _ in
-      guard let self else { return }
-      sort(sortBy: .byName)
-    }
-    let textSortingClose = NSLocalizedString("Sorting.Close", comment: "Sorting.Close")
-    let close = UIAlertAction(title: textSortingClose, style: .cancel) { _ in }
-    alert.addAction(sortByPrice)
-    alert.addAction(sortByRating)
-    alert.addAction(sortByName)
-    alert.addAction(close)
-    present(alert, animated: true)
   }
 
   @objc private func handlePaymentButtonTapped() {
@@ -131,11 +109,50 @@ final class CartViewController: UIViewController {
     )
   }
 
+  private func getCartList() {
+    UIBlockingProgressHUD.show()
+    presenter.getCartListId { [weak self] in
+      guard let self else { return }
+      UIBlockingProgressHUD.dismiss()
+      checkingEmptyBasket()
+      if presenter.isErrorState() {
+        ifYouDidntManageToGetTheListOfNftsInYourCart()
+      }
+    }
+  }
+
+  private func ifYouDidntManageToGetTheListOfNftsInYourCart() {
+    alertPresenter.alertForErrorWithTwoActions(
+      title: NSLocalizedString("Alert.DontLoadOrder", comment: "Alert.DontLoadOrder")
+    ) { [weak self] in
+      guard let self else { return }
+      getCartList()
+    }
+  }
+
+  private func sort(sortBy: CartSortType) {
+    presenter.sort(sortBy: sortBy)
+    tableView.reloadData()
+  }
+
+  private func setPlaceholderIsHidden(_ isHidden: Bool) {
+    placeholderLabel.isHidden = isHidden
+    paymentView.isHidden = !isHidden
+    sortButton.isHidden = !isHidden
+    tableView.isHidden = !isHidden
+  }
+
+  private func checkingEmptyBasket() {
+    setPlaceholderIsHidden(presenter.itemCount() > 0)
+    countNTFLabel.text = "\(presenter.itemCount()) NFT"
+    priceNTFLabel.text = "\(presenter.nftCartTotal()) ETH"
+    tableView.reloadData()
+  }
+
   private func setTableViewConstraints() {
     tableView.translatesAutoresizingMaskIntoConstraints = false
     view.addSubview(tableView)
     tableView.delegate = self
-    print(1)
     tableView.dataSource = self
     NSLayoutConstraint.activate([
       tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
@@ -178,6 +195,15 @@ final class CartViewController: UIViewController {
     navigationItem.rightBarButtonItem = sortBarButtonItem
   }
 
+  private func setPlaceholderLabel() {
+    view.addSubview(placeholderLabel)
+    NSLayoutConstraint.activate([
+      placeholderLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+      placeholderLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+    ])
+    placeholderLabel.isHidden = true
+  }
+
   private func setUI() {
     setPaymentViewConstraints()
     setTableViewConstraints()
@@ -189,32 +215,14 @@ final class CartViewController: UIViewController {
   private func configCell(cell: CartCell, indexPath: IndexPath) {
     let cartItem = presenter.item(at: indexPath.row)
     cell.priceNFTLabel.text = "\(cartItem.price) ETH"
-    cell.imageNFT.image = cartItem.image
     cell.nameNFTLabel.text = cartItem.name
     let ratingInt = cartItem.rating
+    if let url = URL(string: cartItem.images[0]) {
+      cell.setImage(url: url)
+    }
     let image = UIImage(named: presenter.getStringRating(for: ratingInt))
     cell.starImage.image = image
     cell.indexPath = indexPath
-  }
-
-  private func sort(sortBy: CartSortType) {
-    presenter.sort(sortBy: sortBy)
-    tableView.reloadData()
-  }
-
-  private func setPlaceholderLabel() {
-    view.addSubview(placeholderLabel)
-    NSLayoutConstraint.activate([
-      placeholderLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-      placeholderLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor)
-    ])
-  }
-
-  private func setPlaceholderIsHidden(_ isHidden: Bool) {
-    placeholderLabel.isHidden = isHidden
-    paymentView.isHidden = !isHidden
-    sortButton.isHidden = !isHidden
-    tableView.isHidden = !isHidden
   }
 }
 
@@ -259,10 +267,17 @@ extension CartViewController: CartCellDelegate {
 
 extension CartViewController: DeleteNFTViewControllerDelegate {
   func delete() {
-    presenter.removeItem()
-    tableView.reloadData()
-    setPlaceholderIsHidden(presenter.itemCount() > 0)
-    countNTFLabel.text = "\(presenter.itemCount()) NFT"
-    priceNTFLabel.text = "\(presenter.nftCartTotal()) ETH"
+    UIBlockingProgressHUD.show()
+    presenter.delete { [weak self] in
+      guard let self else { return }
+      checkingEmptyBasket()
+      UIBlockingProgressHUD.dismiss()
+      if presenter.isErrorState() {
+        alertPresenter.alertWithOneActions(
+          title: NSLocalizedString("Alert.DontRemoveInCart", comment: "Alert.DontRemoveInCart"),
+          buttonTitle: "OK"
+        ) {}
+      }
+    }
   }
 }

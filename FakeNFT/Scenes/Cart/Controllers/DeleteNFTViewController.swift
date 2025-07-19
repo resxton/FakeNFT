@@ -11,7 +11,7 @@ protocol DeleteNFTViewControllerDelegate: AnyObject {
 final class DeleteNFTViewController: UIViewController {
   weak var delegate: DeleteNFTViewControllerDelegate?
 
-  var backgroundBlurView = UIVisualEffectView()
+  private var backgroundBlurView = UIVisualEffectView()
 
   private var returnButton: UIButton = {
     let button = UIButton()
@@ -39,7 +39,6 @@ final class DeleteNFTViewController: UIViewController {
     let imageView = UIImageView()
     HelperUI.setRadius(imageView, radius: 12)
     imageView.translatesAutoresizingMaskIntoConstraints = false
-    imageView.image = UIImage(systemName: "trash")
     return imageView
   }()
 

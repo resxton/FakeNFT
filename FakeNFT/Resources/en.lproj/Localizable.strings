@@ -17,3 +17,15 @@
 "Delete.deleteButton" = "Delete";
 "Delete.returnButton" = "Return";
 "NFT.price" = "Price";
+"Currency.payment" = "Pay";
+"Currency.link" = "User Agreement";
+"Currency.text" = "By making a purchase, you agree to the terms";
+"WebView.title" = "User Agreement";
+"Success.button" = "Return to cart";
+"Success.title" ="Success! Payment completed,\n congratulations on your purchase!";
+"Alert.DontRemoveInCart" = "Unable to remove from cart";
+"Alert.DontLoadOrder" = "Unable to receive the order";
+"Alert.NotSelectedCurrency" = "You have not selected a currency";
+"Alert.UnableToGetListOfCurrencies" = "Unable to get list of currencies";
+"Alert.FailedToPayment" = "Failed to complete payment";
+"Alert.Cancel" = "Cancel";

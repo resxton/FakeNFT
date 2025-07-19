@@ -17,3 +17,15 @@
 "Delete.deleteButton" = "Удалить";
 "Delete.returnButton" = "Вернуться";
 "NFT.price" = "Цена";
+"Currency.payment" = "Оплатить";
+"Currency.link" = "Пользовательского соглашения";
+"Currency.text" = "Совершая покупку, вы соглашаетесь с условиями";
+"WebView.title" = "Пользовательское соглашение";
+"Success.button"  =  "Вернуться в корзину";
+"Success.title" = "Успех! Оплата прошла,\n поздравляем с покупкой!";
+"Alert.DontRemoveInCart" = "Не получилось удалить из корзины";
+"Alert.DontLoadOrder" = "Не получилось получить заказ";
+"Alert.NotSelectedCurrency" = "Вы не выбрали валюту";
+"Alert.UnableToGetListOfCurrencies" = "Не удалось получить список валют";
+"Alert.FailedToPayment" = "Не удалось произвести оплату";
+"Alert.Cancel" = "Отменить";
