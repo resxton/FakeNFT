@@ -1,6 +1,14 @@
 import UIKit
 
+// MARK: - ProfileViewControllerProtocol
+
+protocol ProfileViewControllerProtocol: UIViewController {}
+
+// MARK: - ProfileViewController
+
 final class ProfileViewController: UIViewController {
+  private let presenter: ProfilePresenterProtocol
+
   private lazy var exitButton: UIButton = {
     let button = UIButton.systemButton(
       with: UIImage(resource: .backward),
@@ -20,16 +28,12 @@ final class ProfileViewController: UIViewController {
 
   private lazy var nameLabel: UILabel = {
     let name = UILabel()
-    name.text = "васян васянович"
     name.font = .systemFont(ofSize: 22, weight: .bold)
     return name
   }()
 
   private lazy var descriptionLable: UILabel = {
     let description = UILabel()
-    description
-      .text =
-      "Дизайнер из Казани, люблю цифровое искусство и бейглы. В моей коллекции уже 100+ NFT"
     description.font = .systemFont(ofSize: 13, weight: .regular)
     description.numberOfLines = .max
     return description
@@ -58,19 +62,35 @@ final class ProfileViewController: UIViewController {
     let button = UIButton(type: .system)
     button.addSubview(arrowImageForButton)
     arrowImageForButton.translatesAutoresizingMaskIntoConstraints = false
-    button.setTitle("Коллекция NFT (112)", for: .normal)
     button.setTitleColor(.universalBlack, for: .normal)
     button.titleLabel?.font = .systemFont(ofSize: 17, weight: .bold)
     button.contentHorizontalAlignment = .leading
     return button
   }()
 
+  init(presenter: ProfilePresenterProtocol) {
+    self.presenter = presenter
+    super.init(nibName: nil, bundle: nil)
+  }
+
+  @available(*, unavailable)
+  required init?(coder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+  }
+
   override func viewDidLoad() {
-    view.backgroundColor = .white
+    setUpUserData()
     setUpUI()
   }
 
+  private func setUpUserData() {
+    nameLabel.text = presenter.getUserName()
+    descriptionLable.text = presenter.getUserDescripton()
+    nftButton.setTitle("Коллекция NFT \(presenter.getNuberOfNfts())", for: .normal)
+  }
+
   private func setUpUI() {
+    view.backgroundColor = .white
     for item in [exitButton, avatarImage, nameLabel, descriptionLable, webButton, nftButton] {
       item.translatesAutoresizingMaskIntoConstraints = false
       view.addSubview(item)
@@ -116,8 +136,10 @@ final class ProfileViewController: UIViewController {
 
   @objc
   func didTapWebButton() {
-    let webViewController = WebViewController()
-    webViewController.modalPresentationStyle = .fullScreen
-    present(webViewController, animated: true)
+    presenter.presentWebViewController()
   }
 }
+
+// MARK: ProfileViewControllerProtocol
+
+extension ProfileViewController: ProfileViewControllerProtocol {}

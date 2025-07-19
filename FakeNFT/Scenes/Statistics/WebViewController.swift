@@ -3,6 +3,7 @@ import WebKit
 
 class WebViewController: UIViewController {
   let webView = WKWebView()
+  let url: URL
 
   private lazy var exitButton: UIButton = {
     let button = UIButton.systemButton(
@@ -16,12 +17,20 @@ class WebViewController: UIViewController {
     return button
   }()
 
+  init(url: URL) {
+    self.url = url
+    super.init(nibName: nil, bundle: nil)
+  }
+
+  @available(*, unavailable)
+  required init?(coder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+  }
+
   override func viewDidLoad() {
     super.viewDidLoad()
     setUpUi()
-    if let url = URL(string: "https://practicum.yandex.ru/ios-developer") {
-      webView.load(URLRequest(url: url))
-    }
+    webView.load(URLRequest(url: url))
   }
 
   private func setUpUi() {

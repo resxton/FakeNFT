@@ -28,6 +28,7 @@
 		47644BEBB4F589170EA8E512 /* AppDIContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D89DAC814AE4344EFA086F22 /* AppDIContainer.swift */; };
 		489F3AF6E77473E8A52B5A8F /* FakeNFTUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BFFEBF51F316E5161BE5DF7 /* FakeNFTUITests.swift */; };
 		4DDBBE344C178C4F3FCEEC53 /* ExampleUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07EC7AA175608E2723EC8972 /* ExampleUnitTests.swift */; };
+		4F9687D12E2BC05E00E0D393 /* ProfilePresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F9687D02E2BC05E00E0D393 /* ProfilePresenter.swift */; };
 		4FD237302E2820B80081B271 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FD2372F2E2820B80081B271 /* ProfileViewController.swift */; };
 		4FE23C022E2AE41200EFD988 /* WebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FE23C012E2AE41200EFD988 /* WebViewController.swift */; };
 		512824907125B3477B3EBEE4 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = 346E88310201D3B71FB15951 /* Colors.swift */; };
@@ -104,6 +105,7 @@
 		4B5CDF28AC0085C324A05E81 /* NFTDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NFTDomain.swift; sourceTree = "<group>"; };
 		4BC3D26C4956820B9AD27367 /* NetworkClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkClient.swift; sourceTree = "<group>"; };
 		4EC4DBBDE954BE123312AF12 /* ExamplePutService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExamplePutService.swift; sourceTree = "<group>"; };
+		4F9687D02E2BC05E00E0D393 /* ProfilePresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfilePresenter.swift; sourceTree = "<group>"; };
 		4FD2372F2E2820B80081B271 /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		4FE23C012E2AE41200EFD988 /* WebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewController.swift; sourceTree = "<group>"; };
 		50E6BF5F793C85048957E358 /* DateFormatters+Presets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DateFormatters+Presets.swift"; sourceTree = "<group>"; };
@@ -263,11 +265,12 @@
 		4A49040072DBD453623B42BE /* Statistics */ = {
 			isa = PBXGroup;
 			children = (
-				09407180FB7EE273D18E3F18 /* StatisticsPresenter.swift */,
-				4FD2372F2E2820B80081B271 /* ProfileViewController.swift */,
 				4FE23C012E2AE41200EFD988 /* WebViewController.swift */,
 				C8C9126F634980E04749491E /* StatisticsTableViewCell.swift */,
 				E04961EBE13EA953EED65667 /* StatisticsViewController.swift */,
+				09407180FB7EE273D18E3F18 /* StatisticsPresenter.swift */,
+				4FD2372F2E2820B80081B271 /* ProfileViewController.swift */,
+				4F9687D02E2BC05E00E0D393 /* ProfilePresenter.swift */,
 			);
 			path = Statistics;
 			sourceTree = "<group>";
@@ -652,6 +655,7 @@
 				4FD237302E2820B80081B271 /* ProfileViewController.swift in Sources */,
 				236091569EE16B892BF96963 /* UserDTO.swift in Sources */,
 				1AAC8A37CE26CC1FA3B75C68 /* UserDomain.swift in Sources */,
+				4F9687D12E2BC05E00E0D393 /* ProfilePresenter.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
