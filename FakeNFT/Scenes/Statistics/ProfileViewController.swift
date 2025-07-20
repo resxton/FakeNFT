@@ -79,7 +79,6 @@ final class ProfileViewController: UIViewController {
   }
 
   override func viewDidLoad() {
-    setUpUserData()
     setUpUI()
   }
 
@@ -90,6 +89,7 @@ final class ProfileViewController: UIViewController {
   }
 
   private func setUpUI() {
+    setUpUserData()
     view.backgroundColor = .white
     for item in [exitButton, avatarImage, nameLabel, descriptionLable, webButton, nftButton] {
       item.translatesAutoresizingMaskIntoConstraints = false
