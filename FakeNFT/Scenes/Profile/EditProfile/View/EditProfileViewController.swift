@@ -4,8 +4,7 @@ import UIKit
 // MARK: - EditProfileViewController
 
 final class EditProfileViewController: UIViewController {
-  private var user: User
-  private let onSave: (User) -> Void
+  private var presenter: EditProfilePresenting
 
   private let scrollView = UIScrollView()
   private let contentView = UIView()
@@ -23,9 +22,10 @@ final class EditProfileViewController: UIViewController {
   private let bioField = makeTextView()
   private let websiteField = makeField()
 
-  init(user: User, onSave: @escaping (User) -> Void) {
-    self.user = user
-    self.onSave = onSave
+  private let activityIndicator = UIActivityIndicatorView(style: .medium)
+
+  init(presenter: EditProfilePresenting) {
+    self.presenter = presenter
     super.init(nibName: nil, bundle: nil)
   }
 
@@ -33,11 +33,16 @@ final class EditProfileViewController: UIViewController {
 
   override func viewDidLoad() {
     super.viewDidLoad()
+    presenter.view = self
+    setupUI()
+    presenter.viewDidLoad()
+  }
+
+  private func setupUI() {
     view.backgroundColor = UIColor.yaWhite
     setupNavigationAppearance()
     setupNavBar()
     setupLayout()
-    populateData()
     setupDismissKeyboardGesture()
     setupKeyboardObservers()
   }
@@ -61,27 +66,29 @@ final class EditProfileViewController: UIViewController {
     navigationItem.rightBarButtonItem?.tintColor = UIColor.yaBlack
   }
 
-  private func populateData() {
-    nameField.text = user.name
-    bioField.text = user.bio
-    websiteField.text = user.website?.absoluteString
-
-    if let url = user.avatarURL {
-      avatarView.kf.setImage(with: url, placeholder: UIImage(systemName: "person.crop.circle"))
-    } else {
-      avatarView.image = UIImage(systemName: "person.crop.circle")
-    }
+  @objc private func closeTapped() {
+    presenter.didTapClose(
+      name: nameField.text ?? "",
+      bio: bioField.text,
+      website: websiteField.text
+    )
   }
 
-  // swiftlint:disable:next function_body_length
   private func setupLayout() {
+    activityIndicator.translatesAutoresizingMaskIntoConstraints = false
+    view.addSubview(activityIndicator)
+    NSLayoutConstraint.activate([
+      activityIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+      activityIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+    ])
+
     scrollView.translatesAutoresizingMaskIntoConstraints = false
     contentView.translatesAutoresizingMaskIntoConstraints = false
     view.addSubview(scrollView)
     scrollView.addSubview(contentView)
 
     NSLayoutConstraint.activate([
-      scrollView.topAnchor.constraint(equalTo: view.topAnchor),
+      scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
       scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
       scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
       scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
@@ -116,14 +123,10 @@ final class EditProfileViewController: UIViewController {
     avatarContainer.addSubview(avatarView)
     avatarContainer.addSubview(avatarOverlay)
     avatarContainer.addSubview(changePhotoLabel)
-    contentView.addSubview(avatarContainer)
 
-    contentView.addSubview(nameTitle)
-    contentView.addSubview(nameField)
-    contentView.addSubview(bioTitle)
-    contentView.addSubview(bioField)
-    contentView.addSubview(websiteTitle)
-    contentView.addSubview(websiteField)
+    for item in [avatarContainer, nameTitle, nameField, bioTitle, bioField, websiteTitle, websiteField] {
+      contentView.addSubview(item)
+    }
 
     NSLayoutConstraint.activate([
       avatarContainer.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 22),
@@ -172,16 +175,6 @@ final class EditProfileViewController: UIViewController {
     ])
   }
 
-  @objc private func closeTapped() {
-    user.name = nameField.text ?? ""
-    user.bio = bioField.text
-    if let text = websiteField.text, let url = URL(string: text) {
-      user.website = url
-    }
-    onSave(user)
-    dismiss(animated: true)
-  }
-
   private func setupDismissKeyboardGesture() {
     let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
     tapGesture.cancelsTouchesInView = false
@@ -208,9 +201,8 @@ final class EditProfileViewController: UIViewController {
   }
 
   @objc private func keyboardWillShow(notification: Notification) {
-    guard
-      let userInfo = notification.userInfo,
-      let keyboardFrame = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect
+    guard let userInfo = notification.userInfo,
+          let keyboardFrame = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect
     else { return }
 
     let insets = UIEdgeInsets(top: 0, left: 0, bottom: keyboardFrame.height + 20, right: 0)
@@ -228,73 +220,27 @@ final class EditProfileViewController: UIViewController {
   }
 }
 
-// MARK: - UI Helpers
+// MARK: EditProfileView
 
-private func makeTitle(_ text: String) -> UILabel {
-  let label = UILabel()
-  label.text = text
-  label.font = .systemFont(ofSize: 22, weight: .bold)
-  label.textColor = UIColor.yaBlack
-  label.translatesAutoresizingMaskIntoConstraints = false
-  return label
-}
-
-private func makeField() -> UITextField {
-  let textField = UITextField()
-  textField.font = .systemFont(ofSize: 17)
-  textField.textColor = UIColor.yaBlack
-  textField.backgroundColor = UIColor.yaLightGray
-  textField.layer.cornerRadius = 12
-  textField.setLeftPaddingPoints(16)
-  textField.translatesAutoresizingMaskIntoConstraints = false
-
-  let clearButton = UIButton(type: .custom)
-  clearButton.setImage(UIImage(systemName: "xmark.circle.fill"), for: .normal)
-  clearButton.tintColor = UIColor.systemGray
-  clearButton.addTarget(textField, action: #selector(UITextField.clear), for: .touchUpInside)
-
-  let container = UIView()
-  container.translatesAutoresizingMaskIntoConstraints = false
-  container.addSubview(clearButton)
-  clearButton.translatesAutoresizingMaskIntoConstraints = false
-  NSLayoutConstraint.activate([
-    clearButton.centerYAnchor.constraint(equalTo: container.centerYAnchor),
-    clearButton.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -14.5),
-    clearButton.widthAnchor.constraint(equalToConstant: 24),
-    clearButton.heightAnchor.constraint(equalToConstant: 24)
-  ])
-  NSLayoutConstraint.activate([
-    container.widthAnchor.constraint(equalToConstant: 38.5),
-    container.heightAnchor.constraint(equalToConstant: 44)
-  ])
-
-  textField.rightView = container
-  textField.rightViewMode = .whileEditing
-
-  return textField
-}
-
-private func makeTextView() -> UITextView {
-  let textView = UITextView()
-  textView.font = .systemFont(ofSize: 17)
-  textView.textColor = UIColor.yaBlack
-  textView.backgroundColor = UIColor.yaLightGray
-  textView.layer.cornerRadius = 12
-  textView.isScrollEnabled = false
-  textView.textContainerInset = UIEdgeInsets(top: 12, left: 10, bottom: 12, right: 10)
-  textView.translatesAutoresizingMaskIntoConstraints = false
-  return textView
-}
-
-private extension UITextField {
-  func setLeftPaddingPoints(_ amount: CGFloat) {
-    let padding = UIView(frame: CGRect(x: 0, y: 0, width: amount, height: frame.height))
-    leftView = padding
-    leftViewMode = .always
+extension EditProfileViewController: EditProfileView {
+  func fillForm(name: String, bio: String, website: String?, avatarURL: URL?) {
+    nameField.text = name
+    bioField.text = bio
+    websiteField.text = website
+    avatarView.kf.setImage(with: avatarURL, placeholder: UIImage(systemName: "person.crop.circle"))
   }
 
-  @objc func clear() {
-    text = ""
-    sendActions(for: .editingChanged)
+  func showLoading(_ show: Bool) {
+    show ? activityIndicator.startAnimating() : activityIndicator.stopAnimating()
+  }
+
+  func showError(_ message: String) {
+    let alert = UIAlertController(title: "Ошибка", message: message, preferredStyle: .alert)
+    alert.addAction(UIAlertAction(title: "OK", style: .default))
+    present(alert, animated: true)
+  }
+
+  func close() {
+    dismiss(animated: true)
   }
 }
