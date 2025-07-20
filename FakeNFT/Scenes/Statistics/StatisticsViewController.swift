@@ -105,10 +105,12 @@ extension StatisticsViewController: UITableViewDataSource {
     }
 
     let user = presenter.getUser(index: indexPath.row)
+
+    let userFirstName = user.name.split(separator: " ")[0]
     cell.setUpValues(
       number: indexPath.row,
       avatarImage: UIImage(resource: .userpick),
-      name: user.name,
+      name: String(userFirstName),
       numberOfNft: user.nfts.count
     )
 
@@ -124,9 +126,7 @@ extension StatisticsViewController: UITableViewDelegate {
   }
 
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-    let profileVc = ProfileViewController()
-    profileVc.modalPresentationStyle = .fullScreen
-    present(profileVc, animated: true)
+    presenter.presentProfile(index: indexPath.row)
   }
 }
 
