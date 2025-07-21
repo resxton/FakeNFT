@@ -141,10 +141,15 @@ final class ProfilePresenter {
       name: user.name,
       description: user.bio,
       website: user.website?.absoluteString ?? "",
-      likes: updatedLikes
+      likes: updatedLikes,
+      avatar: user.avatarURL?.absoluteString ?? ""
     )
 
-    networkClient.send(request: request, type: ProfileResponse.self, completionQueue: .main) { [weak self] result in
+    networkClient.send(
+      request: request,
+      type: ProfileResponse.self,
+      completionQueue: .main
+    ) { [weak self] result in
       guard let self else { return }
 
       switch result {

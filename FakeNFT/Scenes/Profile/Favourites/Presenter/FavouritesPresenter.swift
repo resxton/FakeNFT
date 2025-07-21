@@ -26,7 +26,11 @@ final class FavoritesPresenter: FavoritesPresenting {
     for id in user.likes {
       group.enter()
       let request = NFTRequest(id: id)
-      networkClient.send(request: request, type: NFTResponse.self, completionQueue: .main) { result in
+      networkClient.send(
+        request: request,
+        type: NFTResponse.self,
+        completionQueue: .main
+      ) { result in
         defer { group.leave() }
         switch result {
         case let .success(dto):
@@ -82,7 +86,8 @@ final class FavoritesPresenter: FavoritesPresenting {
       name: user.name,
       description: user.bio,
       website: user.website?.absoluteString ?? "",
-      likes: updatedLikes
+      likes: updatedLikes,
+      avatar: user.avatarURL?.absoluteString ?? ""
     )
 
     DispatchQueue.global(qos: .utility).async { [weak self] in

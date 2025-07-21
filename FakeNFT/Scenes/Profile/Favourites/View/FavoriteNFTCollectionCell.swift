@@ -7,8 +7,7 @@ final class FavoriteNFTCollectionCell: UICollectionViewCell {
   private var currentCard: NFTCard?
 
   @objc private func heartTapped() {
-    guard var card = currentCard else { return }
-
+    guard let card = currentCard else { return }
     likeDelegate?.didToggleLike(for: card)
   }
 
@@ -34,7 +33,8 @@ final class FavoriteNFTCollectionCell: UICollectionViewCell {
     let lbl = UILabel()
     lbl.font = .systemFont(ofSize: 17, weight: .bold)
     lbl.textColor = .yaBlack
-    lbl.numberOfLines = 1
+    lbl.numberOfLines = 0
+    lbl.lineBreakMode = .byWordWrapping
     lbl.translatesAutoresizingMaskIntoConstraints = false
     return lbl
   }()
@@ -56,22 +56,37 @@ final class FavoriteNFTCollectionCell: UICollectionViewCell {
     return lbl
   }()
 
+  private let infoStackView: UIStackView = {
+    let stack = UIStackView()
+    stack.axis = .vertical
+    stack.alignment = .leading
+    stack.translatesAutoresizingMaskIntoConstraints = false
+    return stack
+  }()
+
   // MARK: – Init & Reuse
 
   override init(frame: CGRect) {
     super.init(frame: frame)
-
     contentView.backgroundColor = .yaWhite
 
-    for item in [nftImageView, nameLabel, starsStackView, priceLabel] {
-      contentView.addSubview(item)
-    }
+    clipsToBounds = false
+    contentView.clipsToBounds = false
 
     heartButton.addTarget(self, action: #selector(heartTapped), for: .touchUpInside)
-    contentView.addSubview(heartButton)
+
+    infoStackView.addArrangedSubview(nameLabel)
+    infoStackView.addArrangedSubview(starsStackView)
+    infoStackView.addArrangedSubview(priceLabel)
+
+    infoStackView.setCustomSpacing(4, after: nameLabel)
+    infoStackView.setCustomSpacing(8, after: starsStackView)
+
+    contentView.addSubview(nftImageView)
+    contentView.addSubview(infoStackView)
+    addSubview(heartButton)
 
     NSLayoutConstraint.activate([
-      contentView.widthAnchor.constraint(equalToConstant: 168),
       contentView.heightAnchor.constraint(equalToConstant: 80),
 
       nftImageView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor),
@@ -79,22 +94,14 @@ final class FavoriteNFTCollectionCell: UICollectionViewCell {
       nftImageView.widthAnchor.constraint(equalToConstant: 80),
       nftImageView.heightAnchor.constraint(equalToConstant: 80),
 
-      heartButton.topAnchor.constraint(equalTo: contentView.topAnchor, constant: -6.19),
+      heartButton.topAnchor.constraint(equalTo: topAnchor, constant: -6.19),
       heartButton.rightAnchor.constraint(equalTo: nftImageView.rightAnchor, constant: 6.19),
       heartButton.widthAnchor.constraint(equalToConstant: 42),
       heartButton.heightAnchor.constraint(equalToConstant: 42),
 
-      nameLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 7),
-      nameLabel.leftAnchor.constraint(equalTo: nftImageView.rightAnchor, constant: 12),
-      nameLabel.rightAnchor.constraint(equalTo: contentView.rightAnchor),
-
-      starsStackView.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 4),
-      starsStackView.leftAnchor.constraint(equalTo: nameLabel.leftAnchor),
-      starsStackView.heightAnchor.constraint(equalToConstant: 12),
-
-      priceLabel.topAnchor.constraint(equalTo: starsStackView.bottomAnchor, constant: 8),
-      priceLabel.leftAnchor.constraint(equalTo: nameLabel.leftAnchor),
-      priceLabel.rightAnchor.constraint(equalTo: contentView.rightAnchor)
+      infoStackView.leadingAnchor.constraint(equalTo: nftImageView.trailingAnchor, constant: 12),
+      infoStackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor),
+      infoStackView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor)
     ])
   }
 
@@ -129,6 +136,7 @@ final class FavoriteNFTCollectionCell: UICollectionViewCell {
     } else {
       nftImageView.image = placeholder
     }
+
     currentCard = card
     applyHeartStyle(isLiked: card.isLiked)
   }

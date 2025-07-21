@@ -9,7 +9,7 @@ final class NFTTableViewCell: UITableViewCell {
   private var currentCard: NFTCard?
 
   @objc private func heartTapped() {
-    guard var card = currentCard else { return }
+    guard let card = currentCard else { return }
     likeDelegate?.didToggleLike(for: card)
   }
 

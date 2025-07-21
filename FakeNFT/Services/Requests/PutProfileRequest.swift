@@ -8,6 +8,7 @@ struct PutProfileRequest: NetworkRequest {
   let description: String
   let website: String
   let likes: [String]
+  let avatar: String
 
   var endpoint: URL? {
     URL(string: "\(RequestConstants.baseURL)/api/v1/profile/\(id)")
@@ -20,7 +21,8 @@ struct PutProfileRequest: NetworkRequest {
       name: name,
       description: description,
       website: website,
-      likes: likes
+      likes: likes,
+      avatar: avatar
     )
   }
 
@@ -39,13 +41,15 @@ struct PutProfileFormDto: Dto {
   let description: String
   let website: String
   let likes: [String]
+  let avatar: String
 
   func asDictionary() -> [String: String] {
     return [
       "name": name,
       "description": description,
       "website": website,
-      "likes": likes.joined(separator: ",")
+      "likes": likes.joined(separator: ","),
+      "avatar": avatar
     ]
   }
 }

@@ -81,8 +81,8 @@ final class FavoritesViewController: UIViewController {
   private func setupCollectionView() {
     let layout = UICollectionViewFlowLayout()
     layout.itemSize = CGSize(width: 168, height: 80)
-    layout.minimumInteritemSpacing = 12
-    layout.minimumLineSpacing = 12
+    layout.minimumInteritemSpacing = 7
+    layout.minimumLineSpacing = 20
     layout.sectionInset = UIEdgeInsets(
       top: 0, left: 16, bottom: 0, right: 16
     )
@@ -100,7 +100,10 @@ final class FavoritesViewController: UIViewController {
 
     view.addSubview(collectionView)
     NSLayoutConstraint.activate([
-      collectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
+      collectionView.topAnchor.constraint(
+        equalTo: view.safeAreaLayoutGuide.topAnchor,
+        constant: 20
+      ),
       collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
       collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
       collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
@@ -141,6 +144,37 @@ extension FavoritesViewController: UICollectionViewDataSource {
 extension FavoritesViewController: UICollectionViewDelegate {
   func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
     presenter.didSelectItem(at: indexPath.item)
+  }
+}
+
+// MARK: UICollectionViewDelegateFlowLayout
+
+extension FavoritesViewController: UICollectionViewDelegateFlowLayout {
+  func collectionView(
+    _ collectionView: UICollectionView,
+    layout collectionViewLayout: UICollectionViewLayout,
+    insetForSectionAt section: Int
+  ) -> UIEdgeInsets {
+    return UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
+  }
+
+  func collectionView(
+    _ collectionView: UICollectionView,
+    layout collectionViewLayout: UICollectionViewLayout,
+    minimumInteritemSpacingForSectionAt section: Int
+  ) -> CGFloat {
+    return 7
+  }
+
+  func collectionView(
+    _ collectionView: UICollectionView,
+    layout collectionViewLayout: UICollectionViewLayout,
+    sizeForItemAt indexPath: IndexPath
+  ) -> CGSize {
+    let totalSpacing: CGFloat = 16 + 16 + 7
+    let availableWidth = collectionView.bounds.width - totalSpacing
+    let itemWidth = floor(availableWidth / 2)
+    return CGSize(width: itemWidth, height: 80)
   }
 }
 

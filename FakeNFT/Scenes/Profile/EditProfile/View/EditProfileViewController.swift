@@ -3,6 +3,7 @@ import UIKit
 
 // MARK: - EditProfileViewController
 
+// swiftlint:disable:next type_body_length
 final class EditProfileViewController: UIViewController {
   private var presenter: EditProfilePresenting
 
@@ -43,6 +44,7 @@ final class EditProfileViewController: UIViewController {
     setupNavigationAppearance()
     setupNavBar()
     setupLayout()
+    setupAvatarTap()
     setupDismissKeyboardGesture()
     setupKeyboardObservers()
   }
@@ -66,6 +68,36 @@ final class EditProfileViewController: UIViewController {
     navigationItem.rightBarButtonItem?.tintColor = UIColor.yaBlack
   }
 
+  private func setupAvatarTap() {
+    let tap = UITapGestureRecognizer(target: self, action: #selector(avatarTapped))
+    avatarContainer.isUserInteractionEnabled = true
+    avatarContainer.addGestureRecognizer(tap)
+  }
+
+  private func userAvatarString() -> String {
+    (presenter as? EditProfilePresenter)?.user.avatarURL?.absoluteString ?? ""
+  }
+
+  @objc private func avatarTapped() {
+    let alert = UIAlertController(
+      title: "Ссылка на фото",
+      message: "Введите URL нового аватара",
+      preferredStyle: .alert
+    )
+    alert.addTextField { textField in
+      textField.placeholder = "https://example.com/avatar.png"
+      textField.text = self.userAvatarString()
+    }
+    alert.addAction(UIAlertAction(title: "Отмена", style: .cancel))
+    alert.addAction(UIAlertAction(title: "Сохранить", style: .default) { _ in
+      guard let urlString = alert.textFields?.first?.text,
+            let url = URL(string: urlString) else { return }
+      self.avatarView.kf.setImage(with: url, placeholder: UIImage(systemName: "person.crop.circle"))
+      self.presenter.avatarUpdate(url: url)
+    })
+    present(alert, animated: true)
+  }
+
   @objc private func closeTapped() {
     presenter.didTapClose(
       name: nameField.text ?? "",
@@ -74,6 +106,7 @@ final class EditProfileViewController: UIViewController {
     )
   }
 
+  // swiftlint:disable:next function_body_length
   private func setupLayout() {
     activityIndicator.translatesAutoresizingMaskIntoConstraints = false
     view.addSubview(activityIndicator)
@@ -124,7 +157,15 @@ final class EditProfileViewController: UIViewController {
     avatarContainer.addSubview(avatarOverlay)
     avatarContainer.addSubview(changePhotoLabel)
 
-    for item in [avatarContainer, nameTitle, nameField, bioTitle, bioField, websiteTitle, websiteField] {
+    for item in [
+      avatarContainer,
+      nameTitle,
+      nameField,
+      bioTitle,
+      bioField,
+      websiteTitle,
+      websiteField
+    ] {
       contentView.addSubview(item)
     }
 
@@ -231,7 +272,11 @@ extension EditProfileViewController: EditProfileView {
   }
 
   func showLoading(_ show: Bool) {
-    show ? activityIndicator.startAnimating() : activityIndicator.stopAnimating()
+    if show {
+      activityIndicator.startAnimating()
+    } else {
+      activityIndicator.stopAnimating()
+    }
   }
 
   func showError(_ message: String) {

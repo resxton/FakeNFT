@@ -1,12 +1,16 @@
 import Foundation
 
 final class EditProfilePresenter: EditProfilePresenting {
-  private var user: User
+  private(set) var user: User
   private let networkClient: NetworkClient
   private let onSave: (User) -> Void
   weak var view: EditProfileView?
 
-  init(user: User, networkClient: NetworkClient = DefaultNetworkClient(), onSave: @escaping (User) -> Void) {
+  init(
+    user: User,
+    networkClient: NetworkClient = DefaultNetworkClient(),
+    onSave: @escaping (User) -> Void
+  ) {
     self.user = user
     self.networkClient = networkClient
     self.onSave = onSave
@@ -21,6 +25,10 @@ final class EditProfilePresenter: EditProfilePresenting {
     )
   }
 
+  func avatarUpdate(url: URL?) {
+    user.avatarURL = url
+  }
+
   func didTapClose(name: String, bio: String, website: String?) {
     view?.showLoading(true)
 
@@ -33,10 +41,15 @@ final class EditProfilePresenter: EditProfilePresenting {
       name: user.name,
       description: user.bio,
       website: user.website?.absoluteString ?? "",
-      likes: user.likes
+      likes: user.likes,
+      avatar: user.avatarURL?.absoluteString ?? ""
     )
 
-    networkClient.send(request: request, type: ProfileResponse.self, completionQueue: .main) { [weak self] result in
+    networkClient.send(
+      request: request,
+      type: ProfileResponse.self,
+      completionQueue: .main
+    ) { [weak self] result in
       guard let self else { return }
       view?.showLoading(false)
 

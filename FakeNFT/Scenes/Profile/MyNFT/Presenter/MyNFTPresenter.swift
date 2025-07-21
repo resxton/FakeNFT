@@ -125,7 +125,8 @@ final class MyNFTPresenter: MyNFTPresenting {
       name: user.name,
       description: user.bio,
       website: user.website?.absoluteString ?? "",
-      likes: updatedLikes
+      likes: updatedLikes,
+      avatar: user.avatarURL?.absoluteString ?? ""
     )
 
     DispatchQueue.global(qos: .utility).async { [weak self] in
