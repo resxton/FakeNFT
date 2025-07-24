@@ -4,5 +4,5 @@ import Foundation
 
 protocol CatalogRouterProtocol: AnyObject {
   func show(collection: CollectionDetailViewModel)
-  func show(website: URL)
+  func show(website: URL?)
 }

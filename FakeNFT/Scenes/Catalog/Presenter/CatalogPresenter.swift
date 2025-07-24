@@ -38,26 +38,29 @@ final class CatalogPresenter: CatalogPresenterProtocol {
     let collection = collections[indexPath.row]
     view?.showLoader()
 
-    services.userService.loadUser(id: collection.authorID) { [weak self] result in
-      guard let self else { return }
-      view?.hideLoader()
+    services.userService
+      .fetchUser(byName: collection.author) { [weak self] result in
+        guard let self else { return }
 
-      switch result {
-      case let .success(author):
-        let viewModel = CollectionDetailViewModel(
-          coverURL: collection.coverURL,
-          name: collection.name,
-          author: author.name,
-          authorURL: author.website,
-          description: collection.description,
-          nftIDs: collection.nftIDs
-        )
-        router.show(collection: viewModel)
+        view?.hideLoader()
 
-      case let .failure(error):
-        view?.showError(error.localizedDescription)
+        switch result {
+        case let .success(author):
+          let viewModel = CollectionDetailViewModel(
+            coverURL: collection.coverURL,
+            name: collection.name,
+            author: author.name,
+            authorURL: author.website,
+            description: collection.description,
+            nftIDs: collection.nftIDs
+          )
+
+          router.show(collection: viewModel)
+
+        case let .failure(error):
+          view?.showError(error.localizedDescription)
+        }
       }
-    }
   }
 
   func collection(at index: Int) -> CollectionViewModel {

@@ -6,22 +6,31 @@ struct CollectionDetailViewModel {
   let coverURL: URL?
   let name: String
   let author: String
-  let authorURL: URL
+  let authorURL: URL?
   let description: String
   let nftIDs: [String]
 
   var attributedAuthorText: NSAttributedString {
-    let prefix = String(localized: "Collection.author") + ": "
+    let prefix = String(localized: "Collection.author") + " "
     let fullText = prefix + author
     let attributed = NSMutableAttributedString(string: fullText)
 
     let authorRange = (fullText as NSString).range(of: author)
 
-    attributed.addAttribute(
-      .link,
-      value: authorURL.absoluteString,
-      range: authorRange
-    )
+    if let authorURL {
+      attributed.addAttribute(
+        .link,
+        value: authorURL.absoluteString,
+        range: authorRange
+      )
+    } else {
+      attributed.addAttribute(
+        .link,
+        value: "no website available",
+        range: authorRange
+      )
+    }
+
     attributed.addAttribute(
       .foregroundColor,
       value: UIColor.systemBlue,

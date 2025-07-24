@@ -25,7 +25,8 @@ final class CatalogRouter: @preconcurrency CatalogRouterProtocol {
   }
 
   @MainActor
-  func show(website: URL) {
+  func show(website: URL?) {
+    guard let website else { return }
     let webVC = appDIContainer.makeWebViewController(url: website)
     navigationController?.pushViewController(webVC, animated: true)
   }

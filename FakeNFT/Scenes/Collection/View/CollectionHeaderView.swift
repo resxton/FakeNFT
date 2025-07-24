@@ -30,6 +30,7 @@ final class CollectionHeaderView: UICollectionReusableView {
     textView.textColor = .adaptiveBlack
     textView.textAlignment = .natural
     textView.textContainerInset = .zero
+    textView.textContainer.lineFragmentPadding = 0
     textView.delegate = self
     textView.isEditable = false
     textView.isSelectable = true
@@ -143,6 +144,7 @@ final class CollectionHeaderView: UICollectionReusableView {
 
     authorTextView.snp.makeConstraints { make in
       make.horizontalEdges.equalToSuperview().inset(Constants.inset)
+      make.height.equalTo(Constants.nameHeight)
       make.top.equalTo(titleLabel.snp.bottom).offset(Constants.mediumSpacing)
     }
 
@@ -197,5 +199,6 @@ extension CollectionHeaderView {
     static let inset: CGFloat = 16
     static let largeSpacing: CGFloat = 16
     static let mediumSpacing: CGFloat = 8
+    static let nameHeight: CGFloat = 28
   }
 }

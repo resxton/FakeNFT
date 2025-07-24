@@ -21,7 +21,7 @@ extension CollectionDTO {
       coverURL: URL(string: cover),
       nftIDs: nfts,
       description: description,
-      authorID: author,
+      author: author,
       id: id
     )
   }

@@ -4,9 +4,9 @@ import Foundation
 
 struct UserDTO: Decodable {
   let name: String
-  let avatar: URL
-  let description: String
-  let website: URL
+  let avatar: String
+  let description: String?
+  let website: String
   let nfts: [String]
   let rating: String
   let id: String
@@ -14,12 +14,12 @@ struct UserDTO: Decodable {
 
 extension UserDTO {
   func toDomain() -> UserDomain {
-    UserDomain(
+    return UserDomain(
       id: id,
       name: name,
-      avatarURL: avatar,
+      avatarURL: URL(string: avatar),
       description: description,
-      website: website,
+      website: URL(string: website),
       nfts: nfts,
       rating: Double(rating) ?? 0
     )
