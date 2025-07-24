@@ -2,5 +2,7 @@
 import Foundation
 
 final class StubUserService: UserServiceProtocol {
-  func loadUser(id: String, completion: @escaping UserCompletion) {}
+  func fetchUser(byName name: String, completion: @escaping FakeNFT.UserCompletion) {}
+
+  func fetchAllUsers(completion: @escaping (Result<[FakeNFT.UserDomain], any Error>) -> Void) {}
 }
