@@ -7,7 +7,6 @@ final class AppDIContainer {
 
   private let servicesAssembly = ServicesAssembly(
     networkClient: DefaultNetworkClient(),
-    collectionStorage: CollectionStorage(),
     userStorage: UserStorage()
   )
 

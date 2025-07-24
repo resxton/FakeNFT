@@ -16,7 +16,6 @@ final class ServicesAssembly: ServicesAssemblyProtocol {
   // MARK: - Private Properties
 
   private let networkClient: NetworkClient
-  private let collectionStorage: CollectionStorageProtocol
   private let userStorage: UserStorageProtocol
 
   private let collectionServiceInstance: CollectionServiceProtocol
@@ -29,16 +28,13 @@ final class ServicesAssembly: ServicesAssemblyProtocol {
 
   init(
     networkClient: NetworkClient,
-    collectionStorage: CollectionStorageProtocol,
     userStorage: UserStorageProtocol
   ) {
     self.networkClient = networkClient
-    self.collectionStorage = collectionStorage
     self.userStorage = userStorage
 
     collectionServiceInstance = CollectionService(
-      networkClient: networkClient,
-      collectionStorage: collectionStorage
+      networkClient: networkClient
     )
     nftServiceInstance = NFTService(
       networkClient: networkClient

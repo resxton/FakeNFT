@@ -22,16 +22,13 @@ final class CollectionService: CollectionServiceProtocol {
   // MARK: - Private Properties
 
   private let networkClient: NetworkClient
-  private let collectionStorage: CollectionStorageProtocol
 
   // MARK: - Initializers
 
   init(
-    networkClient: NetworkClient,
-    collectionStorage: CollectionStorageProtocol
+    networkClient: NetworkClient
   ) {
     self.networkClient = networkClient
-    self.collectionStorage = collectionStorage
   }
 
   // MARK: - Public Methods
