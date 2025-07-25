@@ -7,7 +7,7 @@ final class AppDIContainer {
 
   private let servicesAssembly = ServicesAssembly(
     networkClient: DefaultNetworkClient(),
-    collectionStorage: CollectionStorage()
+    userStorage: UserStorage()
   )
 
   @MainActor
@@ -45,7 +45,7 @@ final class AppDIContainer {
 
     catalogNavigationController.viewControllers = [view]
     catalogNavigationController.tabBarItem = UITabBarItem(
-      title: NSLocalizedString("Tab.catalog", comment: ""),
+      title: String(localized: "Tab.catalog"),
       image: UIImage(systemName: "square.stack.fill"),
       tag: 0
     )
@@ -65,6 +65,11 @@ final class AppDIContainer {
     let view = CollectionViewController(presenter: presenter)
     presenter.view = view
     return view
+  }
+
+  func makeWebViewController(url: URL) -> UIViewController {
+    let viewController = WebViewController(website: url)
+    return viewController
   }
 
   // MARK: - Private Methods

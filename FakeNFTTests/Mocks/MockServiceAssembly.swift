@@ -19,4 +19,8 @@ final class MockServiceAssembly: ServicesAssemblyProtocol {
   var orderService: OrderServiceProtocol {
     StubOrderService()
   }
+
+  var userService: UserServiceProtocol {
+    StubUserService()
+  }
 }

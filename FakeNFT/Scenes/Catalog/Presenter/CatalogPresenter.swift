@@ -36,14 +36,31 @@ final class CatalogPresenter: CatalogPresenterProtocol {
 
   func didSelectRow(at indexPath: IndexPath) {
     let collection = collections[indexPath.row]
-    let viewModel = CollectionDetailViewModel(
-      coverURL: collection.coverURL,
-      name: collection.name,
-      author: NSLocalizedString("Collection.author", comment: "") + collection.authorID,
-      description: collection.description,
-      nftIDs: collection.nftIDs
-    )
-    router.show(collection: viewModel)
+    view?.showLoader()
+
+    services.userService
+      .fetchUser(byName: collection.author) { [weak self] result in
+        guard let self else { return }
+
+        view?.hideLoader()
+
+        switch result {
+        case let .success(author):
+          let viewModel = CollectionDetailViewModel(
+            coverURL: collection.coverURL,
+            name: collection.name,
+            author: author.name,
+            authorURL: author.website,
+            description: collection.description,
+            nftIDs: collection.nftIDs
+          )
+
+          router.show(collection: viewModel)
+
+        case let .failure(error):
+          view?.showError(error.localizedDescription)
+        }
+      }
   }
 
   func collection(at index: Int) -> CollectionViewModel {

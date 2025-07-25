@@ -15,7 +15,7 @@ final class StubCollectionService: CollectionServiceProtocol {
         coverURL: nil,
         nftIDs: ["\(index)", "\(index + 1)", "\(index + 2)"],
         description: "Mock description \(index)",
-        authorID: "mock_author_\(index)",
+        author: "mock_author_\(index)",
         id: "\(index)"
       )
     }

@@ -112,19 +112,19 @@ extension CollectionViewController: CollectionViewProtocol {
 
   func showError(_ message: String, withRetry: Bool = false) {
     let alert = UIAlertController(
-      title: NSLocalizedString("Alert.title", comment: ""),
+      title: String(localized: "Alert.title"),
       message: message,
       preferredStyle: .alert
     )
     let dismiss = UIAlertAction(
-      title: NSLocalizedString("Alert.dismiss", comment: ""),
+      title: String(localized: "Alert.dismiss"),
       style: .cancel,
       handler: nil
     )
     alert.addAction(dismiss)
     if withRetry {
       let retryAction = UIAlertAction(
-        title: NSLocalizedString("Alert.retry", comment: ""),
+        title: String(localized: "Alert.retry"),
         style: .default
       ) { [weak self] _ in
         guard let self else { return }
@@ -192,6 +192,7 @@ extension CollectionViewController: UICollectionViewDataSource {
     }
 
     header.configure(with: presenter.collection)
+    header.delegate = self
     return header
   }
 }
@@ -227,6 +228,14 @@ extension CollectionViewController: NFTCellDelegate {
       return
     }
     presenter.didTapCartButton(at: indexPath)
+  }
+}
+
+// MARK: CollectionHeaderViewDelegate
+
+extension CollectionViewController: CollectionHeaderViewDelegate {
+  func collectionHeaderViewDidTapAuthorLink(url: URL) {
+    presenter.didTapAuthorLink(url)
   }
 }
 

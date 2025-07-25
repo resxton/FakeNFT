@@ -34,7 +34,7 @@ final class CollectionPresenter: CollectionPresenterProtocol {
 
   func viewDidLoad() {
     view?.showLoader()
-    loadProfileAndOrder { [weak self] result in
+    loadInitialData { [weak self] result in
       guard let self else { return }
       switch result {
       case .success(let (profile, order)):
@@ -116,9 +116,13 @@ final class CollectionPresenter: CollectionPresenterProtocol {
     }
   }
 
+  func didTapAuthorLink(_ url: URL) {
+    router.show(website: url)
+  }
+
   // MARK: - Private Methods
 
-  private func loadProfileAndOrder(
+  private func loadInitialData(
     completion: @escaping (
       Result<(ProfileDomain, OrderDomain), Error>
     ) -> Void

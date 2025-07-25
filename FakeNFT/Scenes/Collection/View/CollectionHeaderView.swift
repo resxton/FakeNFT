@@ -24,12 +24,20 @@ final class CollectionHeaderView: UICollectionReusableView {
     return label
   }()
 
-  private let authorLabel: UILabel = {
-    let label = UILabel()
-    label.font = .labelNormal
-    label.textColor = .adaptiveBlack
-    label.numberOfLines = 1
-    return label
+  private lazy var authorTextView: UITextView = {
+    let textView = UITextView()
+    textView.font = .labelNormal
+    textView.textColor = .adaptiveBlack
+    textView.textAlignment = .natural
+    textView.textContainerInset = .zero
+    textView.textContainer.lineFragmentPadding = 0
+    textView.delegate = self
+    textView.isEditable = false
+    textView.isSelectable = true
+    textView.dataDetectorTypes = []
+    textView.backgroundColor = .clear
+    textView.linkTextAttributes = [:]
+    return textView
   }()
 
   private let descriptionTextView: UITextView = {
@@ -47,6 +55,8 @@ final class CollectionHeaderView: UICollectionReusableView {
   // MARK: - Public Properties
 
   static let reuseIdentifier = "CollectionHeaderView"
+
+  weak var delegate: CollectionHeaderViewDelegate?
 
   // MARK: - Initializers
 
@@ -76,7 +86,7 @@ final class CollectionHeaderView: UICollectionReusableView {
 
     titleLabel.text = viewModel.name
 
-    authorLabel.text = viewModel.author
+    authorTextView.attributedText = viewModel.attributedAuthorText
 
     descriptionTextView.text = viewModel.description
   }
@@ -93,7 +103,7 @@ final class CollectionHeaderView: UICollectionReusableView {
       font: .title
     )
 
-    let authorHeight = viewModel.author.labelHeight(
+    let authorHeight = viewModel.author.textViewHeight(
       width: width - inset * 2,
       font: .labelNormal
     )
@@ -117,7 +127,7 @@ final class CollectionHeaderView: UICollectionReusableView {
     backgroundColor = .adaptiveWhite
     addSubview(coverImageView)
     addSubview(titleLabel)
-    addSubview(authorLabel)
+    addSubview(authorTextView)
     addSubview(descriptionTextView)
   }
 
@@ -132,16 +142,30 @@ final class CollectionHeaderView: UICollectionReusableView {
       make.top.equalTo(coverImageView.snp.bottom).offset(Constants.largeSpacing)
     }
 
-    authorLabel.snp.makeConstraints { make in
+    authorTextView.snp.makeConstraints { make in
       make.horizontalEdges.equalToSuperview().inset(Constants.inset)
+      make.height.equalTo(Constants.nameHeight)
       make.top.equalTo(titleLabel.snp.bottom).offset(Constants.mediumSpacing)
     }
 
     descriptionTextView.snp.makeConstraints { make in
       make.horizontalEdges.equalToSuperview().inset(Constants.inset)
-      make.top.equalTo(authorLabel.snp.bottom)
+      make.top.equalTo(authorTextView.snp.bottom)
       make.bottom.equalToSuperview()
     }
+  }
+}
+
+// MARK: UITextViewDelegate
+
+extension CollectionHeaderView: UITextViewDelegate {
+  func textView(
+    _ textView: UITextView,
+    shouldInteractWith URL: URL,
+    in characterRange: NSRange
+  ) -> Bool {
+    delegate?.collectionHeaderViewDidTapAuthorLink(url: URL)
+    return false
   }
 }
 
@@ -175,5 +199,6 @@ extension CollectionHeaderView {
     static let inset: CGFloat = 16
     static let largeSpacing: CGFloat = 16
     static let mediumSpacing: CGFloat = 8
+    static let nameHeight: CGFloat = 28
   }
 }

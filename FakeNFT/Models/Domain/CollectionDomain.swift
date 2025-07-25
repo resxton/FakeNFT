@@ -8,7 +8,7 @@ struct CollectionDomain {
   let coverURL: URL?
   let nftIDs: [String]
   let description: String
-  let authorID: String
+  let author: String
   let id: String
 }
 
