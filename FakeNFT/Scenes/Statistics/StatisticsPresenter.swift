@@ -14,6 +14,7 @@ protocol StatisticsPresenterProtocol {
   func getUser(index: Int) -> UserDomain
   func changeSort(sortType: SortTypes)
   func presentProfile(index: Int)
+  func viewDidLoad()
 }
 
 // MARK: - StatisticsPresenter
@@ -21,37 +22,25 @@ protocol StatisticsPresenterProtocol {
 final class StatisticsPresenter: StatisticsPresenterProtocol {
   weak var view: StatisticsViewControllerProtocol?
 
-  var users: [UserDomain] = [
-    UserDomain(
-      name: "Васян Васянович",
-      avatarUrl: nil,
-      description: "Просто Васян",
-      websiteUrl: URL(string: "https://practicum.yandex.ru/ios-developer"),
-      nfts: ["1", "2", "3", "4"],
-      rating: 4,
-      id: "83476"
-    ),
+  private let services = ServicesAssembly(networkClient: DefaultNetworkClient())
 
-    UserDomain(
-      name: "Ванек Иванов",
-      avatarUrl: nil,
-      description: "Необычный Ванек",
-      websiteUrl: URL(string: "https://practicum.yandex.ru/ios-developer"),
-      nfts: ["1", "2", "3"],
-      rating: 5,
-      id: "891203"
-    ),
+  var users: [UserDomain] = []
 
-    UserDomain(
-      name: "Андрей Искусственных",
-      avatarUrl: nil,
-      description: "Он не Андрей, он андроид",
-      websiteUrl: URL(string: "https://practicum.yandex.ru/ios-developer"),
-      nfts: ["1", "2", "3", "4", "6"],
-      rating: 2,
-      id: "7831468"
-    )
-  ].sorted { $0.rating > $1.rating }
+  func viewDidLoad() {
+    view?.showLoader()
+    loadUsers { [weak self] result in
+      guard let self else { return }
+      switch result {
+      case let .success(users):
+        self.users = users
+        view?.reloadStatistics()
+        view?.hideLoader()
+      case let .failure(error):
+        view?.hideLoader()
+        view?.showError(error.localizedDescription)
+      }
+    }
+  }
 
   func getNumberOfUsers() -> Int {
     users.count
@@ -74,10 +63,46 @@ final class StatisticsPresenter: StatisticsPresenterProtocol {
 
   func presentProfile(index: Int) {
     let user = users[index]
-    let profilePresenter = ProfilePresenter(user: user)
+    let profilePresenter = ProfilePresenter(user: user, services: services)
     let profileVc = ProfileViewController(presenter: profilePresenter)
     profilePresenter.view = profileVc
     profileVc.modalPresentationStyle = .fullScreen
     view?.present(profileVc, animated: true)
+  }
+
+  private func loadUsers(
+    completion: @escaping (
+      Result<[UserDomain], Error>
+    ) -> Void
+  ) {
+    let group = DispatchGroup()
+
+    var loadedUsers: [UserDomain]?
+    var loadingError: Error?
+
+    group.enter()
+    services.userService.fetchAllUsers { result in
+      switch result {
+      case let .success(users):
+        loadedUsers = users
+      case let .failure(error):
+        loadingError = error
+      }
+      group.leave()
+    }
+
+    group.notify(queue: .main) {
+      if let error = loadingError {
+        completion(.failure(error))
+      } else if let users = loadedUsers {
+        completion(.success(users))
+      } else {
+        completion(.failure(NSError(
+          domain: "LoadError",
+          code: 0,
+          userInfo: [NSLocalizedDescriptionKey: "Unknown loading error"]
+        )))
+      }
+    }
   }
 }

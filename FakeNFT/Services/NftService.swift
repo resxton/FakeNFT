@@ -1,36 +1,34 @@
 import Foundation
 
-typealias NftCompletion = (Result<Nft, Error>) -> Void
+typealias NFTComplection = (Result<NFTDomain, Error>) -> Void
 
-// MARK: - NftService
+// MARK: - NFTServiceProtocol
 
-protocol NftService {
-  func loadNft(id: String, completion: @escaping NftCompletion)
+protocol NFTServiceProtocol {
+  func loadNft(id: String, completion: @escaping NFTComplection)
 }
 
-// MARK: - NftServiceImpl
+// MARK: - NFTService
 
-final class NftServiceImpl: NftService {
+final class NFTService: NFTServiceProtocol {
+  // MARK: - Private Properties
+
   private let networkClient: NetworkClient
-  private let storage: NftStorage
 
-  init(networkClient: NetworkClient, storage: NftStorage) {
-    self.storage = storage
+  // MARK: - Initializers
+
+  init(networkClient: NetworkClient) {
     self.networkClient = networkClient
   }
 
-  func loadNft(id: String, completion: @escaping NftCompletion) {
-    if let nft = storage.getNft(with: id) {
-      completion(.success(nft))
-      return
-    }
+  // MARK: - Public Methods
 
+  func loadNft(id: String, completion: @escaping NFTComplection) {
     let request = NFTRequest(id: id)
-    networkClient.send(request: request, type: Nft.self) { [weak storage] result in
+    networkClient.send(request: request, type: NFTDTO.self) { result in
       switch result {
       case let .success(nft):
-        storage?.saveNft(nft)
-        completion(.success(nft))
+        completion(.success(nft.toDomain()))
       case let .failure(error):
         completion(.failure(error))
       }

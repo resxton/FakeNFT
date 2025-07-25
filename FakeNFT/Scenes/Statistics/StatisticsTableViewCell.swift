@@ -1,3 +1,4 @@
+import Kingfisher
 import UIKit
 
 final class StatisticsTableViewCell: UITableViewCell {
@@ -20,6 +21,8 @@ final class StatisticsTableViewCell: UITableViewCell {
 
   private lazy var avatarImage: UIImageView = {
     let image = UIImageView(image: UIImage(resource: .userpick))
+    image.layer.masksToBounds = true
+    image.layer.cornerRadius = 14
     return image
   }()
 
@@ -81,9 +84,12 @@ final class StatisticsTableViewCell: UITableViewCell {
     ])
   }
 
-  func setUpValues(number: Int, avatarImage: UIImage, name: String, numberOfNft: Int) {
+  func setUpValues(number: Int, avatarImageUrl: URL?, name: String, numberOfNft: Int) {
     numberLabel.text = String(number)
-    self.avatarImage.image = avatarImage
+    avatarImage.kf.setImage(
+      with: avatarImageUrl,
+      placeholder: UIImage(resource: .userpick)
+    )
     nameLabel.text = name
     self.numberOfNft.text = String(numberOfNft)
   }

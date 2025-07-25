@@ -33,10 +33,10 @@ final class TabBarController: UITabBarController {
   override func viewDidLoad() {
     super.viewDidLoad()
 
-    let catalogController = TestCatalogViewController(
-      servicesAssembly: servicesAssembly
-    )
-    catalogController.tabBarItem = catalogTabBarItem
+//    let catalogController = TestCatalogViewController(
+//      servicesAssembly: servicesAssembly
+//    )
+//    catalogController.tabBarItem = catalogTabBarItem
 
     let statisticsPresenter = StatisticsPresenter()
     let statisticsController = StatisticsViewController(
@@ -50,7 +50,7 @@ final class TabBarController: UITabBarController {
     )
     statisticsController.tabBarItem = statisticsTabBarItem
 
-    viewControllers = [catalogController, navigationStatisticsController]
+    viewControllers = [navigationStatisticsController]
 
     view.backgroundColor = .systemBackground
   }

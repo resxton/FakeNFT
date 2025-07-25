@@ -1,19 +1,50 @@
-final class ServicesAssembly {
-  private let networkClient: NetworkClient
-  private let nftStorage: NftStorage
+import Foundation
 
-  init(
-    networkClient: NetworkClient,
-    nftStorage: NftStorage
-  ) {
+// MARK: - ServicesAssemblyProtocol
+
+protocol ServicesAssemblyProtocol {
+  var nftService: NFTServiceProtocol { get }
+  var profileService: ProfileServiceProtocol { get }
+  var orderService: OrderServiceProtocol { get }
+  var userService: UserServiceProtocol { get }
+}
+
+// MARK: - ServicesAssembly
+
+final class ServicesAssembly: ServicesAssemblyProtocol {
+  // MARK: - Private Properties
+
+  private let networkClient: NetworkClient
+
+  // MARK: - Initializers
+
+  init(networkClient: NetworkClient) {
     self.networkClient = networkClient
-    self.nftStorage = nftStorage
   }
 
-  var nftService: NftService {
-    NftServiceImpl(
-      networkClient: networkClient,
-      storage: nftStorage
+  // MARK: - Public Properties
+
+  var nftService: NFTServiceProtocol {
+    NFTService(
+      networkClient: networkClient
+    )
+  }
+
+  var profileService: ProfileServiceProtocol {
+    ProfileService(
+      networkClient: networkClient
+    )
+  }
+
+  var orderService: OrderServiceProtocol {
+    OrderService(
+      networkClient: networkClient
+    )
+  }
+
+  var userService: UserServiceProtocol {
+    UserService(
+      networkClient: networkClient
     )
   }
 }
