@@ -1,9 +1,19 @@
+import ProgressHUD
 import UIKit
 
 // MARK: - StatisticsViewControllerProtocol
 
 protocol StatisticsViewControllerProtocol: UIViewController {
   func reloadStatistics()
+  func showLoader()
+  func hideLoader()
+  func showError(_ message: String, withRetry: Bool)
+}
+
+extension StatisticsViewControllerProtocol {
+  func showError(_ message: String, withRetry: Bool = false) {
+    showError(message, withRetry: withRetry)
+  }
 }
 
 // MARK: - StatisticsViewController
@@ -46,6 +56,7 @@ final class StatisticsViewController: UIViewController {
 
   override func viewDidLoad() {
     super.viewDidLoad()
+    presenter.viewDidLoad()
     view.addSubview(filterButton)
     setUpView()
   }
@@ -109,7 +120,7 @@ extension StatisticsViewController: UITableViewDataSource {
     let userFirstName = user.name.split(separator: " ")[0]
     cell.setUpValues(
       number: indexPath.row,
-      avatarImage: UIImage(resource: .userpick),
+      avatarImageUrl: user.avatarURL,
       name: String(userFirstName),
       numberOfNft: user.nfts.count
     )
@@ -135,5 +146,38 @@ extension StatisticsViewController: UITableViewDelegate {
 extension StatisticsViewController: StatisticsViewControllerProtocol {
   func reloadStatistics() {
     statisticsTableView.reloadData()
+  }
+
+  func showLoader() {
+    ProgressHUD.animate(interaction: false)
+  }
+
+  func hideLoader() {
+    ProgressHUD.dismiss()
+  }
+
+  func showError(_ message: String, withRetry: Bool = false) {
+    let alert = UIAlertController(
+      title: "Ошибка",
+      message: message,
+      preferredStyle: .alert
+    )
+    let dismiss = UIAlertAction(
+      title: "Закрыть",
+      style: .cancel,
+      handler: nil
+    )
+    alert.addAction(dismiss)
+    if withRetry {
+      let retryAction = UIAlertAction(
+        title: "Повторить",
+        style: .default
+      ) { [weak self] _ in
+        guard let self else { return }
+        presenter.viewDidLoad()
+      }
+      alert.addAction(retryAction)
+    }
+    present(alert, animated: true, completion: nil)
   }
 }

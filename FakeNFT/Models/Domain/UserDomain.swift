@@ -1,11 +1,13 @@
 import Foundation
 
+// MARK: - UserDomain
+
 struct UserDomain {
-  let name: String
-  let avatarUrl: URL?
-  let description: String
-  let websiteUrl: URL?
-  let nfts: [String]
-  let rating: Int
   let id: String
+  let name: String
+  let avatarURL: URL?
+  let description: String?
+  let website: URL?
+  let nfts: [String]
+  let rating: Double
 }

@@ -4,6 +4,7 @@ import WebKit
 class WebViewController: UIViewController {
   let webView = WKWebView()
   let url: URL
+  private var estimatedProgressObservation: NSKeyValueObservation?
 
   private lazy var exitButton: UIButton = {
     let button = UIButton.systemButton(
@@ -12,10 +13,26 @@ class WebViewController: UIViewController {
       action: #selector(self.exitButtonDidTap)
     )
     button.tintColor = .black
-    button.translatesAutoresizingMaskIntoConstraints = false
     button.contentMode = .scaleToFill
     return button
   }()
+
+  private lazy var progressView: UIProgressView = {
+    let progressView = UIProgressView()
+    progressView.trackTintColor = .clear
+    progressView.progressTintColor = .universalBlack
+    return progressView
+  }()
+
+  private func setEstimatedProgressObservation() {
+    estimatedProgressObservation = webView.observe(
+      \.estimatedProgress,
+      options: []
+    ) { [weak self] _, _ in
+      guard let self else { return }
+      didUpdateProgressValue(webView.estimatedProgress)
+    }
+  }
 
   init(url: URL) {
     self.url = url
@@ -29,13 +46,15 @@ class WebViewController: UIViewController {
 
   override func viewDidLoad() {
     super.viewDidLoad()
+    setEstimatedProgressObservation()
     setUpUi()
     webView.load(URLRequest(url: url))
   }
 
   private func setUpUi() {
     view.backgroundColor = .white
-    for item in [exitButton, webView] {
+    progressView.translatesAutoresizingMaskIntoConstraints = false
+    for item in [exitButton, webView, progressView] {
       item.translatesAutoresizingMaskIntoConstraints = false
       view.addSubview(item)
     }
@@ -49,8 +68,32 @@ class WebViewController: UIViewController {
       webView.topAnchor.constraint(equalTo: view.topAnchor, constant: 88),
       webView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
       webView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-      webView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+      webView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+
+      progressView.topAnchor.constraint(equalTo: webView.topAnchor),
+      progressView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+      progressView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+      progressView.heightAnchor.constraint(equalToConstant: 3)
     ])
+  }
+
+  private func didUpdateProgressValue(_ newValue: Double) {
+    let newProgressValue = Float(newValue)
+    setProgressValue(newProgressValue)
+    let shouldHideProgress = shouldHideProgress(for: newProgressValue)
+    setProgressHidden(shouldHideProgress)
+  }
+
+  func setProgressValue(_ newValue: Float) {
+    progressView.progress = newValue
+  }
+
+  func setProgressHidden(_ isHidden: Bool) {
+    progressView.isHidden = isHidden
+  }
+
+  private func shouldHideProgress(for value: Float) -> Bool {
+    abs(value - 1.0) <= 0.1002
   }
 
   @objc

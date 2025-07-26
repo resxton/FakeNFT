@@ -1,3 +1,4 @@
+import Kingfisher
 import UIKit
 
 // MARK: - ProfileViewControllerProtocol
@@ -6,7 +7,7 @@ protocol ProfileViewControllerProtocol: UIViewController {}
 
 // MARK: - ProfileViewController
 
-final class ProfileViewController: UIViewController {
+final class ProfileViewController: UIViewController, ProfileViewControllerProtocol {
   private let presenter: ProfilePresenterProtocol
 
   private lazy var exitButton: UIButton = {
@@ -23,6 +24,8 @@ final class ProfileViewController: UIViewController {
 
   private lazy var avatarImage: UIImageView = {
     let avatar = UIImageView(image: UIImage(resource: .userpick))
+    avatar.layer.masksToBounds = true
+    avatar.layer.cornerRadius = 34
     return avatar
   }()
 
@@ -60,6 +63,11 @@ final class ProfileViewController: UIViewController {
 
   private lazy var nftButton: UIButton = {
     let button = UIButton(type: .system)
+    button.addTarget(
+      self,
+      action: #selector(self.didTapNftButton),
+      for: .touchUpInside
+    )
     button.addSubview(arrowImageForButton)
     arrowImageForButton.translatesAutoresizingMaskIntoConstraints = false
     button.setTitleColor(.universalBlack, for: .normal)
@@ -79,7 +87,6 @@ final class ProfileViewController: UIViewController {
   }
 
   override func viewDidLoad() {
-    setUpUserData()
     setUpUI()
   }
 
@@ -87,9 +94,14 @@ final class ProfileViewController: UIViewController {
     nameLabel.text = presenter.getUserName()
     descriptionLable.text = presenter.getUserDescripton()
     nftButton.setTitle("Коллекция NFT \(presenter.getNuberOfNfts())", for: .normal)
+    avatarImage.kf.setImage(
+      with: presenter.getAvatarUrl(),
+      placeholder: UIImage(resource: .userpick)
+    )
   }
 
   private func setUpUI() {
+    setUpUserData()
     view.backgroundColor = .white
     for item in [exitButton, avatarImage, nameLabel, descriptionLable, webButton, nftButton] {
       item.translatesAutoresizingMaskIntoConstraints = false
@@ -130,16 +142,19 @@ final class ProfileViewController: UIViewController {
   }
 
   @objc
-  func exitButtonDidTap() {
+  private func exitButtonDidTap() {
     dismiss(animated: true)
   }
 
   @objc
-  func didTapWebButton() {
+  private func didTapWebButton() {
     presenter.presentWebViewController()
+  }
+
+  @objc
+  private func didTapNftButton() {
+    presenter.presentCollectionViewController()
   }
 }
 
 // MARK: ProfileViewControllerProtocol
-
-extension ProfileViewController: ProfileViewControllerProtocol {}
