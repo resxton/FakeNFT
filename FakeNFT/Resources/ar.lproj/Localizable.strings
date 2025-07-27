@@ -1,0 +1,14 @@
+"Alert.dismiss" = "إغلاق";
+"Alert.retry" = "إعادة المحاولة";
+"Alert.title" = "خطأ";
+"Catalog.alertTitle" = "الفرز";
+"Catalog.cancelActionTitle" = "إغلاق";
+"Catalog.openNft" = "فتح NFT";
+"Catalog.sortByCountActionTitle" = "حسب عدد الـNFTs";
+"Catalog.sortByNameActionTitle" = "حسب الاسم";
+"Catalog.unknownAuthor" = "مؤلف غير معروف";
+"Collection.author" = "مصمم المجموعة: ";
+"Error.network" = "حدث خطأ في الشبكة";
+"Error.unknown" = "حدث خطأ غير معروف";
+"NFT.currency" = "إيثريوم";
+"Tab.catalog" = "الفهرس";

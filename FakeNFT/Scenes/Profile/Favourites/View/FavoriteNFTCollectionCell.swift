@@ -32,7 +32,7 @@ final class FavoriteNFTCollectionCell: UICollectionViewCell {
   private let nameLabel: UILabel = {
     let lbl = UILabel()
     lbl.font = .systemFont(ofSize: 17, weight: .bold)
-    lbl.textColor = .yaBlack
+    lbl.textColor = .adaptiveBlack
     lbl.numberOfLines = 0
     lbl.lineBreakMode = .byWordWrapping
     lbl.translatesAutoresizingMaskIntoConstraints = false
@@ -51,7 +51,7 @@ final class FavoriteNFTCollectionCell: UICollectionViewCell {
   private let priceLabel: UILabel = {
     let lbl = UILabel()
     lbl.font = .systemFont(ofSize: 15, weight: .regular)
-    lbl.textColor = .yaBlack
+    lbl.textColor = .adaptiveBlack
     lbl.translatesAutoresizingMaskIntoConstraints = false
     return lbl
   }()
@@ -68,7 +68,7 @@ final class FavoriteNFTCollectionCell: UICollectionViewCell {
 
   override init(frame: CGRect) {
     super.init(frame: frame)
-    contentView.backgroundColor = .yaWhite
+    contentView.backgroundColor = .adaptiveWhite
 
     clipsToBounds = false
     contentView.clipsToBounds = false
@@ -142,7 +142,7 @@ final class FavoriteNFTCollectionCell: UICollectionViewCell {
   }
 
   private func applyHeartStyle(isLiked: Bool) {
-    heartButton.tintColor = isLiked ? .systemPink : .yaLightGray
+    heartButton.tintColor = isLiked ? .systemPink : .adaptiveLightGrey
   }
 
   private func updateStars(rating: Int) {
@@ -158,7 +158,7 @@ final class FavoriteNFTCollectionCell: UICollectionViewCell {
       ])
       let imageName = index <= rating ? "StarFill" : "Star"
       starView.image = UIImage(named: imageName)
-      starView.tintColor = index <= rating ? .systemYellow : .yaLightGray
+      starView.tintColor = index <= rating ? .systemYellow : .adaptiveLightGrey
       starsStackView.addArrangedSubview(starView)
     }
   }

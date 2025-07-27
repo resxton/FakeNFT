@@ -21,7 +21,7 @@ final class FavoritesViewController: UIViewController {
 
   override func viewDidLoad() {
     super.viewDidLoad()
-    view.backgroundColor = .yaWhite
+    view.backgroundColor = .adaptiveWhite
     setupNavBarAppearance()
     setupNavBar()
     setupCollectionView()
@@ -54,16 +54,16 @@ final class FavoritesViewController: UIViewController {
       target: self,
       action: #selector(backTapped)
     )
-    backItem.tintColor = .yaBlack
+    backItem.tintColor = .adaptiveBlack
     navigationItem.leftBarButtonItem = backItem
   }
 
   private func setupNavBarAppearance() {
     let appearance = UINavigationBarAppearance()
     appearance.configureWithOpaqueBackground()
-    appearance.backgroundColor = .yaWhite
+    appearance.backgroundColor = .adaptiveWhite
     appearance.titleTextAttributes = [
-      .foregroundColor: UIColor.yaBlack,
+      .foregroundColor: UIColor.adaptiveBlack,
       .font: UIFont.systemFont(ofSize: 17, weight: .semibold)
     ]
 
@@ -88,7 +88,7 @@ final class FavoritesViewController: UIViewController {
     )
 
     collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-    collectionView.backgroundColor = .yaWhite
+    collectionView.backgroundColor = .adaptiveWhite
     collectionView.translatesAutoresizingMaskIntoConstraints = false
 
     collectionView.register(

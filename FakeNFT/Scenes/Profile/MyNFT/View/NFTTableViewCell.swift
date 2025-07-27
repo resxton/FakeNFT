@@ -14,7 +14,7 @@ final class NFTTableViewCell: UITableViewCell {
   }
 
   private func applyHeartStyle(isLiked: Bool) {
-    heartButton.tintColor = isLiked ? .systemPink : .yaLightGray
+    heartButton.tintColor = isLiked ? .systemPink : .adaptiveLightGrey
   }
 
   private let nftImage: UIImageView = {
@@ -36,7 +36,7 @@ final class NFTTableViewCell: UITableViewCell {
   private let titleLabel: UILabel = {
     let titleLabel = UILabel()
     titleLabel.font = .systemFont(ofSize: 17, weight: .bold)
-    titleLabel.textColor = .yaBlack
+    titleLabel.textColor = .adaptiveBlack
     titleLabel.numberOfLines = 0
     titleLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
     return titleLabel
@@ -57,7 +57,7 @@ final class NFTTableViewCell: UITableViewCell {
   private let authorLabel: UILabel = {
     let authorLabel = UILabel()
     authorLabel.font = .systemFont(ofSize: 13)
-    authorLabel.textColor = .yaBlack
+    authorLabel.textColor = .adaptiveBlack
     authorLabel.numberOfLines = 0
     authorLabel.lineBreakMode = .byClipping
     authorLabel.setContentCompressionResistancePriority(.required, for: .horizontal)
@@ -67,7 +67,7 @@ final class NFTTableViewCell: UITableViewCell {
   private let priceTitleLabel: UILabel = {
     let priceTitleLabel = UILabel()
     priceTitleLabel.font = .systemFont(ofSize: 13)
-    priceTitleLabel.textColor = .yaBlack
+    priceTitleLabel.textColor = .adaptiveBlack
     priceTitleLabel.text = "Цена"
     return priceTitleLabel
   }()
@@ -75,7 +75,7 @@ final class NFTTableViewCell: UITableViewCell {
   private let priceValueLabel: UILabel = {
     let priceValueLabel = UILabel()
     priceValueLabel.font = .systemFont(ofSize: 17, weight: .bold)
-    priceValueLabel.textColor = .yaBlack
+    priceValueLabel.textColor = .adaptiveBlack
     return priceValueLabel
   }()
 
@@ -111,8 +111,8 @@ final class NFTTableViewCell: UITableViewCell {
   required init?(coder: NSCoder) { fatalError() }
 
   private func setupUI() {
-    backgroundColor = .yaWhite
-    contentView.backgroundColor = .yaWhite
+    backgroundColor = .adaptiveWhite
+    contentView.backgroundColor = .adaptiveWhite
 
     contentView.addSubview(nftImage)
 
@@ -170,7 +170,7 @@ final class NFTTableViewCell: UITableViewCell {
       let imgName = starIndex <= card.rating ? "StarFill" : "Star"
       let starImageView = UIImageView(image: UIImage(named: imgName))
       starImageView.contentMode = .scaleAspectFit
-      starImageView.tintColor = .yaYellowUniversal
+      starImageView.tintColor = .universalYellow
       starImageView.translatesAutoresizingMaskIntoConstraints = false
 
       NSLayoutConstraint.activate([

@@ -6,7 +6,7 @@ func makeTitle(_ text: String) -> UILabel {
   let label = UILabel()
   label.text = text
   label.font = .systemFont(ofSize: 22, weight: .bold)
-  label.textColor = UIColor.yaBlack
+  label.textColor = UIColor.adaptiveBlack
   label.translatesAutoresizingMaskIntoConstraints = false
   return label
 }
@@ -14,8 +14,8 @@ func makeTitle(_ text: String) -> UILabel {
 func makeField() -> UITextField {
   let textField = UITextField()
   textField.font = .systemFont(ofSize: 17)
-  textField.textColor = UIColor.yaBlack
-  textField.backgroundColor = UIColor.yaLightGray
+  textField.textColor = UIColor.adaptiveBlack
+  textField.backgroundColor = UIColor.adaptiveLightGrey
   textField.layer.cornerRadius = 12
   textField.setLeftPaddingPoints(16)
   textField.translatesAutoresizingMaskIntoConstraints = false
@@ -48,8 +48,8 @@ func makeField() -> UITextField {
 func makeTextView() -> UITextView {
   let textView = UITextView()
   textView.font = .systemFont(ofSize: 17)
-  textView.textColor = UIColor.yaBlack
-  textView.backgroundColor = UIColor.yaLightGray
+  textView.textColor = UIColor.adaptiveBlack
+  textView.backgroundColor = UIColor.adaptiveLightGrey
   textView.layer.cornerRadius = 12
   textView.isScrollEnabled = false
   textView.textContainerInset = UIEdgeInsets(top: 12, left: 10, bottom: 12, right: 10)

@@ -49,7 +49,7 @@ final class MyNFTViewController: UIViewController {
 
   override func viewDidLoad() {
     super.viewDidLoad()
-    view.backgroundColor = .yaWhite
+    view.backgroundColor = .adaptiveWhite
     setupBackButton()
     setupSortButton()
     configureNavBarAppearance()
@@ -72,7 +72,7 @@ final class MyNFTViewController: UIViewController {
       target: self,
       action: #selector(onSortTap)
     )
-    item.tintColor = .yaBlack
+    item.tintColor = .adaptiveBlack
     sortBarButtonItem = item
     navigationItem.rightBarButtonItem = item
   }
@@ -99,9 +99,9 @@ final class MyNFTViewController: UIViewController {
   private func configureNavBarAppearance() {
     let appearance = UINavigationBarAppearance()
     appearance.configureWithOpaqueBackground()
-    appearance.backgroundColor = .yaWhite
+    appearance.backgroundColor = .adaptiveWhite
     appearance.titleTextAttributes = [
-      .foregroundColor: UIColor.yaBlack,
+      .foregroundColor: UIColor.adaptiveBlack,
       .font: UIFont.systemFont(ofSize: 17, weight: .bold)
     ]
     appearance.largeTitleTextAttributes = appearance.titleTextAttributes
@@ -109,7 +109,7 @@ final class MyNFTViewController: UIViewController {
     navigationController?.navigationBar.standardAppearance = appearance
     navigationController?.navigationBar.scrollEdgeAppearance = appearance
     navigationController?.navigationBar.compactAppearance = appearance
-    navigationController?.navigationBar.tintColor = .yaBlack
+    navigationController?.navigationBar.tintColor = .adaptiveBlack
     navigationController?.navigationBar.barStyle = .default
     navigationItem.title = "Мои NFT"
   }
@@ -119,7 +119,7 @@ final class MyNFTViewController: UIViewController {
   private func setupTableView() {
     tableView.rowHeight = 140
     tableView.separatorStyle = .none
-    tableView.backgroundColor = .yaWhite
+    tableView.backgroundColor = .adaptiveWhite
     tableView.translatesAutoresizingMaskIntoConstraints = false
     tableView.register(NFTTableViewCell.self, forCellReuseIdentifier: NFTTableViewCell.reuseID)
     tableView.dataSource = self
@@ -146,7 +146,7 @@ final class MyNFTViewController: UIViewController {
       target: self,
       action: #selector(backTapped)
     )
-    backItem.tintColor = .yaBlack
+    backItem.tintColor = .adaptiveBlack
     navigationItem.leftBarButtonItem = backItem
   }
 

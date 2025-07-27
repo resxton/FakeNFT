@@ -40,7 +40,7 @@ final class EditProfileViewController: UIViewController {
   }
 
   private func setupUI() {
-    view.backgroundColor = UIColor.yaWhite
+    view.backgroundColor = UIColor.adaptiveWhite
     setupNavigationAppearance()
     setupNavBar()
     setupLayout()
@@ -52,7 +52,7 @@ final class EditProfileViewController: UIViewController {
   private func setupNavigationAppearance() {
     let appearance = UINavigationBarAppearance()
     appearance.configureWithOpaqueBackground()
-    appearance.backgroundColor = UIColor.yaWhite
+    appearance.backgroundColor = UIColor.adaptiveWhite
     navigationController?.navigationBar.standardAppearance = appearance
     navigationController?.navigationBar.scrollEdgeAppearance = appearance
     navigationController?.navigationBar.compactAppearance = appearance
@@ -65,7 +65,7 @@ final class EditProfileViewController: UIViewController {
       target: self,
       action: #selector(closeTapped)
     )
-    navigationItem.rightBarButtonItem?.tintColor = UIColor.yaBlack
+    navigationItem.rightBarButtonItem?.tintColor = UIColor.adaptiveBlack
   }
 
   private func setupAvatarTap() {
@@ -143,7 +143,7 @@ final class EditProfileViewController: UIViewController {
     avatarView.clipsToBounds = true
     avatarView.backgroundColor = .tertiarySystemFill
 
-    avatarOverlay.backgroundColor = UIColor.yaBlack.withAlphaComponent(0.6)
+    avatarOverlay.backgroundColor = UIColor.adaptiveBlack.withAlphaComponent(0.6)
     avatarOverlay.layer.cornerRadius = 35
     avatarOverlay.clipsToBounds = true
 

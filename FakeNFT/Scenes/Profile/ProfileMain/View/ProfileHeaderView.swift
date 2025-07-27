@@ -36,7 +36,7 @@ final class ProfileHeaderView: UIView {
     let attrs: [NSAttributedString.Key: Any] = [
       .font: font,
       .paragraphStyle: paragraph,
-      .foregroundColor: UIColor.yaBlack,
+      .foregroundColor: UIColor.adaptiveBlack,
       .kern: -0.08,
       .baselineOffset: baselineOffset
     ]
@@ -83,7 +83,7 @@ final class ProfileHeaderView: UIView {
     name.font = .systemFont(ofSize: 22, weight: .bold)
     name.numberOfLines = 0
     name.translatesAutoresizingMaskIntoConstraints = false
-    name.textColor = UIColor.yaBlack
+    name.textColor = UIColor.adaptiveBlack
 
     let paragraphStyle = NSMutableParagraphStyle()
     paragraphStyle.minimumLineHeight = 18
@@ -91,17 +91,17 @@ final class ProfileHeaderView: UIView {
 
     let bioFont = UIFont.systemFont(ofSize: 13)
     bio.font = bioFont
-    bio.textColor = UIColor.yaBlack
+    bio.textColor = UIColor.adaptiveBlack
     bio.numberOfLines = 0
     bio.setContentCompressionResistancePriority(.required, for: .vertical)
     bio.setContentHuggingPriority(.required, for: .vertical)
     bio.translatesAutoresizingMaskIntoConstraints = false
     bio.attributedText = NSAttributedString(string: "", attributes: [
-      .font: bioFont, .paragraphStyle: paragraphStyle, .foregroundColor: UIColor.yaBlack
+      .font: bioFont, .paragraphStyle: paragraphStyle, .foregroundColor: UIColor.adaptiveBlack
     ])
 
     site.font = .systemFont(ofSize: 15)
-    site.textColor = UIColor.yaBlueUniversal
+    site.textColor = UIColor.universalBlue
     site.numberOfLines = 1
     site.translatesAutoresizingMaskIntoConstraints = false
     site.isUserInteractionEnabled = true
@@ -109,7 +109,7 @@ final class ProfileHeaderView: UIView {
     site.addGestureRecognizer(tap)
 
     edit.setImage(UIImage(resource: .editIcon), for: .normal)
-    edit.tintColor = UIColor.yaBlack
+    edit.tintColor = UIColor.adaptiveBlack
     edit.addTarget(self, action: #selector(editTapped), for: .touchUpInside)
     edit.translatesAutoresizingMaskIntoConstraints = false
 

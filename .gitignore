@@ -14,6 +14,9 @@ Icon
 # Thumbnails
 ._*
 
+# Secrets
+Secrets.xcconfig
+
 # Files that might appear in the root of a volume
 .DocumentRevisions-V100
 .fseventsd
@@ -141,5 +144,12 @@ xcuserdata
 /*.gcno
 **/xcshareddata/WorkspaceSettings.xcsettings
 
+<<<<<<< HEAD
 # End of https://www.toptal.com/developers/gitignore/api/xcode,macos,swift,swiftpackagemanager,swiftpm
 Secrets.xcconfig
+=======
+# Secrets
+Secrets.xcconfig
+
+# End of https://www.toptal.com/developers/gitignore/api/xcode,macos,swift,swiftpackagemanager,swiftpm
+>>>>>>> develop

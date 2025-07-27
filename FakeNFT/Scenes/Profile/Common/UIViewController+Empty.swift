@@ -14,7 +14,7 @@ extension UIViewController {
     label.tag = tag
     label.text = text
     label.font = UIFont.systemFont(ofSize: 17, weight: .bold)
-    label.textColor = UIColor.yaBlack
+    label.textColor = UIColor.adaptiveBlack
     label.textAlignment = .center
     label.numberOfLines = 0
     label.translatesAutoresizingMaskIntoConstraints = false

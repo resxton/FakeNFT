@@ -32,7 +32,7 @@ final class ProfileViewController: UIViewController {
   override func viewDidLoad() {
     print("🛠 DEBUG: ProfileViewController.viewDidLoad()")
     super.viewDidLoad()
-    view.backgroundColor = UIColor.yaWhite
+    view.backgroundColor = UIColor.adaptiveWhite
     setupBackButton()
     setupTable()
     presenter.viewDidLoad()
@@ -57,7 +57,7 @@ final class ProfileViewController: UIViewController {
   private func setupTable() {
     view.addSubview(tableView)
     tableView.translatesAutoresizingMaskIntoConstraints = false
-    tableView.backgroundColor = UIColor.yaWhite
+    tableView.backgroundColor = UIColor.adaptiveWhite
     headerView.onWebsiteTap = { [weak self] in
       guard let self, let url = presenter.user.website else { return }
       openWebsite(url)
@@ -149,7 +149,7 @@ extension ProfileViewController: ProfileView {
       finalURL = url
     }
 
-    let webVC = WebViewController(url: finalURL)
+    let webVC = ProfileWebViewController(url: finalURL)
     webVC.hidesBottomBarWhenPushed = true
     navigationController?.pushViewController(webVC, animated: true)
   }
@@ -184,7 +184,7 @@ extension ProfileViewController: UITableViewDataSource, UITableViewDelegate {
       fallback.selectionStyle = .none
 
       let chevron = UIImageView(image: UIImage(resource: .chevronForwardIcon))
-      chevron.tintColor = UIColor.yaBlack
+      chevron.tintColor = UIColor.adaptiveBlack
       chevron.frame = CGRect(x: 0, y: 0, width: 7.98, height: 13.86)
       chevron.contentMode = .scaleAspectFit
       fallback.accessoryView = chevron
@@ -198,7 +198,7 @@ extension ProfileViewController: UITableViewDataSource, UITableViewDelegate {
     cell.selectionStyle = .none
 
     let chevron = UIImageView(image: UIImage(resource: .chevronForwardIcon))
-    chevron.tintColor = UIColor.yaBlack
+    chevron.tintColor = UIColor.adaptiveBlack
     chevron.frame = CGRect(x: 0, y: 0, width: 7.98, height: 13.86)
     chevron.contentMode = .scaleAspectFit
     cell.accessoryView = chevron

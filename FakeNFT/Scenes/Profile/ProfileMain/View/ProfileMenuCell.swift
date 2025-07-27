@@ -10,11 +10,11 @@ final class ProfileMenuCell: UITableViewCell {
 
     accessoryType = .disclosureIndicator
     selectionStyle = .default
-    backgroundColor = UIColor.yaWhite
-    contentView.backgroundColor = UIColor.yaWhite
+    backgroundColor = UIColor.adaptiveWhite
+    contentView.backgroundColor = UIColor.adaptiveWhite
 
     titleLabel.translatesAutoresizingMaskIntoConstraints = false
-    titleLabel.textColor = UIColor.yaBlack
+    titleLabel.textColor = UIColor.adaptiveBlack
     titleLabel.font = UIFont.boldSystemFont(ofSize: 17)
 
     contentView.addSubview(titleLabel)
