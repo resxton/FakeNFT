@@ -83,7 +83,7 @@ final class CartPresenter {
   }
 
   func getCartListId(completeion: @escaping () -> Void?) {
-    let request = CartRequest(id: "1")
+    let request = OrderRequest(id: "1")
     networkClient.send(
       request: request,
       type: NFTForCartResponse.self,
@@ -142,7 +142,7 @@ final class CartPresenter {
     var cartItemsCopy = cartItems
     cartItemsCopy.remove(at: numberDeleteItem)
     let nfts = cartItemsCopy.map(\.id)
-    let request = RemoveFromTheBasket(id: "1", nfts: nfts)
+    let request = CartPutRequest(id: "1", nfts: nfts)
     networkClient.send(
       request: request,
       type: NFTForCartResponse.self,

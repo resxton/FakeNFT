@@ -32,14 +32,6 @@ final class TabBarController: UITabBarController {
 
   override func viewDidLoad() {
     super.viewDidLoad()
-    setupUI()
-  }
-
-  func setupUI() {
-    let cartVC = CartViewController()
-    let cartViewController = UINavigationController(rootViewController: cartVC)
-    cartViewController.tabBarItem = cartTabBarItem
-    viewControllers = [cartViewController]
     view.backgroundColor = .adaptiveWhite
   }
 }
