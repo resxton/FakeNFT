@@ -37,7 +37,7 @@ final class OrderService: OrderServiceProtocol {
   }
 
   func putOrder(with nfts: [String], completion: @escaping OrderCompletion) {
-    let request = CartRequest(id: Constants.orderId, nfts: nfts)
+    let request = CartPutRequest(id: Constants.orderId, nfts: nfts)
     networkClient.send(request: request, type: OrderDTO.self) { result in
       switch result {
       case let .success(order):

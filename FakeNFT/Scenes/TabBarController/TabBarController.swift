@@ -16,6 +16,12 @@ final class TabBarController: UITabBarController {
     tag: 0
   )
 
+  private let statisticsTabBarItem = UITabBarItem(
+    title: "Статистика",
+    image: UIImage(resource: .statisticsTabBar),
+    tag: 0
+  )
+
   // MARK: - Initializers
 
   init(servicesAssembly: ServicesAssembly) {
@@ -33,11 +39,6 @@ final class TabBarController: UITabBarController {
   override func viewDidLoad() {
     super.viewDidLoad()
 
-//    let catalogController = TestCatalogViewController(
-//      servicesAssembly: servicesAssembly
-//    )
-//    catalogController.tabBarItem = catalogTabBarItem
-
     let statisticsPresenter = StatisticsPresenter()
     let statisticsController = StatisticsViewController(
       servicesAssembly: servicesAssembly,
@@ -48,18 +49,19 @@ final class TabBarController: UITabBarController {
     let navigationStatisticsController = UINavigationController(
       rootViewController: statisticsController
     )
+
     statisticsController.tabBarItem = statisticsTabBarItem
 
-    viewControllers = [navigationStatisticsController]
     let catalogController = TestCatalogViewController(
       servicesAssembly: servicesAssembly
     )
+
     catalogController.tabBarItem = catalogTabBarItem
 
     let cartVC = CartViewController()
     let cartViewController = UINavigationController(rootViewController: cartVC)
     cartViewController.tabBarItem = cartTabBarItem
-    viewControllers = [catalogController, cartViewController]
+    viewControllers = [catalogController, cartViewController, navigationStatisticsController]
 
     view.backgroundColor = .systemBackground
   }

@@ -1,7 +1,7 @@
 import UIKit
 import WebKit
 
-class WebViewController: UIViewController {
+class UserWebViewController: UIViewController {
   let webView = WKWebView()
   let url: URL
   private var estimatedProgressObservation: NSKeyValueObservation?

@@ -47,7 +47,7 @@ class ProfilePresenter: ProfilePresenterProtocol {
       return
     }
 
-    let webVC = WebViewController(url: url)
+    let webVC = UserWebViewController(url: url)
     webVC.modalPresentationStyle = .fullScreen
     view?.present(webVC, animated: true)
   }
