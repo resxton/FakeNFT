@@ -24,7 +24,7 @@ final class StatisticsViewController: UIViewController {
 
   private lazy var filterButton: UIButton = {
     let button = UIButton.systemButton(
-      with: UIImage(resource: .filterButton),
+      with: UIImage(resource: .sort),
       target: self,
       action: #selector(self.didTapFilterButton)
     )
