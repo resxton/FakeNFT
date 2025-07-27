@@ -3,7 +3,7 @@ import UIKit
 final class TabBarController: UITabBarController {
   // MARK: - Private Properties
 
-  private let servicesAssembly: ServicesAssembly
+  private let servicesAssembly: ServicesAssemblyProtocol
   private let catalogTabBarItem = UITabBarItem(
     title: NSLocalizedString("Tab.catalog", comment: ""),
     image: UIImage(systemName: "square.stack.3d.up.fill"),
@@ -18,7 +18,7 @@ final class TabBarController: UITabBarController {
 
   // MARK: - Initializers
 
-  init(servicesAssembly: ServicesAssembly) {
+  init(servicesAssembly: ServicesAssemblyProtocol) {
     self.servicesAssembly = servicesAssembly
     super.init(nibName: nil, bundle: nil)
   }
@@ -32,17 +32,15 @@ final class TabBarController: UITabBarController {
 
   override func viewDidLoad() {
     super.viewDidLoad()
+    setupUI()
+  }
 
-    let catalogController = TestCatalogViewController(
-      servicesAssembly: servicesAssembly
-    )
-    catalogController.tabBarItem = catalogTabBarItem
-
+  func setupUI() {
     let cartVC = CartViewController()
     let cartViewController = UINavigationController(rootViewController: cartVC)
     cartViewController.tabBarItem = cartTabBarItem
-    viewControllers = [catalogController, cartViewController]
+    viewControllers = [cartViewController]
 
-    view.backgroundColor = .systemBackground
+    view.backgroundColor = .adaptiveWhite
   }
 }

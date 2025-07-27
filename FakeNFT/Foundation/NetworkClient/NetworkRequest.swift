@@ -9,6 +9,12 @@ enum HttpMethod: String {
   case delete = "DELETE"
 }
 
+// MARK: - Dto
+
+protocol Dto: Encodable {
+  func asDictionary() -> [String: String]
+}
+
 // MARK: - NetworkRequest
 
 protocol NetworkRequest {
@@ -17,14 +23,7 @@ protocol NetworkRequest {
   var dto: Dto? { get }
 }
 
-// MARK: - Dto
-
-protocol Dto {
-  func asDictionary() -> [String: String]
-}
-
-// default values
 extension NetworkRequest {
   var httpMethod: HttpMethod { .get }
-  var dto: Encodable? { nil }
+  var dto: Dto? { nil }
 }
