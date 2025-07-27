@@ -13,6 +13,7 @@ protocol UserServiceProtocol {
 
 final class UserService: UserServiceProtocol {
   private let networkClient: NetworkClient
+
   private let userStorage: UserStorageProtocol
 
   init(networkClient: NetworkClient, userStorage: UserStorageProtocol) {

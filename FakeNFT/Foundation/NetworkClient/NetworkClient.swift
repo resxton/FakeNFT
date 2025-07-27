@@ -213,9 +213,14 @@ struct DefaultNetworkClient: NetworkClient {
   ) {
     do {
       let decoded = try decoder.decode(T.self, from: data)
+      print("[NetworkClient.parse] - Successfully parsed response to \(T.self)")
       onResponse(.success(decoded))
     } catch {
       let raw = String(data: data, encoding: .utf8) ?? "<non-UTF8>"
+      print("""
+      [NetworkClient.parse] - Failed to parse response: \(error.localizedDescription), \
+      data: \(raw)")
+      """)
       onResponse(.failure(NetworkClientError.parsingError(data)))
     }
   }

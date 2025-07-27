@@ -27,8 +27,9 @@ final class AppDIContainer {
     let tabBarController = TabBarController(servicesAssembly: servicesAssembly)
     let catalog = makeCatalogViewController()
     let profile = makeProfileViewController()
+    let statistics = makeStatisticsViewController()
 
-    tabBarController.viewControllers = [catalog, profile]
+    tabBarController.viewControllers = [catalog, profile, statistics]
     tabBarController.tabBar.isTranslucent = false
     tabBarController.tabBar.backgroundColor = UIColor.adaptiveWhite
     tabBarController.tabBar.barTintColor = UIColor.adaptiveWhite
@@ -84,6 +85,29 @@ final class AppDIContainer {
   func makeWebViewController(url: URL) -> UIViewController {
     let viewController = AuthorWebViewController(website: url)
     return viewController
+  }
+
+  @MainActor
+  func makeStatisticsViewController() -> UINavigationController {
+    let statisticsTabBarItem = UITabBarItem(
+      title: "Статистика",
+      image: UIImage(resource: .statisticsTabBar),
+      tag: 0
+    )
+    let statisticsPresenter = StatisticsPresenter(services: servicesAssembly)
+    let statisticsController = StatisticsViewController(
+      servicesAssembly: servicesAssembly,
+      presenter: statisticsPresenter
+    )
+    statisticsPresenter.view = statisticsController
+
+    let navigationStatisticsController = UINavigationController(
+      rootViewController: statisticsController
+    )
+
+    statisticsController.tabBarItem = statisticsTabBarItem
+
+    return navigationStatisticsController
   }
 
   // MARK: - Private Methods

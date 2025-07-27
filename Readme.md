@@ -19,7 +19,15 @@ git clone https://github.com/resxton/FakeNFT.git
 ```
 git config core.hooksPath .githooks
 ```
-3. Генерация Xcode проекта
+3. Переходим в `bash`, если оболочка не `bash`:
+```
+bash
+```
+4. Выполняем команду и вводим свой токен:
+```bash
+read -r -p "Enter your API token: " token && printf 'API_TOKEN = %s\n' "$token" > Secrets.xcconfig && echo "✅ Secrets.xcconfig sucessfully created!"
+```
+5. Генерация Xcode проекта
 ```
 xcodegen generate
 ```

@@ -40,7 +40,6 @@ final class TabBarController: UITabBarController {
     let cartViewController = UINavigationController(rootViewController: cartVC)
     cartViewController.tabBarItem = cartTabBarItem
     viewControllers = [cartViewController]
-
     view.backgroundColor = .adaptiveWhite
   }
 }
