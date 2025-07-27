@@ -106,7 +106,7 @@ final class CurrencySelectionPresenter {
 
   func removeAll(completion: @escaping () -> Void) {
     let cartItemsCopy = [String]()
-    let request = RemoveFromTheBasket(id: "1", nfts: cartItemsCopy)
+    let request = CartPutRequest(id: "1", nfts: cartItemsCopy)
     networkCliet.send(
       request: request,
       type: NFTForCartResponse.self,

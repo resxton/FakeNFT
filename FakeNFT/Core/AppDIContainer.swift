@@ -28,8 +28,9 @@ final class AppDIContainer {
     let catalog = makeCatalogViewController()
     let profile = makeProfileViewController()
     let statistics = makeStatisticsViewController()
+    let cart = makeCartViewController()
 
-    tabBarController.viewControllers = [catalog, profile, statistics]
+    tabBarController.viewControllers = [profile, catalog, cart, statistics]
     tabBarController.tabBar.isTranslucent = false
     tabBarController.tabBar.backgroundColor = UIColor.adaptiveWhite
     tabBarController.tabBar.barTintColor = UIColor.adaptiveWhite
@@ -66,6 +67,18 @@ final class AppDIContainer {
     )
     profileNav.tabBarItem = profileTabBarItem
     return profileNav
+  }
+
+  @MainActor
+  func makeCartViewController() -> UINavigationController {
+    let cartViewController = CartViewController()
+    let cartNavigationController = UINavigationController(rootViewController: cartViewController)
+    cartNavigationController.tabBarItem = UITabBarItem(
+      title: NSLocalizedString("Tab.cart", comment: "Tab.cart"),
+      image: UIImage(named: "basketNFT"),
+      tag: 0
+    )
+    return cartNavigationController
   }
 
   @MainActor
