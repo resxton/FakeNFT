@@ -46,6 +46,7 @@ final class ProfileViewController: UIViewController {
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
     navigationController?.setNavigationBarHidden(true, animated: false)
+    updateHeader(with: presenter.user)
   }
 
   override func viewDidLayoutSubviews() {
@@ -119,13 +120,21 @@ extension ProfileViewController: ProfileView {
   }
 
   func showMyNFT() {
-    let viewController = MyNFTViewController(nftIDs: presenter.user.nfts)
+    let viewController = MyNFTViewController(user: presenter.user) { [weak self] updatedUser in
+      self?.presenter.user = updatedUser
+      self?.updateHeader(with: updatedUser)
+      self?.tableView.reloadData()
+    }
     viewController.hidesBottomBarWhenPushed = true
     navigationController?.pushViewController(viewController, animated: true)
   }
 
   func showFavorites() {
-    let viewController = FavoritesViewController()
+    let viewController = FavoritesViewController(user: presenter.user) { [weak self] updatedUser in
+      self?.presenter.user = updatedUser
+      self?.updateHeader(with: updatedUser)
+      self?.tableView.reloadData()
+    }
     viewController.hidesBottomBarWhenPushed = true
     navigationController?.pushViewController(viewController, animated: true)
   }
@@ -146,7 +155,10 @@ extension ProfileViewController: ProfileView {
   }
 
   func showEditProfile(current user: User, onSave: @escaping (User) -> Void) {
-    let editVC = EditProfileViewController(user: user, onSave: onSave)
+    let presenter = EditProfilePresenter(user: user, onSave: onSave)
+    let editVC = EditProfileViewController(presenter: presenter)
+    presenter.view = editVC
+
     let nav = UINavigationController(rootViewController: editVC)
     nav.modalPresentationStyle = .pageSheet
     present(nav, animated: true)

@@ -13,7 +13,7 @@ final class MyNFTPresenter: MyNFTPresenting {
     }
   }
 
-  private let nftIDs: [String]
+  var user: User
   private let networkClient: NetworkClient
 
   var onEmpty: ((String) -> Void)?
@@ -33,13 +33,13 @@ final class MyNFTPresenter: MyNFTPresenting {
 
   private var allCards: [NFTCard] = []
 
-  init(nftIDs: [String], networkClient: NetworkClient = DefaultNetworkClient()) {
-    self.nftIDs = nftIDs
+  init(user: User, networkClient: NetworkClient = DefaultNetworkClient()) {
+    self.user = user
     self.networkClient = networkClient
   }
 
   func viewDidLoad() {
-    guard !nftIDs.isEmpty else {
+    guard !user.nfts.isEmpty else {
       onEmpty?("У Вас ещё нет NFT")
       return
     }
@@ -47,7 +47,7 @@ final class MyNFTPresenter: MyNFTPresenting {
   }
 
   private func loadSequentially(at index: Int, accumulated cards: [NFTCard]) {
-    if index >= nftIDs.count {
+    if index >= user.nfts.count {
       if cards.isEmpty {
         onEmpty?("Не удалось загрузить ни одного NFT")
       } else {
@@ -57,7 +57,7 @@ final class MyNFTPresenter: MyNFTPresenting {
       return
     }
 
-    let idOfCurrentNft = nftIDs[index]
+    let idOfCurrentNft = user.nfts[index]
     let nftByIdRequest = NFTRequest(id: idOfCurrentNft)
     networkClient.send(
       request: nftByIdRequest,
@@ -67,7 +67,7 @@ final class MyNFTPresenter: MyNFTPresenting {
       guard let self else { return }
       var newCards = cards
       if case let .success(resp) = result {
-        newCards.append(NFTCard(from: resp))
+        newCards.append(NFTCard(from: resp, likedIDs: user.likes))
       }
       loadSequentially(at: index + 1, accumulated: newCards)
     }
@@ -100,5 +100,50 @@ final class MyNFTPresenter: MyNFTPresenting {
     }
 
     onCards?(sortedCards)
+  }
+
+  // MARK: – Лайк / дизлайк из таблицы «Мои NFT»
+
+  func toggleLike(for nftID: String) {
+    let updatedLikes: [String] = {
+      if user.likes.contains(nftID) {
+        return user.likes.filter { $0 != nftID }
+      } else {
+        return user.likes + [nftID]
+      }
+    }()
+
+    user.likes = updatedLikes
+
+    if let idx = allCards.firstIndex(where: { $0.id == nftID }) {
+      allCards[idx].isLiked.toggle()
+      applySort(currentSort)
+    }
+
+    let req = PutProfileRequest(
+      id: "1",
+      name: user.name,
+      description: user.bio,
+      website: user.website?.absoluteString ?? "",
+      likes: updatedLikes,
+      avatar: user.avatarURL?.absoluteString ?? ""
+    )
+
+    DispatchQueue.global(qos: .utility).async { [weak self] in
+      self?.networkClient.send(
+        request: req,
+        type: ProfileResponse.self,
+        completionQueue: .main
+      ) { result in
+        switch result {
+        case let .success(dto):
+          print("✅ PUT OK – likes:", dto.likes)
+          self?.user.likes = dto.likes
+
+        case let .failure(error):
+          print("❌ PUT /profile error:", error.localizedDescription)
+        }
+      }
+    }
   }
 }

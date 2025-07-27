@@ -5,6 +5,17 @@ final class NFTTableViewCell: UITableViewCell {
   static let reuseID = "NFTTableViewCell"
 
   private let starsRange: ClosedRange<Int> = 1 ... 5
+  weak var likeDelegate: NFTCardLikeDelegate?
+  private var currentCard: NFTCard?
+
+  @objc private func heartTapped() {
+    guard let card = currentCard else { return }
+    likeDelegate?.didToggleLike(for: card)
+  }
+
+  private func applyHeartStyle(isLiked: Bool) {
+    heartButton.tintColor = isLiked ? .systemPink : .yaLightGray
+  }
 
   private let nftImage: UIImageView = {
     let nftImage = UIImageView()
@@ -16,8 +27,8 @@ final class NFTTableViewCell: UITableViewCell {
   }()
 
   private let heartButton: UIButton = {
-    let heartButton = UIButton()
-    heartButton.setImage(UIImage(resource: .heart), for: .normal)
+    let heartButton = UIButton(type: .system)
+    heartButton.setImage(UIImage(resource: .heart).withRenderingMode(.alwaysTemplate), for: .normal)
     heartButton.translatesAutoresizingMaskIntoConstraints = false
     return heartButton
   }()
@@ -92,6 +103,7 @@ final class NFTTableViewCell: UITableViewCell {
 
   override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
     super.init(style: style, reuseIdentifier: reuseIdentifier)
+    heartButton.addTarget(self, action: #selector(heartTapped), for: .touchUpInside)
     setupUI()
   }
 
@@ -192,5 +204,7 @@ final class NFTTableViewCell: UITableViewCell {
     } else {
       nftImage.image = UIImage(systemName: "photo")
     }
+    currentCard = card
+    applyHeartStyle(isLiked: card.isLiked)
   }
 }

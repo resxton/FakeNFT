@@ -10,15 +10,18 @@ final class MyNFTViewController: UIViewController {
 
   private var sortBarButtonItem: UIBarButtonItem?
 
-  init(presenter: MyNFTPresenting) {
-    self.presenter = presenter
+  private let onUserUpdate: (User) -> Void
+
+  init(user: User, onUserUpdate: @escaping (User) -> Void) {
+    self.onUserUpdate = onUserUpdate
+    presenter = MyNFTPresenter(user: user)
     super.init(nibName: nil, bundle: nil)
     bindPresenter()
   }
 
-  convenience init(nftIDs: [String]) {
-    let realPresenter = MyNFTPresenter(nftIDs: nftIDs)
-    self.init(presenter: realPresenter)
+  override func viewWillDisappear(_ animated: Bool) {
+    super.viewWillDisappear(animated)
+    onUserUpdate(presenter.user)
   }
 
   @available(*, unavailable)
@@ -178,6 +181,15 @@ extension MyNFTViewController: UITableViewDataSource {
     }
     cell.configure(with: cards[indexPath.row])
     cell.selectionStyle = .none
+    cell.likeDelegate = self
     return cell
+  }
+}
+
+// MARK: NFTCardLikeDelegate
+
+extension MyNFTViewController: NFTCardLikeDelegate {
+  func didToggleLike(for card: NFTCard) {
+    presenter.toggleLike(for: card.id)
   }
 }

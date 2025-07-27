@@ -31,7 +31,7 @@ final class ProfilePresenter {
 
   weak var view: ProfileView?
   private let profileID: String
-  private(set) var user: User
+  var user: User
   private let networkClient: NetworkClient
 
   private var isLoaded = false
@@ -124,6 +124,51 @@ final class ProfilePresenter {
       guard let self else { return }
       user = updated
       view?.updateHeader(with: updated)
+    }
+  }
+
+  func toggleLike(nftID: String) {
+    var updatedLikes = user.likes
+
+    if updatedLikes.contains(nftID) {
+      updatedLikes.removeAll { $0 == nftID }
+    } else {
+      updatedLikes.append(nftID)
+    }
+
+    let request = PutProfileRequest(
+      id: "1",
+      name: user.name,
+      description: user.bio,
+      website: user.website?.absoluteString ?? "",
+      likes: updatedLikes,
+      avatar: user.avatarURL?.absoluteString ?? ""
+    )
+
+    networkClient.send(
+      request: request,
+      type: ProfileResponse.self,
+      completionQueue: .main
+    ) { [weak self] result in
+      guard let self else { return }
+
+      switch result {
+      case let .success(response):
+        print("✅ Лайки обновлены: \(response.likes)")
+        user = User(
+          avatarURL: URL(string: response.avatar),
+          name: response.name,
+          bio: response.bio ?? "",
+          website: URL(string: response.website ?? ""),
+          nfts: response.nfts,
+          likes: response.likes
+        )
+
+        view?.reloadData()
+
+      case let .failure(error):
+        print("❌ Ошибка обновления лайков: \(error)")
+      }
     }
   }
 }
