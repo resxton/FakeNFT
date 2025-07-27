@@ -22,7 +22,7 @@ protocol StatisticsPresenterProtocol {
 final class StatisticsPresenter: StatisticsPresenterProtocol {
   weak var view: StatisticsViewControllerProtocol?
 
-  private let services = ServicesAssembly(networkClient: DefaultNetworkClient())
+  private let services: ServicesAssemblyProtocol
 
   var users: [UserDomain] = []
 
@@ -40,6 +40,10 @@ final class StatisticsPresenter: StatisticsPresenterProtocol {
         view?.showError(error.localizedDescription)
       }
     }
+  }
+
+  init(services: ServicesAssemblyProtocol) {
+    self.services = services
   }
 
   func getNumberOfUsers() -> Int {
@@ -63,8 +67,8 @@ final class StatisticsPresenter: StatisticsPresenterProtocol {
 
   func presentProfile(index: Int) {
     let user = users[index]
-    let profilePresenter = ProfilePresenter(user: user, services: services)
-    let profileVc = ProfileViewController(presenter: profilePresenter)
+    let profilePresenter = StatisticsProfilePresenter(user: user, services: services)
+    let profileVc = StatisticsProfileViewController(presenter: profilePresenter)
     profilePresenter.view = profileVc
     profileVc.modalPresentationStyle = .fullScreen
     view?.present(profileVc, animated: true)

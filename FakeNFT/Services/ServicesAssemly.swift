@@ -3,6 +3,7 @@ import Foundation
 // MARK: - ServicesAssemblyProtocol
 
 protocol ServicesAssemblyProtocol {
+  var collectionService: CollectionServiceProtocol { get }
   var nftService: NFTServiceProtocol { get }
   var profileService: ProfileServiceProtocol { get }
   var orderService: OrderServiceProtocol { get }
@@ -15,36 +16,60 @@ final class ServicesAssembly: ServicesAssemblyProtocol {
   // MARK: - Private Properties
 
   private let networkClient: NetworkClient
+  private let userStorage: UserStorageProtocol
+
+  private let collectionServiceInstance: CollectionServiceProtocol
+  private let nftServiceInstance: NFTServiceProtocol
+  private let profileServiceInstance: ProfileServiceProtocol
+  private let orderServiceInstance: OrderServiceProtocol
+  private let userServiceInstance: UserServiceProtocol
 
   // MARK: - Initializers
 
-  init(networkClient: NetworkClient) {
+  init(
+    networkClient: NetworkClient,
+    userStorage: UserStorageProtocol
+  ) {
     self.networkClient = networkClient
+    self.userStorage = userStorage
+
+    collectionServiceInstance = CollectionService(
+      networkClient: networkClient
+    )
+    nftServiceInstance = NFTService(
+      networkClient: networkClient
+    )
+    profileServiceInstance = ProfileService(
+      networkClient: networkClient
+    )
+    orderServiceInstance = OrderService(
+      networkClient: networkClient
+    )
+    userServiceInstance = UserService(
+      networkClient: networkClient,
+      userStorage: userStorage
+    )
   }
 
   // MARK: - Public Properties
 
+  var collectionService: CollectionServiceProtocol {
+    collectionServiceInstance
+  }
+
   var nftService: NFTServiceProtocol {
-    NFTService(
-      networkClient: networkClient
-    )
+    nftServiceInstance
   }
 
   var profileService: ProfileServiceProtocol {
-    ProfileService(
-      networkClient: networkClient
-    )
+    profileServiceInstance
   }
 
   var orderService: OrderServiceProtocol {
-    OrderService(
-      networkClient: networkClient
-    )
+    orderServiceInstance
   }
 
   var userService: UserServiceProtocol {
-    UserService(
-      networkClient: networkClient
-    )
+    userServiceInstance
   }
 }

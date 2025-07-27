@@ -3,7 +3,7 @@ import UIKit
 final class TabBarController: UITabBarController {
   // MARK: - Private Properties
 
-  private let servicesAssembly: ServicesAssembly
+  private let servicesAssembly: ServicesAssemblyProtocol
   private let catalogTabBarItem = UITabBarItem(
     title: NSLocalizedString("Tab.catalog", comment: ""),
     image: UIImage(systemName: "square.stack.3d.up.fill"),
@@ -16,15 +16,9 @@ final class TabBarController: UITabBarController {
     tag: 0
   )
 
-  private let statisticsTabBarItem = UITabBarItem(
-    title: "Статистика",
-    image: UIImage(resource: .statisticsTabBar),
-    tag: 0
-  )
-
   // MARK: - Initializers
 
-  init(servicesAssembly: ServicesAssembly) {
+  init(servicesAssembly: ServicesAssemblyProtocol) {
     self.servicesAssembly = servicesAssembly
     super.init(nibName: nil, bundle: nil)
   }
@@ -38,31 +32,14 @@ final class TabBarController: UITabBarController {
 
   override func viewDidLoad() {
     super.viewDidLoad()
+    setupUI()
+  }
 
-    let statisticsPresenter = StatisticsPresenter()
-    let statisticsController = StatisticsViewController(
-      servicesAssembly: servicesAssembly,
-      presenter: statisticsPresenter
-    )
-    statisticsPresenter.view = statisticsController
-
-    let navigationStatisticsController = UINavigationController(
-      rootViewController: statisticsController
-    )
-
-    statisticsController.tabBarItem = statisticsTabBarItem
-
-    let catalogController = TestCatalogViewController(
-      servicesAssembly: servicesAssembly
-    )
-
-    catalogController.tabBarItem = catalogTabBarItem
-
+  func setupUI() {
     let cartVC = CartViewController()
     let cartViewController = UINavigationController(rootViewController: cartVC)
     cartViewController.tabBarItem = cartTabBarItem
-    viewControllers = [catalogController, cartViewController, navigationStatisticsController]
-
-    view.backgroundColor = .systemBackground
+    viewControllers = [cartViewController]
+    view.backgroundColor = .adaptiveWhite
   }
 }

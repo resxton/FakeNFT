@@ -8,7 +8,7 @@ class UserWebViewController: UIViewController {
 
   private lazy var exitButton: UIButton = {
     let button = UIButton.systemButton(
-      with: UIImage(resource: .backward),
+      with: UIImage(resource: .back),
       target: self,
       action: #selector(self.exitButtonDidTap)
     )

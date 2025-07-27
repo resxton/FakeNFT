@@ -30,7 +30,7 @@ final class UsersCollectionViewController: UIViewController {
 
     let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
     collectionView.dataSource = self
-    collectionView.register(NFTCell.self, forCellWithReuseIdentifier: NFTCell.cellIdentifier)
+    collectionView.register(StatisticsNFTCell.self, forCellWithReuseIdentifier: StatisticsNFTCell.cellIdentifier)
     collectionView.backgroundColor = .adaptiveWhite
 
     return collectionView
@@ -38,7 +38,7 @@ final class UsersCollectionViewController: UIViewController {
 
   private lazy var exitButton: UIButton = {
     let button = UIButton.systemButton(
-      with: UIImage(resource: .backward),
+      with: UIImage(resource: .back),
       target: self,
       action: #selector(self.exitButtonDidTap)
     )
@@ -116,9 +116,9 @@ extension UsersCollectionViewController: UICollectionViewDataSource {
     cellForItemAt indexPath: IndexPath
   ) -> UICollectionViewCell {
     guard let cell = collectionView.dequeueReusableCell(
-      withReuseIdentifier: NFTCell.cellIdentifier,
+      withReuseIdentifier: StatisticsNFTCell.cellIdentifier,
       for: indexPath
-    ) as? NFTCell else {
+    ) as? StatisticsNFTCell else {
       return UICollectionViewCell()
     }
 
@@ -132,8 +132,8 @@ extension UsersCollectionViewController: UICollectionViewDataSource {
 
 // MARK: NFTCellDelegate
 
-extension UsersCollectionViewController: NFTCellDelegate {
-  func didTapFavoritesButton(_ cell: NFTCell) {
+extension UsersCollectionViewController: StatisticsNFTCellDelegate {
+  func didTapFavoritesButton(_ cell: StatisticsNFTCell) {
     guard let indexPath = nftCollection.indexPath(for: cell) else {
       print("[CollectionViewController] – Failed to get indexPath for cell")
       return
@@ -141,7 +141,7 @@ extension UsersCollectionViewController: NFTCellDelegate {
     presenter.didTapFavoritesButton(at: indexPath)
   }
 
-  func didTapCartButton(_ cell: NFTCell) {
+  func didTapCartButton(_ cell: StatisticsNFTCell) {
     guard let indexPath = nftCollection.indexPath(for: cell) else {
       print("[CollectionViewController] – Failed to get indexPath for cell")
       return

@@ -11,3 +11,12 @@ struct UserDomain {
   let nfts: [String]
   let rating: Double
 }
+
+extension UserDomain {
+  func toViewModel() -> UserViewModel {
+    UserViewModel(
+      name: name,
+      url: website
+    )
+  }
+}

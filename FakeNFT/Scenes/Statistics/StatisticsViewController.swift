@@ -28,7 +28,7 @@ final class StatisticsViewController: UIViewController {
       target: self,
       action: #selector(self.didTapFilterButton)
     )
-    button.tintColor = .black
+    button.tintColor = .adaptiveBlack
     return button
   }()
 

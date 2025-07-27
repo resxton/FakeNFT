@@ -4,7 +4,7 @@ import UIKit
 final class StatisticsTableViewCell: UITableViewCell {
   private lazy var cardView: UIView = {
     let card = UIView()
-    card.backgroundColor = .systemGray6
+    card.backgroundColor = .systemGray5
     card.translatesAutoresizingMaskIntoConstraints = false
     card.layer.cornerRadius = 12
     card.clipsToBounds = true
@@ -51,7 +51,7 @@ final class StatisticsTableViewCell: UITableViewCell {
   }
 
   private func setUp() {
-    contentView.backgroundColor = .clear
+    contentView.backgroundColor = .adaptiveWhite
     selectionStyle = .none
     contentView.addSubview(cardView)
     contentView.addSubview(numberLabel)
