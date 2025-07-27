@@ -30,7 +30,10 @@ final class UsersCollectionViewController: UIViewController {
 
     let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
     collectionView.dataSource = self
-    collectionView.register(StatisticsNFTCell.self, forCellWithReuseIdentifier: StatisticsNFTCell.cellIdentifier)
+    collectionView.register(
+      StatisticsNFTCell.self,
+      forCellWithReuseIdentifier: StatisticsNFTCell.cellIdentifier
+    )
     collectionView.backgroundColor = .adaptiveWhite
 
     return collectionView
