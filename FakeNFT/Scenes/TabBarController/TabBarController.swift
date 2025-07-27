@@ -10,9 +10,9 @@ final class TabBarController: UITabBarController {
     tag: 0
   )
 
-  private let statisticsTabBarItem = UITabBarItem(
-    title: "Статистика",
-    image: UIImage(resource: .statisticsTabBar),
+  private let cartTabBarItem = UITabBarItem(
+    title: NSLocalizedString("Tab.cart", comment: "Tab.cart"),
+    image: UIImage(named: "basketNFT"),
     tag: 0
   )
 
@@ -51,6 +51,15 @@ final class TabBarController: UITabBarController {
     statisticsController.tabBarItem = statisticsTabBarItem
 
     viewControllers = [navigationStatisticsController]
+    let catalogController = TestCatalogViewController(
+      servicesAssembly: servicesAssembly
+    )
+    catalogController.tabBarItem = catalogTabBarItem
+
+    let cartVC = CartViewController()
+    let cartViewController = UINavigationController(rootViewController: cartVC)
+    cartViewController.tabBarItem = cartTabBarItem
+    viewControllers = [catalogController, cartViewController]
 
     view.backgroundColor = .systemBackground
   }

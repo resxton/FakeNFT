@@ -6,5 +6,6 @@ struct NFTRequest: NetworkRequest {
     URL(string: "\(RequestConstants.baseURL)/api/v1/nft/\(id)")
   }
 
+  var HTTPMethod: HttpMethod { .get }
   var dto: Dto?
 }
