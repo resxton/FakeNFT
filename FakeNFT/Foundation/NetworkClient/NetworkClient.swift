@@ -173,6 +173,7 @@ struct DefaultNetworkClient: NetworkClient {
       print("[NetworkClient.create] - Empty endpoint provided")
       return nil
     }
+    print("🛠 DEBUG: Creating URLRequest for \(endpoint)")
 
     var urlRequest = URLRequest(url: endpoint)
     urlRequest.httpMethod = request.httpMethod.rawValue

@@ -26,8 +26,9 @@ final class AppDIContainer {
   func makeTabBarController() -> UITabBarController {
     let tabBarController = TabBarController(servicesAssembly: servicesAssembly)
     let catalog = makeCatalogViewController()
+    let profile = makeProfileViewController()
 
-    tabBarController.viewControllers = [catalog]
+    tabBarController.viewControllers = [catalog, profile]
     tabBarController.tabBar.isTranslucent = false
     tabBarController.tabBar.backgroundColor = UIColor.adaptiveWhite
     tabBarController.tabBar.barTintColor = UIColor.adaptiveWhite
@@ -51,6 +52,19 @@ final class AppDIContainer {
     )
 
     return catalogNavigationController
+  }
+
+  @MainActor
+  func makeProfileViewController() -> UINavigationController {
+    let profileVC = ProfileViewController(profileID: "1")
+    let profileNav = UINavigationController(rootViewController: profileVC)
+    let profileTabBarItem = UITabBarItem(
+      title: "Профиль",
+      image: UIImage(named: "ProfileTabBarIcon"),
+      tag: 2
+    )
+    profileNav.tabBarItem = profileTabBarItem
+    return profileNav
   }
 
   @MainActor
