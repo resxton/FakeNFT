@@ -45,7 +45,7 @@ final class AppDIContainer {
 
     catalogNavigationController.viewControllers = [view]
     catalogNavigationController.tabBarItem = UITabBarItem(
-      title: String(localized: "Tab.catalog"),
+      title: NSLocalizedString("Tab.catalog", comment: ""),
       image: UIImage(systemName: "square.stack.fill"),
       tag: 0
     )
@@ -68,7 +68,7 @@ final class AppDIContainer {
   }
 
   func makeWebViewController(url: URL) -> UIViewController {
-    let viewController = WebViewController(website: url)
+    let viewController = AuthorWebViewController(website: url)
     return viewController
   }
 

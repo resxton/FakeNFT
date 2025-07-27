@@ -1,9 +1,9 @@
 import UIKit
 import WebKit
 
-// MARK: - WebViewController
+// MARK: - AuthorWebViewController
 
-final class WebViewController: UIViewController {
+final class AuthorWebViewController: UIViewController {
   // MARK: - Private Properties
 
   private let webView = WKWebView()

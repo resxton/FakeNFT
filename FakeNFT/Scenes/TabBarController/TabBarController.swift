@@ -3,7 +3,7 @@ import UIKit
 final class TabBarController: UITabBarController {
   // MARK: - Private Properties
 
-  private let servicesAssembly: ServicesAssembly
+  private let servicesAssembly: ServicesAssemblyProtocol
   private let catalogTabBarItem = UITabBarItem(
     title: NSLocalizedString("Tab.catalog", comment: ""),
     image: UIImage(systemName: "square.stack.3d.up.fill"),
@@ -39,7 +39,7 @@ final class TabBarController: UITabBarController {
     let cartVC = CartViewController()
     let cartViewController = UINavigationController(rootViewController: cartVC)
     cartViewController.tabBarItem = cartTabBarItem
-    viewControllers = [catalogController, cartViewController]
+    viewControllers = [cartViewController]
 
     view.backgroundColor = .adaptiveWhite
   }

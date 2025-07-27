@@ -2,7 +2,7 @@ import Foundation
 
 // MARK: - CartRequest
 
-struct CartRequest: NetworkRequest {
+struct CartPutRequest: NetworkRequest {
   let id: String
   let nfts: [String]
 

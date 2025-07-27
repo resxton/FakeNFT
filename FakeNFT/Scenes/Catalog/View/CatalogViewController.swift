@@ -95,16 +95,18 @@ extension CatalogViewController: CatalogViewProtocol {
 
   func presentSortingOptions() {
     let actionSheet = UIAlertController(
-      title: String(localized:
-        "Catalog.alertTitle"
+      title: NSLocalizedString(
+        "Catalog.alertTitle",
+        comment: ""
       ),
       message: nil,
       preferredStyle: .actionSheet
     )
 
     let sortByNameAction = UIAlertAction(
-      title: String(localized:
-        "Catalog.sortByNameActionTitle"
+      title: NSLocalizedString(
+        "Catalog.sortByNameActionTitle",
+        comment: ""
       ),
       style: .default
     ) { [weak self] _ in
@@ -112,8 +114,9 @@ extension CatalogViewController: CatalogViewProtocol {
       presenter.didSelectSorting(option: .name)
     }
     let sortByCountAction = UIAlertAction(
-      title: String(localized:
-        "Catalog.sortByCountActionTitle"
+      title: NSLocalizedString(
+        "Catalog.sortByCountActionTitle",
+        comment: ""
       ),
       style: .default
     ) { [weak self] _ in
@@ -121,8 +124,9 @@ extension CatalogViewController: CatalogViewProtocol {
       presenter.didSelectSorting(option: .nftCount)
     }
     let cancelAction = UIAlertAction(
-      title: String(localized:
-        "Catalog.cancelActionTitle"
+      title: NSLocalizedString(
+        "Catalog.cancelActionTitle",
+        comment: ""
       ),
       style: .cancel
     )
@@ -144,19 +148,19 @@ extension CatalogViewController: CatalogViewProtocol {
 
   func showError(_ message: String, withRetry: Bool = false) {
     let alert = UIAlertController(
-      title: String(localized: "Alert.title"),
+      title: NSLocalizedString("Alert.title", comment: ""),
       message: message,
       preferredStyle: .alert
     )
     let dismiss = UIAlertAction(
-      title: String(localized: "Alert.dismiss"),
+      title: NSLocalizedString("Alert.dismiss", comment: ""),
       style: .cancel,
       handler: nil
     )
     alert.addAction(dismiss)
     if withRetry {
       let retryAction = UIAlertAction(
-        title: String(localized: "Alert.retry"),
+        title: NSLocalizedString("Alert.retry", comment: ""),
         style: .default
       ) { [weak self] _ in
         guard let self else { return }
