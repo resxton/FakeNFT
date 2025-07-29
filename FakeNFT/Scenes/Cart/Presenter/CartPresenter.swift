@@ -1,0 +1,164 @@
+import Kingfisher
+import UIKit
+
+// MARK: - CartSortType
+
+enum CartSortType {
+  case byPrice
+  case byRating
+  case byName
+}
+
+// MARK: - CartPresenter
+
+final class CartPresenter {
+  private let store = SortTypeStore.shared
+
+  private let networkClient = DefaultNetworkClient()
+
+  private var requestIsRunning: Bool = false
+
+  private let cartRating = [
+    "ratingZero",
+    "ratingOne",
+    "ratingTwo",
+    "ratingThree",
+    "ratingFour",
+    "ratingFive"
+  ]
+  private var isError: Bool = false
+
+  private var cartItems = [NFTForCartModel]()
+
+  private var numberDeleteItem = -1
+
+  func getStringRating(for rating: Int) -> String {
+    return cartRating[rating]
+  }
+
+  func nftCartTotal() -> Decimal {
+    return cartItems.reduce(0) { $0 + $1.price }
+  }
+
+  func item(at index: Int) -> NFTForCartModel {
+    return cartItems[index]
+  }
+
+  func itemCount() -> Int {
+    return cartItems.count
+  }
+
+  func getCartItemsIdList() -> [String] {
+    let list = cartItems.map(\.id)
+    return list
+  }
+
+  func delete(completion: @escaping () -> Void) {
+    deleteRequest {
+      completion()
+    }
+  }
+
+  func isErrorState() -> Bool {
+    let newIsError = isError
+    isError = false
+    return newIsError
+  }
+
+  func sort(sortBy: CartSortType) {
+    print("Вид сортировки:\n\(sortBy)")
+    switch sortBy {
+    case .byRating:
+      cartItems.sort { $0.rating < $1.rating }
+    case .byPrice:
+      cartItems.sort { $0.price < $1.price }
+    case .byName:
+      cartItems.sort { $0.name < $1.name }
+    }
+    store.sortSettings = sortBy
+  }
+
+  func setNumberDeleteItem(_ numberDeleteItem: Int) {
+    self.numberDeleteItem = numberDeleteItem
+  }
+
+  func getCartListId(completeion: @escaping () -> Void?) {
+    let request = OrderRequest(id: "1")
+    networkClient.send(
+      request: request,
+      type: NFTForCartResponse.self,
+      completionQueue: .main
+    ) { [weak self] result in
+      guard let self else { return }
+      switch result {
+      case let .success(response):
+        print("Успех!\nМы получили:\n\(response)")
+        getCartList(ids: response.nfts) {
+          completeion()
+        }
+      case let .failure(error):
+        print("Ошибка:\n\(error)")
+        isError = true
+        completeion()
+      }
+    }
+  }
+
+  private func getCartList(ids: [String], completion: @escaping () -> Void) {
+    cartItems = []
+    guard !ids.isEmpty else {
+      completion()
+      return
+    }
+    var completedRequests = 0
+    let totalRequests = ids.count
+    print("Начали получать информацию о конкретных НФТ")
+    for id in ids {
+      let request = NFTRequest(id: id)
+      networkClient.send(
+        request: request,
+        type: NFTForCartModel.self,
+        completionQueue: .main
+      ) { [weak self] result in
+        guard let self else { return }
+        switch result {
+        case let .success(response):
+          cartItems.append(response)
+        case let .failure(error):
+          print("Ошибка:\n\(error)")
+          isError = true
+        }
+        completedRequests += 1
+        if completedRequests == totalRequests {
+          print("Успех!\nМы получили все НФТ")
+          sort(sortBy: store.sortSettings)
+          completion()
+        }
+      }
+    }
+  }
+
+  func deleteRequest(completion: @escaping () -> Void) {
+    var cartItemsCopy = cartItems
+    cartItemsCopy.remove(at: numberDeleteItem)
+    let nfts = cartItemsCopy.map(\.id)
+    let request = CartPutRequest(id: "1", nfts: nfts)
+    networkClient.send(
+      request: request,
+      type: NFTForCartResponse.self,
+      completionQueue: .main
+    ) { [weak self] result in
+      guard let self else { return }
+      switch result {
+      case .success:
+        print("Успех!\nНфт удалось удалить из корзины")
+        cartItems = cartItemsCopy
+        completion()
+      case let .failure(error):
+        isError = true
+        completion()
+        print("Ошибка:\n\(error)")
+      }
+    }
+  }
+}

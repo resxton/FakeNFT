@@ -3,16 +3,11 @@ import UIKit
 final class TabBarController: UITabBarController {
   // MARK: - Private Properties
 
-  private let servicesAssembly: ServicesAssembly
-  private let catalogTabBarItem = UITabBarItem(
-    title: NSLocalizedString("Tab.catalog", comment: ""),
-    image: UIImage(systemName: "square.stack.3d.up.fill"),
-    tag: 0
-  )
+  private let servicesAssembly: ServicesAssemblyProtocol
 
   // MARK: - Initializers
 
-  init(servicesAssembly: ServicesAssembly) {
+  init(servicesAssembly: ServicesAssemblyProtocol) {
     self.servicesAssembly = servicesAssembly
     super.init(nibName: nil, bundle: nil)
   }
@@ -26,14 +21,6 @@ final class TabBarController: UITabBarController {
 
   override func viewDidLoad() {
     super.viewDidLoad()
-
-    let catalogController = TestCatalogViewController(
-      servicesAssembly: servicesAssembly
-    )
-    catalogController.tabBarItem = catalogTabBarItem
-
-    viewControllers = [catalogController]
-
-    view.backgroundColor = .systemBackground
+    view.backgroundColor = .adaptiveWhite
   }
 }

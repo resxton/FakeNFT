@@ -1,0 +1,295 @@
+import UIKit
+
+// MARK: - CurrencySelectionViewController
+
+final class CurrencySelectionViewController: UIViewController {
+  private lazy var alertPresenter = AlertPresenter(viewController: self)
+
+  private let presenter = CurrencySelectionPresenter()
+
+  private let backButton: UIButton = {
+    let button = UIButton()
+    button.setImage(UIImage(named: "Back"), for: .normal)
+    button.translatesAutoresizingMaskIntoConstraints = false
+    return button
+  }()
+
+  private let collectionView: UICollectionView = {
+    let collectionView = UICollectionView(
+      frame: .zero,
+      collectionViewLayout: UICollectionViewFlowLayout()
+    )
+    collectionView.register(CryptoCell.self, forCellWithReuseIdentifier: "Cell")
+    collectionView.backgroundColor = .clear
+    collectionView.translatesAutoresizingMaskIntoConstraints = false
+    return collectionView
+  }()
+
+  private let paymentButton: UIButton = {
+    let button = UIButton()
+    let text = NSLocalizedString("Currency.payment", comment: "Currency.payment")
+    button.setTitle(text, for: .normal)
+    button.backgroundColor = .adaptiveBlack
+    button.setTitleColor(.adaptiveWhite, for: .normal)
+    button.titleLabel?.font = UIFont.systemFont(ofSize: 17, weight: .bold)
+    HelperUI.setRadius(button, radius: 16)
+    button.translatesAutoresizingMaskIntoConstraints = false
+    return button
+  }()
+
+  private let textLabel: UILabel = {
+    let label = UILabel()
+    let text = NSLocalizedString("Currency.text", comment: "Currency.text")
+    label.text = text
+    label.textColor = .adaptiveBlack
+    label.font = UIFont.systemFont(ofSize: 13, weight: .regular)
+    return label
+  }()
+
+  private lazy var linkLabel: UILabel = {
+    let label = UILabel()
+    let text = NSLocalizedString("Currency.link", comment: "Currency.link")
+    label.text = text
+    label.textColor = .universalBlue
+    label.font = UIFont.systemFont(ofSize: 13, weight: .regular)
+    label.isUserInteractionEnabled = true
+    let tapGesture = UITapGestureRecognizer(target: self, action: #selector(goToUserAgreement))
+    label.addGestureRecognizer(tapGesture)
+    return label
+  }()
+
+  private lazy var textAndLinkStackView: UIStackView = {
+    let stackView = UIStackView(arrangedSubviews: [textLabel, linkLabel])
+    stackView.axis = .vertical
+    stackView.spacing = 4
+    stackView.translatesAutoresizingMaskIntoConstraints = false
+    return stackView
+  }()
+
+  private var paymentView: UIView = {
+    let view = HelperUI.getPaymentView()
+    return view
+  }()
+
+  override func viewDidLoad() {
+    super.viewDidLoad()
+    setUI()
+    getCurrencyList()
+  }
+
+  @objc func backButtonTapped() {
+    dismiss(animated: true)
+  }
+
+  @objc func paymentButtonAction() {
+    if !presenter.getCurrentCurrencyID().isEmpty {
+      UIBlockingProgressHUD.show()
+      presenter.payOrder { [weak self] in
+        guard let self else { return }
+        UIBlockingProgressHUD.dismiss()
+        if !presenter.getPaymentHasBeenMade() {
+          actionsInCaseOfNonPayment()
+        } else {
+          let viewController = SuccessPaymentViewController()
+          navigationController?.pushViewController(viewController, animated: true)
+        }
+      }
+    } else {
+      warningThatYouNeedToChooseCurrency()
+    }
+  }
+
+  @objc func goToUserAgreement() {
+    let webViewController = WebViewController()
+    let viewController = UINavigationController(rootViewController: webViewController)
+    viewController.modalPresentationStyle = .fullScreen
+    present(viewController, animated: true)
+  }
+
+  private func warningThatYouNeedToChooseCurrency() {
+    let text = NSLocalizedString("Alert.NotSelectedCurrency", comment: "Alert.NotSelectedCurrency")
+    alertPresenter.alertWithOneActions(title: text, buttonTitle: "OK") {}
+  }
+
+  private func actionsInCaseOfNonPayment() {
+    let text = NSLocalizedString("Alert.FailedToPayment", comment: "Alert.FailedToPayment")
+    alertPresenter.alertForErrorWithTwoActions(title: text) { [weak self] in
+      guard let self else { return }
+      paymentButtonAction()
+    }
+  }
+
+  private func getCurrencyList() {
+    UIBlockingProgressHUD.show()
+    presenter.getCurrencyList { [weak self] in
+      guard let self else { return }
+      collectionView.reloadData()
+      UIBlockingProgressHUD.dismiss()
+      if presenter.isErrorState() {
+        callAnAlertIfYouCantGetAList()
+      }
+    }
+  }
+
+  private func callAnAlertIfYouCantGetAList() {
+    alertPresenter.alertForErrorWithTwoActions(
+      title: NSLocalizedString("Alert.UnableToGetListOfCurrencies", comment: "noListOfCurrencies")
+    ) { [weak self] in
+      guard let self else {
+        return
+      }
+      getCurrencyList()
+    }
+  }
+
+  private func setCollectionView() {
+    view.addSubview(collectionView)
+    collectionView.dataSource = self
+    collectionView.delegate = self
+    NSLayoutConstraint.activate(
+      [
+        collectionView.topAnchor.constraint(
+          equalTo: view.safeAreaLayoutGuide.topAnchor,
+          constant: 20
+        ),
+        collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+        collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+        collectionView.bottomAnchor.constraint(equalTo: paymentView.topAnchor)
+      ]
+    )
+  }
+
+  private func setPaymentView() {
+    view.addSubview(paymentView)
+    NSLayoutConstraint.activate([
+      paymentView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+      paymentView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+      paymentView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+      paymentView.heightAnchor.constraint(equalToConstant: 186)
+    ])
+  }
+
+  private func setTextAndLinkStackView() {
+    paymentView.addSubview(textAndLinkStackView)
+    NSLayoutConstraint.activate(
+      [
+        textAndLinkStackView.topAnchor
+          .constraint(
+            equalTo: paymentView.topAnchor,
+            constant: 16
+          ),
+        textAndLinkStackView.leadingAnchor
+          .constraint(
+            equalTo: paymentView.leadingAnchor,
+            constant: 16
+          )
+      ]
+    )
+  }
+
+  private func setPaymentButton() {
+    paymentView.addSubview(paymentButton)
+    NSLayoutConstraint.activate(
+      [
+        paymentButton.topAnchor.constraint(
+          equalTo: textAndLinkStackView.bottomAnchor,
+          constant: 20
+        ),
+        paymentButton.leadingAnchor.constraint(equalTo: paymentView.leadingAnchor, constant: 20),
+        paymentButton.trailingAnchor.constraint(equalTo: paymentView.trailingAnchor, constant: -12),
+        paymentButton.heightAnchor.constraint(equalToConstant: 60)
+      ]
+    )
+    paymentButton.addTarget(self, action: #selector(paymentButtonAction), for: .touchUpInside)
+  }
+
+  private func setUI() {
+    view.backgroundColor = .adaptiveWhite
+    let text = NSLocalizedString("ForPay.navigationTitle", comment: "ForPay.navigationTitle")
+    navigationItem.title = text
+    navigationItem.leftBarButtonItem = UIBarButtonItem(customView: backButton)
+    backButton.addTarget(self, action: #selector(backButtonTapped), for: .touchDown)
+    setPaymentView()
+    setCollectionView()
+    setTextAndLinkStackView()
+    setPaymentButton()
+  }
+
+  private func configCell(cell: CryptoCell, indexPath: IndexPath) {
+    let item = presenter.item(at: indexPath.row)
+    cell.cryptoAbbreviationLabel.text = item.abbreviated
+    cell.cryptoNameLabel.text = item.name
+    if let url = URL(string: item.image) {
+      cell.setImage(url: url)
+    }
+  }
+}
+
+// MARK: UICollectionViewDataSource
+
+extension CurrencySelectionViewController: UICollectionViewDataSource {
+  func collectionView(
+    _ collectionView: UICollectionView,
+    numberOfItemsInSection section: Int
+  ) -> Int {
+    return presenter.itemCount()
+  }
+
+  func collectionView(
+    _ collectionView: UICollectionView,
+    cellForItemAt indexPath: IndexPath
+  ) -> UICollectionViewCell {
+    guard let cell = collectionView.dequeueReusableCell(
+      withReuseIdentifier: "Cell",
+      for: indexPath
+    ) as? CryptoCell
+    else {
+      return UICollectionViewCell()
+    }
+    configCell(cell: cell, indexPath: indexPath)
+    return cell
+  }
+}
+
+// MARK: UICollectionViewDelegateFlowLayout
+
+extension CurrencySelectionViewController: UICollectionViewDelegateFlowLayout {
+  func collectionView(
+    _ collectionView: UICollectionView,
+    layout collectionViewLayout: UICollectionViewLayout,
+    sizeForItemAt indexPath: IndexPath
+  ) -> CGSize {
+    return CGSize(width: (collectionView.bounds.width - 32 - 7) / 2, height: 46)
+  }
+
+  func collectionView(
+    _ collectionView: UICollectionView,
+    layout collectionViewLayout: UICollectionViewLayout,
+    minimumInteritemSpacingForSectionAt section: Int
+  ) -> CGFloat {
+    return 7
+  }
+
+  func collectionView(
+    _ collectionView: UICollectionView,
+    layout collectionViewLayout: UICollectionViewLayout,
+    insetForSectionAt section: Int
+  ) -> UIEdgeInsets {
+    return UIEdgeInsets(top: 0, left: 16, bottom: 16, right: 16)
+  }
+}
+
+// MARK: UICollectionViewDelegate
+
+extension CurrencySelectionViewController: UICollectionViewDelegate {
+  func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+    guard let cell = collectionView.cellForItem(at: indexPath) as? CryptoCell else { return }
+    cell.select()
+    presenter.setCurrentCurrencyID(indexPath.row)
+  }
+
+  func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
+    guard let cell = collectionView.cellForItem(at: indexPath) as? CryptoCell else { return }
+    cell.deleteSelect()
+  }
+}
