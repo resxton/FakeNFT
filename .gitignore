@@ -140,19 +140,7 @@ xcuserdata
 /*.gcno
 **/xcshareddata/WorkspaceSettings.xcsettings
 
-<<<<<<< HEAD
 # Secrets
 Secrets.xcconfig
 
 # End of https://www.toptal.com/developers/gitignore/api/xcode,macos,swift,swiftpackagemanager,swiftpm
-=======
-<<<<<<< HEAD
-# End of https://www.toptal.com/developers/gitignore/api/xcode,macos,swift,swiftpackagemanager,swiftpm
-Secrets.xcconfig
-=======
-# Secrets
-Secrets.xcconfig
-
-# End of https://www.toptal.com/developers/gitignore/api/xcode,macos,swift,swiftpackagemanager,swiftpm
->>>>>>> develop
->>>>>>> develop
